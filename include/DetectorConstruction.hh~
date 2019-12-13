@@ -74,6 +74,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double GetShieldThickness();
     G4double SetInsetRadius();
     G4Material* GetTargetMaterial();       
+    G4Material* GetShieldMaterial(); 
     G4LogicalVolume* GetLogicTarget();
     
     G4double GetDetectorLength();
@@ -90,8 +91,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double           fInsetRadius;
     G4Material*        fTargetMater;
     G4Material*        fShieldMater;
+    G4Material*        fG10Mater;
     G4LogicalVolume*   fLogicTarget;
     G4LogicalVolume*   fLogicShield;
+    G4LogicalVolume*   fLogicG10;
                  
     G4double           fDetectorLength;
   G4double           fDetectorThickness;

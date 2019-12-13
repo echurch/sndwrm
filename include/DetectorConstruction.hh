@@ -88,11 +88,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double           fTargetLength; 
     G4double           fTargetRadius;
     G4double           fShieldThickness;
+    G4double           fG10Thickness;
     G4double           fInsetRadius;
     G4Material*        fTargetMater;
     G4Material*        fShieldMater;
+    G4Material*        fG10Mater;
     G4LogicalVolume*   fLogicTarget;
     G4LogicalVolume*   fLogicShield;
+    G4LogicalVolume*   fLogicG10;
                  
     G4double           fDetectorLength;
   G4double           fDetectorThickness;

@@ -100,6 +100,7 @@ void DetectorConstruction::DefineMaterials()
   G4Element* N  = new G4Element("Nitrogen", "N", 7, 14.01*g/mole);
   G4Element* O  = new G4Element("Oxygen",   "O", 8, 16.00*g/mole);
   G4Element* C  = new G4Element("Carbon",   "C", 6, 12.00*g/mole);
+  G4Element* Si  = new G4Element("Silicon", "Si", 14, 28.0855*g/mole);
 
   G4int ncomponents; G4double fractionmass;      
   G4Material* Air20 = new G4Material("Air", 1.205*mg/cm3, ncomponents=2,
@@ -119,22 +120,22 @@ void DetectorConstruction::DefineMaterials()
   plastic->AddElement(C,number_of_atoms=2);
   plastic->AddElement(H,number_of_atoms=4);
 
-
+  G4Material* g10 =  new G4Material("NemaG10", 1.700*g/cm3, ncomponents=4); // Nema Arkani-Hamed G10?
+  g10->AddElement(Si, number_of_atoms=1);
+  g10->AddElement(O , number_of_atoms=2);
+  g10->AddElement(C , number_of_atoms=3);
+  g10->AddElement(H , number_of_atoms=3);
 
 
   //
   fWorldMater = Air20;
 
-  double gasFactor;
-  gasFactor = 3.28; // 2 bar: gm/L 
-  gasFactor /= 1E3; // gm/cm^3
 
-  // fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
-  // fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
-  fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, gasFactor *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
-  fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, gasFactor *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
+  fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
+  fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
   //  fShieldMater = H2O;
   fShieldMater = plastic;
+  fG10Mater = g10;
 
   /*
 
@@ -176,7 +177,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
   // Shield. Now plastic inside Target,if I use a negative fShieldThickness.
-
+  // And launch neutrons from TargetRadius
   G4Box* sOutShield = new G4Box("OutShield",fTargetRadius, fTargetRadius, fTargetLength/2);
   G4Box* sInShield = new G4Box("InShield", fTargetRadius+fShieldThickness, fTargetRadius+fShieldThickness, fTargetLength/2.+fShieldThickness);
   G4SubtractionSolid *sShield = new G4SubtractionSolid("Shield",sOutShield, sInShield);  
@@ -189,6 +190,26 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
                            fLogicShield,              //logical volume
                            "Shield",                  //name
+			   lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0);                          //copy number
+
+  // G10 outside Target, if I use a positive fShieldThickness.
+  // And decay K40s from box this thick
+  fG10Thickness = 3.0*mm;
+
+  G4Box* sInG10 = new G4Box("InG10",fTargetRadius, fTargetRadius, fTargetLength/2);
+  G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius+fG10Thickness, fTargetRadius+fG10Thickness, fTargetLength/2.+fG10Thickness);
+  G4SubtractionSolid *sG10 = new G4SubtractionSolid("G10",sOutG10, sInG10);  
+
+  fLogicG10 = new G4LogicalVolume(sG10,       //shape
+                             fG10Mater,            //material
+                             "G10");               //name
+                               
+         new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+                           fLogicG10,              //logical volume
+                           "G10",                  //name
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
                            0);                          //copy number
@@ -228,8 +249,12 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                 fTargetRadius, fWorldRadius, 0.5*fDetectorLength, 0.,twopi);
   */
 
+  
   std::cout << "fInsetRadius is " << fInsetRadius << std::endl;
   std::cout << "fShieldThickness is " << fShieldThickness << std::endl;
+  std::cout << "fG10Thickness is " << fG10Thickness << std::endl;
+
+  
   fDetectorRadius = fTargetRadius-fInsetRadius;
   G4Box* sDetector = new G4Box("Detector",fDetectorRadius, fDetectorRadius, fDetectorLength/2);
 
@@ -273,6 +298,8 @@ void DetectorConstruction::PrintParameters()
 
   G4cout << "\n Shield : Thickness = " << G4BestUnit(fShieldThickness,"Length")
          << " Material = " << fShieldMater->GetName() << G4endl;          
+  G4cout << "\n G10 : Thickness = " << G4BestUnit(fG10Thickness,"Length")
+         << " Material = " << fG10Mater->GetName() << G4endl;          
 
 }
 

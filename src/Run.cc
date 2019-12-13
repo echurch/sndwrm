@@ -258,6 +258,10 @@ void Run::EndOfRun()
   G4cout << "\n The run is " << numberOfEvent << " "<< Particle << " of "
          << G4BestUnit(fEkin,"Energy") << " through : ";
           
+  G4cout << "\n G10   : Length = " 
+         << "3mm "
+         << " Material = " 
+         << "Nema-Arkani-HamedG10";
   G4cout << "\n Shield   : Length = " 
          << G4BestUnit(fDetector->GetShieldThickness(),"Length")  
          << " Material = " 

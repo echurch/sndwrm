@@ -34,40 +34,33 @@
 /grdm/noVolumes
 /grdm/selectVolume Target
 
-/gps/particle gamma
+#/gps/particle gamma
 
-/gps/ene/type Gauss
-/gps/ene/mono 1.5 MeV
+#/gps/ene/type Gauss
+#/gps/ene/mono 1.5 MeV
 ##/gps/ene/sigma 0.5 MeV
 ##/gps/ene/min 0.5 MeV
 ##/gps/ene/max 3.1 MeV
 
-
-##/gps/pos/type Volume
-##/gps/pos/shape Para
-##/gps/pos/halfx 0 #2 m
-##/gps/pos/halfy 0 #2 m
-##/gps/pos/halfz 0 #8 m
-##/gps/pos/centre 0. 0. 0. m
 #
+# This is for emitting gammas from outside the 6m TargetRadius of Ar
+/gps/particle ion
+/gps/ion 19 40 0 0 # K40
+/grdm/noVolumes
+/grdm/selectVolume G10
 
-### from end cap
-#/gps/position 0 0 -29 m
-#/gps/pos/type Volume
-#/gps/pos/shape Para
-#/gps/pos/halfx 6 m
-#/gps/pos/halfy 6 m
-# This is for emitting n's from outside the water shielding
-##/gps/pos/centre 0. 6.4 0. m
-/gps/pos/centre 0. 5.9 0. m
-/gps/pos/type Plane
-/gps/pos/shape Rectangle
-#/gps/pos/rot1 0 1 0 
-/gps/pos/rot2 0 0 -1
+
+/gps/pos/centre 0. 6.0015 0. m
+
+/gps/pos/type Volume
+/gps/pos/shape Para
 /gps/pos/halfx 6 m
-/gps/pos/halfy 29 m
+/gps/pos/halfy 3.0 mm
+/gps/pos/halfz 29 m
+#/gps/pos/rot1 0 1 0 
+##/gps/pos/rot2 0 0 -1
 
-/gps/ang/type iso
+#/gps/ang/type iso
 #/gps/ang/maxtheta 90 deg
 
 #/analysis/setFileName neutron_shield
@@ -83,8 +76,8 @@
 /analysis/ntuple/setActivation 4 true
 /run/printProgress 1000
 
-/control/execute vis.mac
+##/control/execute vis.mac
 
 # 0.8 Bq/kg leads to 10 Hz. 10 * piE7 sec is ~31 E7. Let's run 1/10th of one year.
 #/run/beamOn 31000000  # 10000
-/run/beamOn 3000000
+/run/beamOn 300000
