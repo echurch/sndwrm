@@ -130,9 +130,11 @@ void DetectorConstruction::DefineMaterials()
   //
   fWorldMater = Air20;
 
+  gasFactor = 3.28; // 2 bar: gm/L 
+  gasFactor /= 1E3; // gm/cm^3
 
-  fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
-  fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
+  fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, gasFactor *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
+  fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, gasFactor *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
   //  fShieldMater = H2O;
   fShieldMater = plastic;
   fG10Mater = g10;
@@ -197,7 +199,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   // G10 outside Target, if I use a positive fShieldThickness.
   // And decay K40s from box this thick
   fG10Thickness = 3.0*mm;
-  std::cout << "TargRadius (sic) and G10thickness:" << fTargetRadius <<", "<< fG10Thickness << std::endl;
+
   G4Box* sInG10 = new G4Box("InG10",fTargetRadius, fTargetRadius, fTargetLength/2);
   G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius+fG10Thickness, fTargetRadius+fG10Thickness, fTargetLength/2.+fG10Thickness);
   G4SubtractionSolid *sG10 = new G4SubtractionSolid("G10",sOutG10, sInG10);  

@@ -130,9 +130,12 @@ void DetectorConstruction::DefineMaterials()
   //
   fWorldMater = Air20;
 
+  G4double gasFactor;
+  gasFactor = 3.28; // 2 bar: gm/L 
+  gasFactor /= 1E3; // gm/cm^3
 
-  fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
-  fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
+  fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, gasFactor *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
+  fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, gasFactor *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
   //  fShieldMater = H2O;
   fShieldMater = plastic;
   fG10Mater = g10;
