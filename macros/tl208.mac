@@ -44,10 +44,9 @@
 # This is for emitting gammas from outside the 6m TargetRadius of Ar
 /gps/energy 0 MeV
 /gps/particle ion
-/gps/ion 19 40 0 0 # K40
+/gps/ion 81 208 0 0 # Tl208
 /grdm/noVolumes
 /grdm/selectVolume G10
-
 
 /gps/pos/centre 0. 6.0015 0. m
 
@@ -64,7 +63,7 @@
 
 #/analysis/setFileName neutron_shield
 #/analysis/setFileName neutron_plastic20cm
-/analysis/setFileName k40
+/analysis/setFileName tl208
 /analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 2. MeV
 /analysis/h1/set 6 100 0. 2. MeV
