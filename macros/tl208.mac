@@ -22,7 +22,7 @@
 # postive puts shield outside cryostat
 #/rdecay02/det/setShieldThickness 40 cm
 # a negative value puts shield inside cryostat
-/rdecay02/det/setShieldThickness -20 cm
+/rdecay02/det/setShieldThickness -50 cm
 
 
 #
@@ -78,4 +78,9 @@
 
 # 0.8 Bq/kg leads to 10 Hz. 10 * piE7 sec is ~31 E7. Let's run 1/10th of one year.
 #/run/beamOn 31000000  # 10000
-/run/beamOn 300000
+
+# Below is K40 activity. I must scale to Tl208
+# 4.9 Bq/kg * 6*60*0.003*1E6*1.65 *1E-3*piE7 is 27.4E10 decays. Let's run 27E6, 1E-4^th of a year.
+# This presumes G10 covers full top of cryostat.
+/run/beamOn 27000000
+
