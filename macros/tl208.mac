@@ -76,6 +76,9 @@
 
 ##/control/execute vis.mac
 
-# 0.8 Bq/kg leads to 10 Hz. 10 * piE7 sec is ~31 E7. Let's run 1/10th of one year.
-#/run/beamOn 31000000  # 10000
-/run/beamOn 300000
+## K40 is 4.9 Bq/kq in G10, so a big 3mm thick sheet of it:
+#>>> 4.9*1.7*10*0.003*58*1E6*1E-3/1E6 gives ~0.044 MEvts/yr
+
+# We run 27000000
+/run/beamOn 27000000  # 10000
+# Not sure how to normalize Tl208  production to K40 or something else...
