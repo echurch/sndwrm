@@ -69,6 +69,15 @@ DetectorConstruction::DetectorConstruction()
   fInsetRadius = 0.0*cm;
   fDetectorRadius = 0.0*cm;
 
+  // 13-Feb-2020 Make the acrylic walls go out 1m beyond fiducial.
+  fAcrylicRadius    = 3.0*m; fAcrylicRadius += 1.0*m;
+  fAcrylicLength    = 20.0*m;  fAcrylicLength += 2.0*m;
+  fAcrylicThickness = 10.0 /*5.08   ....  2.54*/ *cm;
+  fAcrylicThickness = 5.0 *cm;
+  /*
+  fAcrylicThickness = 15.0 *cm;
+  fAcrylicThickness = 20.0 *cm;
+  */
 
   fWorldLength = std::max(fTargetLength,fDetectorLength);
   fWorldRadius = fTargetRadius + 1.0*m;
@@ -101,6 +110,11 @@ void DetectorConstruction::DefineMaterials()
   G4Element* O  = new G4Element("Oxygen",   "O", 8, 16.00*g/mole);
   G4Element* C  = new G4Element("Carbon",   "C", 6, 12.00*g/mole);
   G4Element* Si  = new G4Element("Silicon", "Si", 14, 28.0855*g/mole);
+  G4Element* Ni  = new G4Element("Nickel",  "Ni", 28, 58.69*g/mole);
+  G4Element* Cr  = new G4Element("Chromium", "Cr", 24, 51.996*g/mole);
+  G4Element* Fe  = new G4Element("Iron",     "Fe", 26, 55.84*g/mole);
+  G4Element* Mn  = new G4Element("Manganese","Mn", 25, 54.94*g/mole);
+  G4Element* Cu  = new G4Element("Copper","Cu", 29, 63.55*g/mole);
 
   G4int ncomponents; G4double fractionmass;      
   G4Material* Air20 = new G4Material("Air", 1.205*mg/cm3, ncomponents=2,
@@ -120,23 +134,51 @@ void DetectorConstruction::DefineMaterials()
   plastic->AddElement(C,number_of_atoms=2);
   plastic->AddElement(H,number_of_atoms=4);
 
+  //Foam. From https://indico.fnal.gov/event/20144/session/19/contribution/267/material/slides/1.pdf 
+  G4Material *foam=new G4Material("Foam",0.09*g/cm3, ncomponents=4);
+  foam->AddElement(C,number_of_atoms=54);
+  foam->AddElement(O,number_of_atoms=15);
+  foam->AddElement(N,number_of_atoms=4);
+  foam->AddElement(H,number_of_atoms=60);
+
+  G4Material *wood=new G4Material("Wood",0.5*g/cm3, ncomponents=3);
+  wood->AddElement(C,number_of_atoms=50);
+  wood->AddElement(O,number_of_atoms=44);
+  wood->AddElement(H,number_of_atoms=6);
+
+  G4Material *ss=new G4Material("DUNESteel"/*SS407L*/,7.93*g/cm3, ncomponents=7);
+  ss->AddElement(Fe,fractionmass=95.8/100.);
+  ss->AddElement(Mn,fractionmass=1.8/100.);
+  ss->AddElement(Ni,fractionmass=0.8/100.);
+  ss->AddElement(Si,fractionmass=0.6/100.);
+  ss->AddElement(Cu,fractionmass=0.5/100.);
+  ss->AddElement(Cr,fractionmass=0.3/100.);
+  ss->AddElement(C, fractionmass=0.2/100.);
+  
+
   G4Material* g10 =  new G4Material("NemaG10", 1.700*g/cm3, ncomponents=4); // Nema Arkani-Hamed G10?
   g10->AddElement(Si, number_of_atoms=1);
   g10->AddElement(O , number_of_atoms=2);
   g10->AddElement(C , number_of_atoms=3);
   g10->AddElement(H , number_of_atoms=3);
 
+  // PMMA C5H8O2 ( Acrylic )
+  G4Material* Acrylic = new G4Material("Acrylic", 1.19*g/cm3, ncomponents=3);
+  Acrylic->AddElement(C, number_of_atoms=5);
+  Acrylic->AddElement(H, number_of_atoms=8);
+  Acrylic->AddElement(O, number_of_atoms=2);
 
   //
   fWorldMater = Air20;
-
-
   fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
   fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
   //  fShieldMater = H2O;
-  fShieldMater = plastic;
+  fShieldMater =  foam /*plastic*/ ;
+  fWoodMater =  wood ;
   fG10Mater = g10;
-
+  fColdSkinMater = ss;
+  fAcrylicMater = Acrylic;
+  
   /*
 
     Target is a Box nested inside World box. Detector is a Box inset from Target walls, nested Target, as tall (Length) as Target.
@@ -176,10 +218,11 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                             0);                         //copy number
 
 
-  // Shield. Now plastic inside Target,if I use a negative fShieldThickness.
-  // And launch neutrons from TargetRadius
-  G4Box* sOutShield = new G4Box("OutShield",fTargetRadius, fTargetRadius, fTargetLength/2);
-  G4Box* sInShield = new G4Box("InShield", fTargetRadius+fShieldThickness, fTargetRadius+fShieldThickness, fTargetLength/2.+fShieldThickness);
+
+  // Shield. Now foam+wood outside Target,if I use a positive fShieldThickness.
+  // And launch neutrons from TargetRadius+Foam+WoodRadius
+  G4Box* sInShield = new G4Box("OutShield",fTargetRadius, fTargetRadius, fTargetLength/2);
+  G4Box* sOutShield = new G4Box("InShield", fTargetRadius+fShieldThickness, fTargetRadius+fShieldThickness, fTargetLength/2.+fShieldThickness);
   G4SubtractionSolid *sShield = new G4SubtractionSolid("Shield",sOutShield, sInShield);  
 
   fLogicShield = new G4LogicalVolume(sShield,       //shape
@@ -194,12 +237,32 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            false,                       //no boolean operation
                            0);                          //copy number
 
+  fWoodThickness = 2.4*cm;
+  G4Box* sInWood = new G4Box("OutWood",fTargetRadius+fShieldThickness, fTargetRadius+fShieldThickness, fTargetLength/2+fShieldThickness);
+  G4Box* sOutWood = new G4Box("InWood", fTargetRadius+fWoodThickness+fShieldThickness, fTargetRadius+fWoodThickness+fShieldThickness, fTargetLength/2.+fWoodThickness+fShieldThickness);
+  G4SubtractionSolid *sWood = new G4SubtractionSolid("Wood",sOutWood, sInWood);  
+
+  fLogicWood = new G4LogicalVolume(sWood,       //shape
+                             fWoodMater,            //material
+                             "Wood");               //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+                           fLogicWood,              //logical volume
+                           "Wood",                  //name
+			   lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0);                          //copy number
+
+
+
+
   // G10 outside Target, if I use a positive fShieldThickness.
   // And decay K40s from box this thick
   fG10Thickness = 3.0*mm;
 
-  G4Box* sInG10 = new G4Box("InG10",fTargetRadius, fTargetRadius, fTargetLength/2);
-  G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius+fG10Thickness, fTargetRadius+fG10Thickness, fTargetLength/2.+fG10Thickness);
+  G4Box* sInG10 = new G4Box("InG10",fTargetRadius+fWoodThickness+fShieldThickness, fTargetRadius+fWoodThickness+fShieldThickness, fTargetLength/2+fWoodThickness+fShieldThickness);
+  G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius+fG10Thickness+fWoodThickness+fShieldThickness, fTargetRadius+fG10Thickness+fWoodThickness+fShieldThickness, fTargetLength/2.+fG10Thickness+fWoodThickness+fShieldThickness);
   G4SubtractionSolid *sG10 = new G4SubtractionSolid("G10",sOutG10, sInG10);  
 
   fLogicG10 = new G4LogicalVolume(sG10,       //shape
@@ -214,6 +277,23 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            false,                       //no boolean operation
                            0);                          //copy number
 
+  //ColdSkin
+  fColdSkinThickness = - 1.2 * cm;
+  G4Box* sOutColdSkin = new G4Box("OutColdSkin",fTargetRadius, fTargetRadius, fTargetLength/2);
+  G4Box* sInColdSkin = new G4Box("InColdSkin", fTargetRadius+fColdSkinThickness, fTargetRadius+fColdSkinThickness, fTargetLength/2.+fColdSkinThickness);
+  G4SubtractionSolid *sColdSkin = new G4SubtractionSolid("ColdSkin",sOutColdSkin, sInColdSkin);  
+
+  fLogicColdSkin = new G4LogicalVolume(sColdSkin,       //shape
+                             fColdSkinMater,            //material
+                             "ColdSkin");               //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+                           fLogicColdSkin,              //logical volume
+                           "ColdSkin",                  //name
+			   lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0);                          //copy number
 
                             
   // Target
@@ -223,9 +303,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   sTarget = new G4Tubs("Target",                                   //name
                   0., fTargetRadius, 0.5*fTargetLength, 0.,twopi); //dimensions
   */
-	   // With a negative fShieldThickness this will put the target inside the plastic. EC, 1-Nov-2019.
+	   // With a negative fColdSkinThickness this will put the target inside the skin. EC, 1-Nov-2019.
 
-  G4Box* sTarget = new G4Box("Target", fTargetRadius+fShieldThickness, fTargetRadius+fShieldThickness, fTargetLength/2.+fShieldThickness);
+  G4Box* sTarget = new G4Box("Target", fTargetRadius+fColdSkinThickness, fTargetRadius+fColdSkinThickness, fTargetLength/2.+fColdSkinThickness);
 
   fLogicTarget = new G4LogicalVolume(sTarget,           //shape
                              fTargetMater,              //material
@@ -252,6 +332,8 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   
   std::cout << "fInsetRadius is " << fInsetRadius << std::endl;
   std::cout << "fShieldThickness is " << fShieldThickness << std::endl;
+  std::cout << "fWoodThickness is " << fWoodThickness << std::endl;
+  std::cout << "fColdSkinThickness is " << fColdSkinThickness << std::endl;
   std::cout << "fG10Thickness is " << fG10Thickness << std::endl;
 
   
@@ -267,6 +349,27 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
                            fLogicDetector,              //logical volume
                            "Detector",                  //name
+			   lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0);                          //copy number
+
+	   
+  // in fact, we want y to go top to bottom to allow charge drift and E-field to be unperturbed. Indeed, see the 13-Feb changes.
+  // that might mean even taller than fTargRad to come in under cryoskin on top and bottom, but this should be good approx insofar as n's go. eps to prevent overlap.
+
+  G4Box* sOutAcrylic = new G4Box("InAcrylic",fAcrylicRadius, fTargetRadius , fAcrylicLength/2);
+  // 13-Feb-2020 make the top/bottom 0 thickness.
+  G4Box* sInAcrylic = new G4Box("OutAcrylic", fAcrylicRadius-fAcrylicThickness, fTargetRadius-fAcrylicThickness*0.0, fAcrylicLength/2.-fAcrylicThickness);
+  G4SubtractionSolid *sAcrylic = new G4SubtractionSolid("Acrylic",sOutAcrylic, sInAcrylic);  
+
+  fLogicAcrylic = new G4LogicalVolume(sAcrylic,       //shape
+                             fAcrylicMater,            //material
+                             "Acrylic");               //name
+                               
+         new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+                           fLogicAcrylic,              //logical volume
+                           "Acrylic",                  //name
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
                            0);                          //copy number
@@ -296,10 +399,19 @@ void DetectorConstruction::PrintParameters()
     //         << " Thickness = " << G4BestUnit(fDetectorThickness,"Length")  
          << " Material = " << fDetectorMater->GetName() << G4endl;          
 
+
   G4cout << "\n Shield : Thickness = " << G4BestUnit(fShieldThickness,"Length")
          << " Material = " << fShieldMater->GetName() << G4endl;          
+  G4cout << "\n Wood : Thickness = " << G4BestUnit(fWoodThickness,"Length")
+         << " Material = " << fWoodMater->GetName() << G4endl;          
   G4cout << "\n G10 : Thickness = " << G4BestUnit(fG10Thickness,"Length")
          << " Material = " << fG10Mater->GetName() << G4endl;          
+  G4cout << "\n ColdSkin : Thickness = " << G4BestUnit(fColdSkinThickness,"Length")
+         << " Material = " << fColdSkinMater->GetName() << G4endl;          
+  G4cout << "\n Acrylic : Thickness = " << G4BestUnit(fAcrylicThickness,"Length")
+         << " Radius = " << G4BestUnit(fAcrylicRadius,"Length")  
+         << " Length = " << G4BestUnit(fAcrylicLength,"Length")  
+         << " Material = " << fAcrylicMater->GetName() << G4endl;          
 
 }
 

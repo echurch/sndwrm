@@ -40,8 +40,8 @@ target_link_libraries(rdecay02 ${Geant4_LIBRARIES} )
 # relies on these scripts being in the current working directory.
 #
 set(rdecay02_SCRIPTS
-    debug.mac
-    plotHisto.C
+#    debug.mac
+#    plotHisto.C
     rdecay02.in
     vis.mac
   )
