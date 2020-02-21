@@ -70,8 +70,8 @@ DetectorConstruction::DetectorConstruction()
   fDetectorRadius = 0.0*cm;
 
   // 13-Feb-2020 Make the acrylic walls go out 1m beyond fiducial.
-  fAcrylicRadius    = 3.0*m; fAcrylicRadius += 1.0m;
-  fAcrylicLength    = 20.0*m;  fAcrylicLength += 2.0m;
+  fAcrylicRadius    = 3.0*m; fAcrylicRadius += 0.1*m;
+  fAcrylicLength    = 400.0*m;  fAcrylicLength += 2.0*m;
   fAcrylicThickness = 10.0 /*5.08   ....  2.54*/ *cm;
   fAcrylicThickness = 5.0 *cm;
   /*
