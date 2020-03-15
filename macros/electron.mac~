@@ -81,4 +81,4 @@
 
 # 0.8 Bq/kg leads to 10 Hz. 10 * piE7 sec is ~31 E7. Let's run 1/10th of one year.
 #/run/beamOn 31000000  # 10000
-/run/beamOn 3000
+/run/beamOn 3000000
