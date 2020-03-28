@@ -33,8 +33,12 @@ normtoktyr = 3.064/80.*2  # With 20cm water shield I get ~80. The extra 2 is bec
 ####fname = "../build/neutron_outsidefoamwoodss_cs_10cm_dunedistn_liquid.root"
 fname = "../build/neutron_outsidefoamwoodss_cs_5cm_dunedistn_22x8acryl_liquid.root"
 
-fname = "../build/neutron_outsidefoamwoodss_cs_5cm_dunedistn_42x3acryl_liquid_longskinny.root"
+fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_dunedistn_42x3acryl_liquid_longskinny.root"
 normtoktyr = 238854/15500000. *10. # For cryoskin. See the macros/neutrons_fw_cs.mac ### MY *10 to get it to 2E-9 n/cm3/sec 4-Feb-2020
+
+fidx = 2100 # 3000
+fidy = 2100 # 3000
+fidz = 20000 # 10000
 
 f = TFile(fname)
 
@@ -74,7 +78,7 @@ def allvertices (x,y,z,t,ID,trkin):
         '''
 
         # below appends all n.r. vtxs/trks over threshold and within sepfed [mm] of the edge of our 6x6x20 m^3 box or just inside the box.
-        if (f.Tracks.KEnergy > thresh) and (f.Tracks.PID>100E6) and ( abs(f.Tracks.Startx)<(3000+sepfed) and abs(f.Tracks.Startz)<(10000+sepfed)  ):  # y is drift direction
+        if (f.Tracks.KEnergy > thresh) and (f.Tracks.PID>100E6) and ( abs(f.Tracks.Startx)<(fidx+sepfed) and abs(f.Tracks.Startz)<(fidz+sepfed)  ):  # y is drift direction
             x.append(f.Tracks.Startx)
             y.append(f.Tracks.Starty)
             z.append(f.Tracks.Startz)
@@ -153,7 +157,7 @@ for trk in range(Nent):
         trkloop = False
 
 
-    fidv = abs(f.Tracks.Startx) < 3000 and abs(f.Tracks.Starty) < 3000 and abs(f.Tracks.Startz) < 10000
+    fidv = abs(f.Tracks.Startx) < fidx and abs(f.Tracks.Starty) < fidy and abs(f.Tracks.Startz) < fidz
 
     #  Every track every event
     if (f.Tracks.KEnergy > thresh) and (f.Tracks.PID>100E6) and fidv and not trkloop:
