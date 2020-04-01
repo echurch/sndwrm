@@ -1,12 +1,13 @@
-from ROOT import TFile
+from ROOT import TFile,TH2F,TCanvas,TLine,gStyle
 from matplotlib import pyplot as plt
 import numpy as np
 import math
 import pdb
 import math
 
-from skhep.visual import MplPlotter as skh_plt
 
+
+from skhep.visual import MplPlotter as skh_plt
 
 
 #thresh = 0.020 # MeV 
@@ -14,7 +15,7 @@ from skhep.visual import MplPlotter as skh_plt
 sep = 20 # mm
 
 thresh = 0.075 # MeV 
-thresh = 0.100 # MeV 
+##thresh = 0.100 # MeV 
 
 #sep = 50 # mm
 sepfed = 1000 # mm
@@ -33,8 +34,10 @@ normtoktyr = 3.064/80.*2  # With 20cm water shield I get ~80. The extra 2 is bec
 ####fname = "../build/neutron_outsidefoamwoodss_cs_10cm_dunedistn_liquid.root"
 fname = "../build/neutron_outsidefoamwoodss_cs_5cm_dunedistn_22x8acryl_liquid.root"
 
+fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny_TMP.root"
 fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_dunedistn_42x3acryl_liquid_longskinny.root"
-normtoktyr = 238854/15500000. *10. # For cryoskin. See the macros/neutrons_fw_cs.mac ### MY *10 to get it to 2E-9 n/cm3/sec 4-Feb-2020
+fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny.root"
+normtoktyr = 238854/31000000. *10. # For cryoskin. See the macros/neutrons_fw_cs.mac ### MY *10 to get it to 2E-9 n/cm3/sec 4-Feb-2020
 
 fidx = 2100 # 3000
 fidy = 2100 # 3000
@@ -114,6 +117,9 @@ neutroncap = False
 cnttrks = 0
 trkloop = False
 
+hist2dxy = TH2F("hxy","",100,-6000.,6000.,100,-6000.,6000.)
+
+##Nent = 2000000
 
 for trk in range(Nent):
     fidv = True
@@ -125,6 +131,8 @@ for trk in range(Nent):
         if not f.Tracks.Event%100000:
             print ("Event " + str(f.Tracks.Event))
 
+        
+
         nke0.append(f.Tracks.KEnergy)
 
         if f.Tracks.TrkID==1 and len(trkke)==0:
@@ -135,7 +143,6 @@ for trk in range(Nent):
     
         if len(trkke)>1:
             dist = fdist(xke,yke,zke,trkke)
-#            pdb.set_trace()
             dists.append(dist) # dist is a list of distances between vtxes for just finished event
             oldlen = len(nke0_sep_gam)
             if len(dist):
@@ -158,6 +165,10 @@ for trk in range(Nent):
 
 
     fidv = abs(f.Tracks.Startx) < fidx and abs(f.Tracks.Starty) < fidy and abs(f.Tracks.Startz) < fidz
+    fidv_easy = abs(f.Tracks.Startx) < 6000. and abs(f.Tracks.Starty) < 6000. and abs(f.Tracks.Startz) < 20000
+    if (f.Tracks.KEnergy > thresh) and (f.Tracks.PID>100E6) and fidv_easy:
+        hist2dxy.Fill(f.Tracks.Startx,f.Tracks.Starty)
+
 
     #  Every track every event
     if (f.Tracks.KEnergy > thresh) and (f.Tracks.PID>100E6) and fidv and not trkloop:
@@ -190,6 +201,28 @@ for trk in range(Nent):
         cnttrks+=1
     
 fout = fname.split("/")[-1].split(".")[0]
+
+
+c1 = TCanvas()
+c1.cd()
+hist2dxy.GetYaxis().SetTitle("y [mm]");
+hist2dxy.GetYaxis().CenterTitle(True);
+hist2dxy.GetYaxis().SetTitleOffset(1.2)
+hist2dxy.GetXaxis().SetTitle("x [mm]");
+hist2dxy.GetXaxis().CenterTitle(True);
+hist2dxy.GetXaxis().SetTitleOffset(1.2)
+hist2dxy.GetZaxis().SetTitle("number events");
+gStyle.SetOptStat("")
+lineup = TLine(-2100,2100,2100,2100)
+linelo = TLine(-2100,-2100,2100,-2100)
+linel = TLine(-2100,-2100,-2100,2100)
+liner = TLine(2100,-2100,2100,2100)
+#lineup.SetLineColor(kBlack); linelo.SetLineColor(kBlack); linel.SetLineColor(kBlack); liner.SetLineColor(kBlack)
+hist2dxy.Draw("p,colz")
+lineup.Draw("p,same"); linelo.Draw("p,same"); linel.Draw("p,same"); liner.Draw("p,same")
+
+c1.SaveAs('xy_'+str(thresh)+fout+'.png')
+
 
 fig = plt.figure()
 H,__,__ = skh_plt.hist(trkke0,bins=np.arange(0,0.2,0.01), errorbars=True, histtype='step')
