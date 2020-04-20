@@ -88,9 +88,9 @@
 # Note, further, that my full DUNE geometry calculation shows for neutron emanation rate of 18,879 n's from rock, or 1E-5/cm2/sec, I get ~30 Hz capture rate.
 # Also note Beacom shows more than 20E3  reduction w 40cm water.
 
-# 1E-5*1E4*12*60*(4+12*12/(12*60))*3.14159E7 = 95.0E6
+# 1E-5*1E4*12*60*(4+2*12*12/(12*60))*3.14159E7 = 99.9E
 
-# 95.0E6/15E6 = 6.33
-/run/beamOn 15000000  # 10000
+# 95.0E6/31E6 = 3.064
+/run/beamOn 31000000  # 10000
 #/run/beamOn 10 # 10000
 

@@ -1,3 +1,4 @@
+
 from ROOT import TFile,TH2F,TCanvas,TLine,gStyle
 from matplotlib import pyplot as plt
 import numpy as np
@@ -11,11 +12,11 @@ from skhep.visual import MplPlotter as skh_plt
 
 
 #thresh = 0.020 # MeV 
-#thresh = 0.050 # MeV 
+thresh = 0.050 # MeV 
 sep = 20 # mm
 
-thresh = 0.075 # MeV 
-thresh = 0.100 # MeV 
+#thresh = 0.075 # MeV 
+##thresh = 0.100 # MeV 
 
 #sep = 50 # mm
 sepfed = 1000 # mm
@@ -27,17 +28,19 @@ sepfed = 1000 # mm
 ##f = TFile("../build/neutron_outsideshield_dunedistn_liquid.root")
 ##f = TFile("../build/neutron_outsideshield25cm_dunedistn_liquid.root")
 
-fname = "../build/neutron_outsidefoamwoodss_dunedistn_liquid.root"
-normtoktyr = 3.064 # See macros/neutron_fw.mac with 0-water shield assumption. With 40 cm H20 I get #1000 reduction
-normtoktyr = 3.064/80.*2  # With 20cm water shield I get ~80. The extra 2 is because I generated n's isotropically, whereas they come out of walls at 1E-5.
-
+fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_dunedistn_liquid.root"
+normtoktyr = 99.5E8/31.E6 # See macros/neutron_fw.mac with 0-water shield assumption. 
+normtoktyr /= 8000.  # With 20cm water shield I get ~80. With 40 cm H20 I get #8000 reduction. Fig 12 of https://arxiv.org/pdf/1811.07912.pdf.
+normtoktyr *= 2.   # The extra 2 is because I generated n's isotropically, whereas they come out of walls at 1E-5.
 ####fname = "../build/neutron_outsidefoamwoodss_cs_10cm_dunedistn_liquid.root"
-fname = "../build/neutron_outsidefoamwoodss_cs_5cm_dunedistn_22x8acryl_liquid.root"
+##fname = "../build/neutron_outsidefoamwoodss_cs_5cm_dunedistn_22x8acryl_liquid.root"
 
-fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny_TMP.root"
-fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_dunedistn_42x3acryl_liquid_longskinny.root"
-fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny.root"
-normtoktyr = 238854/31000000. *10. # For cryoskin. See the macros/neutrons_fw_cs.mac ### MY *10 to get it to 2E-9 n/cm3/sec 4-Feb-2020
+##fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny_TMP.root"
+##fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_dunedistn_42x3acryl_liquid_longskinny.root"
+##fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny.root"
+##fname = "/Volumes/Transcend2TB/G4/data/liquid/Rn_alpha_neutron_outsidefoamwoodss_cs_5cm_cjdistn_liquid_longskinny.root"
+##normtoktyr = 238854/31000000. *10. # For cryoskin. See the macros/neutrons_fw_cs.mac ### MY *10 to get it to 2E-9 n/cm3/sec 4-Feb-2020
+##normtoktyr = 6.4E4/3/1000000. # For Rn per Saldanha's 6.4E4/3 kt-yrs
 
 fidx = 2100 # 3000
 fidy = 2100 # 3000
