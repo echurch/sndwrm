@@ -13,7 +13,7 @@
   gStyle->SetOptStat(000000);
   gStyle->SetTextSize(0.04);
   
-  TH2F* axes = new TH2F("axes","DM 90% sensitivities",
+  TH2F* axes = new TH2F("axes","DM 90% C.L. sensitivities",
 			//			100,5,1000,100,1e-46,1e-39);
 			//			100,0.01,10,100,1e-50,1e-41);
 			100,0.01,10,100,1e-49,1e-42);
@@ -21,10 +21,10 @@
   axes->Draw("AXIS");
   gPad->SetLogx();
   gPad->SetLogy();
-  axes->GetXaxis()->SetTitle("WIMP mass [TeV]");
+  axes->GetXaxis()->SetTitle("WIMP mass [TeV/c^{2}]");
   axes->GetXaxis()->CenterTitle();
   axes->GetXaxis()->SetTitleOffset(1.3);
-  axes->GetYaxis()->SetTitle("Cross Section [cm^{2}]");
+  axes->GetYaxis()->SetTitle("Spin-independent WIMP nucleon cross section [cm^{2}]");
   axes->GetYaxis()->CenterTitle();
   axes->GetYaxis()->SetTitleOffset(1.3);
   /*
@@ -105,14 +105,38 @@
   pdama1->Draw();
   */
 
+
+  //draw LZ result
+  
+  TGraph* gLZ = new TGraph("LZ.csv");
+  const int Npts ( gLZ->GetN() );
+  std::cout << "Npts is: " << Npts << std::endl;
+  for (short ii=0; ii<Npts; ii++ )
+    {
+      double x, y;
+      gLZ->GetPoint(ii,x,y);
+      gLZ->SetPoint(ii,x*1E-3,y*1E-49);
+    }
+  gLZ->SetLineWidth(2);
+  gLZ->SetLineColor(kGreen);
+  gLZ->SetLineStyle(7);
+  gLZ->Draw("l");
+  TText* pLZ = new TText(2.,4e-47,"LZ,XENONnT"); // Sensitivity");
+  pLZ->SetTextColor(kGreen);
+  pLZ->SetTextAngle(13);
+  pLZ->Draw();
+  
+
   // DS50 result
   //  TGraph* gdama2 = new TGraph("deep3600proj.csv");
   TGraph* gds50 = new TGraph("DS50_Limit.txt");
   gds50->SetLineWidth(2);
   gds50->SetLineColor(kOrange);
+  gds50->SetLineColor(kRed);
   gds50->Draw("l");
-  TText* gds50t = new TText(1.9,1.3e-43,"Darkside50 LIMIT");
+  TText* gds50t = new TText(1.9,1.2e-43,"Darkside50"); // LIMIT");
   gds50t->SetTextColor(kOrange);
+  gds50t->SetTextColor(kRed);
   gds50t->SetTextAngle(13);
   gds50t->Draw();
 
@@ -121,9 +145,11 @@
   TGraph* gdama2 = new TGraph("DEAP_3600_Limit.txt");
   gdama2->SetLineWidth(2);
   gdama2->SetLineColor(kMagenta);
+  gdama2->SetLineColor(kRed);
   gdama2->Draw("l");
-  TText* pdama2 = new TText(2.,1e-44,"DEAP3600 LIMIT");
+  TText* pdama2 = new TText(2.,1.5e-44,"DEAP3600"); // LIMIT
   pdama2->SetTextColor(kMagenta);
+  pdama2->SetTextColor(kRed);
   pdama2->SetTextAngle(13);
   pdama2->Draw();
 
@@ -132,7 +158,7 @@
   xenon1t->SetLineWidth(2);
   xenon1t->SetLineColor(kGreen);
   xenon1t->Draw("l");
-  TText* xenon1tt = new TText(1.0,6e-46,"XENON1T LIMIT");
+  TText* xenon1tt = new TText(1.0,6e-46,"XENON1T"); //LIMIT
   xenon1tt->SetTextColor(kGreen);
   xenon1tt->SetTextAngle(13);
   xenon1tt->Draw();
@@ -143,7 +169,7 @@
   gxenon1->SetLineWidth(2);
   gxenon1->SetLineStyle(7);
   gxenon1->Draw("l");
-  TText* pxenon = new TText(0.0108,1e-42,"Darkside20k - 200 ton-yr");
+  TText* pxenon = new TText(0.0108,1e-42,"Darkside20k");// - 200 ton-yr");
   pxenon->SetTextColor(kBlue);
   pxenon->SetTextAngle(-78);
   pxenon->Draw();
@@ -154,7 +180,7 @@
   gcdms1->SetLineWidth(2);
   gcdms1->SetLineStyle(9);
   gcdms1->Draw("l");
-  TText* pcdms = new TText(1.0,6e-49,"ARGO 3 kton-yr");
+  TText* pcdms = new TText(1.0,6e-49,"ARGO");// 3 kton-yr");
   pcdms->SetTextColor(kRed);
   pcdms->SetTextAngle(13);
   pcdms->Draw();
@@ -193,7 +219,7 @@
   ul = fc.CalculateUpperLimit(1+10,1+10); // DUNE 100 keV 1 neutrons + 10 atmos nus
   counts100 = ul*2.0; // assumes a 50% efficiency from PSD
 
-  ul = fc.CalculateUpperLimit((14.+1)+13+1,(14.+1)+13+1); // DUNE 75 keV neutrons (ss+rock) + atmos nus  + 1 leakage e
+  ul = fc.CalculateUpperLimit((14.+1)+13+1,(14.+1)+13+1); // DUNE 75 keVneutrons (ss+rock) + atmos nus  + 1 leakage e
   counts75 = ul*2.0; // assumes a 50% efficiency from PSD
 
   ul = fc.CalculateUpperLimit(1,1); 
@@ -268,11 +294,14 @@
   TGraph* g100 = new TGraph(x.size(), &x[0], &y[0]);
   g100->Draw("l");
   g100->SetLineWidth(4);
+  g100->SetLineStyle(1);
   //  TText* t = new TText(22,1.2e-45,"DarkSide-50");
 
-  TText* t100 = new TText(0.6,5.6e-48,"100 keV thresh: 11 bkd"); //+std::itoa(emin));
+  //  TText* t100 = new TText(0.6,5.6e-48,"100 keV thresh: 11 bkd"); //+std::itoa(emin));
+  TText* t100 = new TText(0.033,1e-44,"100 keV thresh"); //: 11 bkd"); //+std::itoa(emin));
   t100->SetTextSize(0.03);
-  t100->SetTextAngle(15);
+  //  t100->SetTextAngle(15);
+  t100->SetTextAngle(-83);
   t100->Draw();
 
 
@@ -316,12 +345,13 @@
   TGraph* g2 = new TGraph(x.size(), &x[0], &y[0]);
   g2->Draw("l");
   g2->SetLineWidth(3);
-
-  //  TText* t3 = new TText(0.018,4e-42,"75 keV thresh: 10 bkd evts"); //+std::itoa(emin));
+  g2->SetLineStyle(1);  //  TText* t3 = new TText(0.018,4e-42,"75 keV thresh: 10 bkd evts"); //+std::itoa(emin));
   // t3->SetTextAngle(-85);
-  TText* t3 = new TText(0.45,1.6e-48,"75 keV thresh: 29 bkd"); //+std::itoa(emin));
+  //  TText* t3 = new TText(0.45,1.6e-48,"75 keV thresh: 29 bkd"); //+std::itoa(emin));
+  TText* t3 = new TText(0.0255,1e-43,"75 keV thresh");//: 29 bkd"); //+std::itoa(emin));
   t3->SetTextSize(0.03);
-  t3->SetTextAngle(15);
+  //  t3->SetTextAngle(15);
+  t3->SetTextAngle(-90);
   t3->Draw();
   gPad->Update();
 
@@ -343,10 +373,13 @@
   TGraph* g751 = new TGraph(x.size(), &x[0], &y[0]);
   g751->Draw("l");
   g751->SetLineWidth(1);
+  g751->SetLineStyle(1);
 
-  TText* t751 = new TText(0.3,6e-49,"50 keV thresh: 33 bkd"); //+std::itoa(emin));
+  //  TText* t751 = new TText(0.3,6e-49,"50 keV thresh: 33 bkd"); //+std::itoa(emin));
+  TText* t751 = new TText(0.019,5e-43,"50 keV thresh");//: 33 bkd"); //+std::itoa(emin));
   t751->SetTextSize(0.03);
-  t751->SetTextAngle(15);
+//  t751->SetTextAngle(15);
+  t751->SetTextAngle(-90);
   t751->Draw();
   gPad->Update();
 
