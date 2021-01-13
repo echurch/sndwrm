@@ -33,6 +33,7 @@
 
 #include "DetectorConstruction.hh"
 #include "DetectorMessenger.hh"
+#include "MaterialPropertyLoader.hh"
 
 #include "G4Material.hh"
 #include "G4NistManager.hh"
@@ -96,6 +97,7 @@ DetectorConstruction::~DetectorConstruction()
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
+
   return ConstructVolumes();
 }
 
@@ -168,10 +170,16 @@ void DetectorConstruction::DefineMaterials()
   Acrylic->AddElement(H, number_of_atoms=8);
   Acrylic->AddElement(O, number_of_atoms=2);
 
+
+
+
   //
   fWorldMater = Air20;
   fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
   fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
+
+
+
   //  fShieldMater = H2O;
   fShieldMater =  foam /*plastic*/ ;
   fWoodMater =  wood ;
@@ -185,6 +193,9 @@ void DetectorConstruction::DefineMaterials()
     EC, 20-Oct-2019.
 
    */
+
+  
+
 
 }
 
@@ -307,6 +318,8 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
   G4Box* sTarget = new G4Box("Target", fTargetRadius+fColdSkinThickness, fTargetRadius+fColdSkinThickness, fTargetLength/2.+fColdSkinThickness);
 
+
+
   fLogicTarget = new G4LogicalVolume(sTarget,           //shape
                              fTargetMater,              //material
                              "Target");                 //name
@@ -375,7 +388,25 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            0);                          //copy number
 
 
-  
+
+  // Now for the purpose of tracking optical photons we do the following to the Argon and TPB to endow them w optical physics properties.
+  // Must wait till this late, cuz MLP works by looping over all Logical Volumes which are only just now established.
+  // Get the logical volume store and assign material properties. MaterialPropLoader() is borrowed, heavily-edited from LArSoft.   
+  MaterialPropertyLoader* MPL = new MaterialPropertyLoader();
+  MPL->SetPropertiesFromServices();  // fills local LArprop class with hard-coded data cutnpasted from fcl file.
+  MPL->GetPropertiesFromServices();  // Shoves these into local MaterialTables
+  MPL->UpdateGeometry(G4LogicalVolumeStore::GetInstance()); // Finally, loads properties into G4MaterialProperties
+
+
+
+
+  std::cout <<  "DetConst::ConstructVolumes(): Argon " << " Fast Intensity" << std::endl;
+  fTargetMater->GetMaterialPropertiesTable()->GetProperty("FASTCOMPONENT") ->DumpValues();
+  std::cout << "DetConst::ConstructVolumes(): Argon " << " Slow Intensity" << std::endl;
+  fTargetMater->GetMaterialPropertiesTable()->GetProperty("SLOWCOMPONENT") ->DumpValues();
+
+
+
 
   PrintParameters();
   

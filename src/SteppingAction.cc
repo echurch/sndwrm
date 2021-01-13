@@ -40,7 +40,9 @@
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
-                           
+
+#include "G4OpticalPhoton.hh" 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(DetectorConstruction* det, EventAction* event)
@@ -75,10 +77,32 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   const G4StepPoint* endPoint = aStep->GetPostStepPoint();
   const G4VProcess* process   = endPoint->GetProcessDefinedStep();
   run->CountProcesses(process, iVol);
+
   
   // energy deposit
   //
   G4double edepStep = aStep->GetTotalEnergyDeposit();
+
+  process = aStep->GetPreStepPoint()->GetProcessDefinedStep();
+  static G4ParticleDefinition* opticalphoton = G4OpticalPhoton::OpticalPhotonDefinition();
+
+  /*
+  // This does not work to find the optical processes. See below chunk instead. EC, 12-Jan-2021.
+  if ( process && (process->GetProcessName().find("intil")!=std::string::npos  ||
+		   process->GetProcessName().find("WLS")!=std::string::npos  ||
+		   process->GetProcessName().find("Op")!=std::string::npos  ||
+		   process->GetProcessName().find("kov")!=std::string::npos  )
+       ) // looking for opticalphoton production evidence
+    {
+      const G4ParticleDefinition* particleType = aStep->GetTrack()->GetParticleDefinition();
+      G4String name = particleType->GetParticleName();
+      G4int pid = particleType->GetPDGEncoding();
+            std::cout << "Process Name, daughter name / pid: " << process->GetProcessName() << ", " << name << " / " << pid << std::endl;
+            std::cout << "EdepStep is " << edepStep << std::endl;
+    }
+*/  
+
+
 
   if (edepStep <= 0.) return;
   G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();

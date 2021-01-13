@@ -31,20 +31,41 @@
 #ifndef PhysicsList_h
 #define PhysicsList_h 1
 
+
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+class G4Cerenkov;
+class G4Scintillation;
+class G4OpAbsorption;
+class G4OpRayleigh;
+class G4OpWLS;
+class G4OpBoundaryProcess;
 
 class PhysicsList: public G4VModularPhysicsList
 {
 public:
-  PhysicsList();
- ~PhysicsList();
+  PhysicsList() ;
+  ~PhysicsList() ;
 
 public:
   virtual void ConstructParticle();
   virtual void SetCuts();
+
+  //  virtual void ConstructProcess();
+  void ConstructPhys();
+  void ConstructOp();
+
+private:
+  /*static G4ThreadLocal*/ G4Cerenkov* fCerenkovProcess;
+  /*static G4ThreadLocal*/ G4Scintillation* fScintillationProcess;
+  /*static G4ThreadLocal*/ G4OpAbsorption* fAbsorptionProcess;
+  /*static G4ThreadLocal*/ G4OpRayleigh* fRayleighScatteringProcess;
+  /*static G4ThreadLocal*/ G4OpWLS* fTheWLSProcess;
+  /*static G4ThreadLocal*/ G4OpBoundaryProcess* fBoundaryProcess;
+
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

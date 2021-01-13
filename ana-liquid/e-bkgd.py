@@ -12,13 +12,16 @@ from skhep.visual import MplPlotter as skh_plt
 #thresh = 0.020 # MeV 
 #thresh = 0.050 # MeV 
 sep = 20 # mm
-thresh = 0.075 # MeV 
+thresh = 0.100 # MeV 
 #sep = 50 # mm
 sepfed = 1000 # mm
 
 fname="../build/tl208_Acrylic.root"
+fname = '/Volumes/Transcend2TB/G4/data/liquid/tl208_Acrylic.root'
+fname = '/Volumes/Transcend2TB/G4/data/liquid/tl208_G10.root'
+fname = '/Volumes/Transcend2TB/G4/data/liquid/k40_G10.root'
 f = TFile(fname)
-fout = fname.split("/")[-1].split("_")[0]+"-Acrylic"
+fout = fname.split("/")[-1].split(".")[0]
 
 
 
@@ -49,7 +52,7 @@ def allvertices (x,y,z,t,ID,trkin):
 
 
         # below appends all e- vtxs/trks over threshold and within sepfed [mm] of the edge of our 6x6x20 m^3 box or just inside the box.
-        if (f.Tracks.KEnergy > thresh) and (f.Tracks.PID==11 ) and ( abs(f.Tracks.Startx)<(3000+sepfed) and abs(f.Tracks.Startz)<(10000+sepfed)  ):  # y is drift direction
+        if (f.Tracks.KEnergy > thresh) and (f.Tracks.PID==11 ) and ( abs(f.Tracks.Startx)<(2100+sepfed) and abs(f.Tracks.Startz)<(20000+sepfed)  ):  # y is drift direction
             x.append(f.Tracks.Startx)
             y.append(f.Tracks.Starty)
             z.append(f.Tracks.Startz)
@@ -109,7 +112,7 @@ for trk in range(Nent):
         cnttrks = 0
         trkloop = False
 
-    fidv = abs(f.Tracks.Startx) < 3000 and abs(f.Tracks.Starty) < 3000 and abs(f.Tracks.Startz) < 10000
+    fidv = abs(f.Tracks.Startx) < 2100 and abs(f.Tracks.Starty) < 2100 and abs(f.Tracks.Startz) < 20000
 
     #  Every track every event
     if (f.Tracks.KEnergy > thresh) and (f.Tracks.PID==11 ) and fidv and not trkloop:
@@ -130,30 +133,34 @@ for trk in range(Nent):
         if (f.Tracks.KEnergy>thresh):
             trkx.append(f.Tracks.Starty)
         
-    
 
-## Below 1./1174. is the weight per decay from this TTree, given amount/activity of acrylic. See ../macros/tl208.mac
+##wt = 0.028/3 # Tl208 Acrylic 3 yrs
+wt = 0.1/3 #Tl208G10
+wt = 0.0001/3 #K40 G10
+## Below 1./wt. is the weight per decay from this TTree, given amount/activity of acrylic. See ../macros/tl208.mac
 
 fig = plt.figure()
 #pdb.set_trace()
-H,__,__ = skh_plt.hist(trkx,bins=np.arange(0.,3000.0,100.0), errorbars=True, histtype='step',weights=np.repeat(1./1174.,len(trkx)))
+H,__,__ = skh_plt.hist(trkx,bins=np.arange(0.,3000.0,100.0), errorbars=True, histtype='step',weights=np.repeat(1./wt,len(trkx)))
 plt.title('Electron Start y')
 plt.xlabel('mm')
 plt.ylabel('Entries/2mm/yr')
 plt.savefig('z_'+str(thresh)+'_e_'+fout+'.png')
 
+
 fig = plt.figure()
-H,__,__ = skh_plt.hist(trkke0,bins=np.arange(0,0.2,0.01), errorbars=True, histtype='step',weights=np.repeat(1./1174.,len(trkke0)))
+H,__,__ = skh_plt.hist(trkke0,bins=np.arange(0,0.2,0.01), errorbars=True, histtype='step',weights=np.repeat(1./wt,len(trkke0)))
 plt.title('Electron KE')
 plt.xlabel('MeV')
 plt.ylabel('Entriess/10keV/yr')
 plt.savefig('KE_'+str(thresh)+'_e_'+fout+'.png')
 
-
+tka = np.array(trkke0)
+print("Sum over 50/75/100 kE: " + str(tka[tka>0.05].sum()/wt) + "/" + str(tka[tka>0.075].sum()/wt) + "/" + str(tka[tka>0.100].sum()/wt))
 
 fig = plt.figure()
 flatdists = [y for x in dists for y in x]
-H2,__,__ = skh_plt.hist(flatdists,bins=np.arange(0.,100.,4.), errorbars=True, histtype='step',weights=np.repeat(1./1174.,len(flatdists)))
+H2,__,__ = skh_plt.hist(flatdists,bins=np.arange(0.,100.,4.), errorbars=True, histtype='step',weights=np.repeat(1./wt,len(flatdists)))
 plt.title('Distances between vertices w  KE recoil> ' + str(thresh) + ' MeV in an event')
 plt.xlabel('mm')
 plt.ylabel('Entries/mm')

@@ -41,6 +41,11 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 
+#include "G4LogicalVolumeStore.hh"
+#include "G4Material.hh"
+#include "G4MaterialPropertiesTable.hh"
+#include "G4MaterialPropertyVector.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 EventAction::EventAction()
@@ -60,6 +65,33 @@ void EventAction::BeginOfEventAction(const G4Event*)
 {
   fEdep1 = fEdep2 = fWeight1 = fWeight2 = 0.;
   fTime0 = -1*s;
+
+
+  G4LogicalVolumeStore * lvs =   G4LogicalVolumeStore::GetInstance();
+
+  for ( G4LogicalVolumeStore::iterator i = lvs->begin(); i != lvs->end(); ++i ){
+
+    G4LogicalVolume* volume = (*i);
+    G4Material* TheMaterial = volume->GetMaterial();
+    std::string Material = TheMaterial->GetName();
+    std::string volLower = volume->GetName();
+    G4MaterialPropertiesTable* aMaterialPropertiesTable = TheMaterial->GetMaterialPropertiesTable();
+
+    if (aMaterialPropertiesTable)
+      {
+	G4MaterialPropertyVector* Fast_Intensity =
+	  aMaterialPropertiesTable->GetProperty(kFASTCOMPONENT);
+	G4MaterialPropertyVector* Slow_Intensity =
+	  aMaterialPropertiesTable->GetProperty(kSLOWCOMPONENT);
+	/*
+	std::cout <<  Material << " Fast Intensity" << std::endl;
+	Fast_Intensity->DumpValues();
+	std::cout << Material << " Slow Intensity" << std::endl;
+	Slow_Intensity->DumpValues();
+	*/
+      }
+  }
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

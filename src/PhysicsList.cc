@@ -32,6 +32,12 @@
 #include "PhysicsList.hh"
 
 #include "G4SystemOfUnits.hh"
+
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTypes.hh"
+#include "G4ParticleTable.hh"
+#include "G4OpticalPhoton.hh"
+
 #include "G4UnitsTable.hh"
 
 #include "G4EmStandardPhysics.hh"
@@ -50,6 +56,15 @@
 #include "G4IonElasticPhysics.hh"
 #include "G4IonPhysics.hh"
 #include "G4IonINCLXXPhysics.hh"
+#include "G4Cerenkov.hh"
+#include "G4Scintillation.hh"
+#include "G4OpAbsorption.hh"
+#include "G4OpRayleigh.hh"
+#include "G4OpWLS.hh"
+#include "G4OpBoundaryProcess.hh"
+#include "G4LossTableManager.hh"
+#include "G4ProcessManager.hh"
+#include "G4OpticalPhysics.hh"
 
 // particles
 
@@ -66,8 +81,6 @@
 PhysicsList::PhysicsList()
 :G4VModularPhysicsList()
 {
-  G4int verb = 1;
-  SetVerboseLevel(verb);
   
   //add new units for radioActive decays
   //
@@ -82,11 +95,20 @@ PhysicsList::PhysicsList()
   new G4UnitDefinition("day",    "d",   "Time", day);
   new G4UnitDefinition("year",   "y",   "Time", year);
 
+  ConstructPhys();
+
+}
+
+void PhysicsList::ConstructPhys()
+{
   // Mandatory for G4NuclideTable
   // Half-life threshold must be set small or many short-lived isomers 
   // will not be assigned life times (default to 0) 
   G4NuclideTable::GetInstance()->SetThresholdOfHalfLife(0.1*picosecond);
   G4NuclideTable::GetInstance()->SetLevelTolerance(1.0*eV);
+
+  G4int verb = 0;
+  SetVerboseLevel(verb);
           
   // EM physics
   RegisterPhysics(new G4EmStandardPhysics());
@@ -123,6 +145,19 @@ PhysicsList::PhysicsList()
   gnuc->ElectroNuclear(false);
   gnuc->MuonNuclear(false);
   RegisterPhysics(gnuc);
+
+
+  // per https://indico.cern.ch/event/789510/contributions/3279418/attachments/1818134/2972494/AH_OpticalPhotons_slides.pdf
+  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(verb);
+  opticalPhysics->SetWLSTimeProfile("delta");
+  opticalPhysics->SetMaxBetaChangePerStep(10.0);
+  opticalPhysics->SetTrackSecondariesFirst(kCerenkov,true);
+  opticalPhysics->SetTrackSecondariesFirst(kScintillation,true);
+  opticalPhysics->SetScintillationYieldFactor(1.);
+  G4int fMaxNumPhotonStep(700);
+  opticalPhysics->SetMaxNumPhotonsPerStep(fMaxNumPhotonStep);
+  RegisterPhysics(opticalPhysics);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -140,6 +175,7 @@ void PhysicsList::ConstructParticle()
   G4LeptonConstructor pLeptonConstructor;
   pLeptonConstructor.ConstructParticle();
 
+
   G4MesonConstructor pMesonConstructor;
   pMesonConstructor.ConstructParticle();
 
@@ -151,7 +187,12 @@ void PhysicsList::ConstructParticle()
 
   G4ShortLivedConstructor pShortLivedConstructor;
   pShortLivedConstructor.ConstructParticle();  
+
+  G4OpticalPhoton::OpticalPhotonDefinition();
+
+
 }
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -164,3 +205,84 @@ void PhysicsList::SetCuts()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+#include "G4Threading.hh"
+
+/*
+void PhysicsList::ConstructProcess()
+{
+  //  AddTransportation();
+  // ConstructDecay();
+  //ConstructEM();
+
+  //  ConstructPhys(); // This seems not to work. Once ConstructProcess() has been called, the physicslist slate that we filled in our constructor seems to be wiped clean. And somehow calling this at this stage does not work to recover that physics.
+
+  //  ConstructOp();
+}
+*/
+
+ // This method not called, you'll notice!
+void PhysicsList::ConstructOp()
+{
+
+  // All this chingaderra replaced by G4OpticalPhysics up in constructor.
+
+  fCerenkovProcess = new G4Cerenkov("Cerenkov");
+  G4int fMaxNumPhotonStep(700);
+  fCerenkovProcess->SetMaxNumPhotonsPerStep(fMaxNumPhotonStep);
+  fCerenkovProcess->SetMaxBetaChangePerStep(10.0);
+  fCerenkovProcess->SetTrackSecondariesFirst(false);
+  fScintillationProcess = new G4Scintillation("Scintillation");
+  fScintillationProcess->SetScintillationYieldFactor(1.);
+  fScintillationProcess->SetTrackSecondariesFirst(false);
+  fAbsorptionProcess = new G4OpAbsorption();
+  fRayleighScatteringProcess = new G4OpRayleigh();
+  fTheWLSProcess                 = new G4OpWLS();
+  //  fMieHGScatteringProcess = new G4OpMieHG();
+  fBoundaryProcess = new G4OpBoundaryProcess();
+
+  G4int fVerboseLevel=1;
+  fCerenkovProcess->SetVerboseLevel(fVerboseLevel);
+  fScintillationProcess->SetVerboseLevel(fVerboseLevel);
+  fAbsorptionProcess->SetVerboseLevel(fVerboseLevel);
+  fRayleighScatteringProcess->SetVerboseLevel(fVerboseLevel);
+  //  fMieHGScatteringProcess->SetVerboseLevel(fVerboseLevel);
+  fBoundaryProcess->SetVerboseLevel(fVerboseLevel);
+  
+  // Use Birks Correction in the Scintillation process
+  if(G4Threading::IsMasterThread())
+  {
+    G4EmSaturation* emSaturation =
+              G4LossTableManager::Instance()->EmSaturation();
+      fScintillationProcess->AddSaturation(emSaturation);
+  }
+
+  auto particleIterator=GetParticleIterator();
+  particleIterator->reset();
+  while( (*particleIterator)() ){
+    G4ParticleDefinition* particle = particleIterator->value();
+    G4ProcessManager* pmanager = particle->GetProcessManager();
+    G4String particleName = particle->GetParticleName();
+    if ( !(particleName.find("e-")!=std::string::npos || (particleName.find("proton")!=std::string::npos && particleName.find("anti")==std::string::npos) || particleName.find("opticalphoton")!=std::string::npos ) )
+      continue;
+
+    
+    if (fCerenkovProcess->IsApplicable(*particle)) {
+      pmanager->AddProcess(fCerenkovProcess);
+      pmanager->SetProcessOrdering(fCerenkovProcess,idxPostStep);
+    }
+    if (fScintillationProcess->IsApplicable(*particle)) {
+      pmanager->AddProcess(fScintillationProcess);
+      pmanager->SetProcessOrderingToLast(fScintillationProcess, idxAtRest);
+      pmanager->SetProcessOrderingToLast(fScintillationProcess, idxPostStep);
+    }
+    
+    if (particleName == "opticalphoton") {
+      G4cout << " AddDiscreteProcess to OpticalPhoton " << G4endl;
+      pmanager->AddDiscreteProcess(fAbsorptionProcess);
+      pmanager->AddDiscreteProcess(fRayleighScatteringProcess);
+      pmanager->AddDiscreteProcess(fTheWLSProcess);
+      pmanager->AddDiscreteProcess(fBoundaryProcess);
+    }
+  }
+}

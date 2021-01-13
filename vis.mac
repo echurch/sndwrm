@@ -11,6 +11,7 @@
 #
 # Use this open statement to create an OpenGL view:
 /vis/open OGL 600x600-0+0
+
 #
 # Use this open statement to create a .prim file suitable for
 # viewing in DAWN:
@@ -78,6 +79,7 @@
 /vis/modeling/trajectories/create/drawByParticleID
 /vis/modeling/trajectories/drawByParticleID-0/set e- red
 /vis/modeling/trajectories/drawByParticleID-0/set gamma green
+/vis/modeling/trajectories/drawByParticleID-0/set opticalphoton green
 /vis/modeling/trajectories/drawByParticleID-0/set neutron yellow
 /vis/modeling/trajectories/drawByParticleID-0/set alpha blue
 /vis/modeling/trajectories/drawByParticleID-0/set GenericIon blue

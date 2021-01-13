@@ -1,0 +1,90 @@
+# 									
+# Demonstrate that isotopes produced in hadronic processes
+# can be treated by RadioactiveDecay.  
+#
+# To register hadronic processes, uncomment corresponding lines
+# in PhysicsList.cc
+#                                                                         
+/control/verbose 2
+/run/verbose 0
+##/tracking/verbose 2
+
+#
+# set the target/detector geometry
+#/rdecay02/det/setTargetMate G4_SODIUM_IODIDE
+# set the target/detector geometry
+/rdecay02/det/setTargetLength 58 m
+# "Radius" means halfXBox, halfYBox
+/rdecay02/det/setTargetRadius 6 m
+/rdecay02/det/setDetectorLength 40. m
+# Detector"Radius" is set to TargetRadius-InsetRadius
+/rdecay02/det/setInsetRadius 3.9 m
+# postive puts shield outside cryostat
+#/rdecay02/det/setShieldThickness 40 cm
+
+/rdecay02/det/setShieldThickness +77.6 cm
+
+#
+/run/initialize
+#
+/process/list
+#
+# rdm is applied only to the bulk Argon
+/grdm/noVolumes
+##/grdm/selectVolume Detector
+/grdm/selectVolume Target
+
+/gps/particle neutron 
+/gps/ene/type Arb
+/gps/hist/type arb
+/gps/hist/file ../ana/alpha_n_Ar_Chris.txt
+/gps/hist/inter Lin
+
+
+### from bulk
+/gps/position 0 0 0 m
+/gps/pos/type Volume
+/gps/pos/shape Para
+/gps/pos/halfx 6.1 m
+/gps/pos/halfy 6.1 m
+/gps/pos/halfz 30.1 m
+/gps/pos/centre 0. 0. 0. m
+##/gps/pos/confine ColdSkin
+
+
+
+###/gps/pos/centre 0. 5.994 0. m
+# This is for emitting n's from inside the water shielding
+###/gps/pos/type Plane
+###/gps/pos/shape Rectangle
+#/gps/pos/rot1 0 1 0 
+###/gps/pos/rot2 0 0 -1
+###/gps/pos/halfx 6 m
+###/gps/pos/halfy 29 m
+
+/gps/ang/type iso
+#/gps/ang/maxtheta 90 deg
+
+#/analysis/setFileName neutron_shield
+#/analysis/setFileName neutron_plastic20cm
+/analysis/setFileName  /Volumes/Transcend2TB/G4/data/liquid/Rn_alpha_neutron_outsidefoamwoodss_cs_5cm_cjdistn_liquid_longskinny
+/analysis/h1/set 0 100 0. 2. MeV
+/analysis/h1/set 1 100 0. 2. MeV
+/analysis/h1/set 6 100 0. 2. MeV
+/analysis/ntuple/setActivation 0 true
+/analysis/ntuple/setActivation 1 true
+/analysis/ntuple/setActivation 2 true
+/analysis/ntuple/setActivation 3 true
+/analysis/ntuple/setActivation 4 false ## true ## Steps
+/run/printProgress 1000
+##/control/execute vis.mac
+
+# SS has neutrons at level of ~1E-11 /cm3/sec from https://books.google.com/books?id=H-DICgAAQBAJ&pg=PA486&lpg=PA486&dq=dark+matter+uranium+and+thorium+contained+in+stainless+steel&source=bl&ots=0CuBLBhG0h&sig=ACfU3U1RCxZ2C11zW-NUBpHb07HerbX6fw&hl=en&ppis=_e&sa=X&ved=2ahUKEwiF45qy2rbnAhU6JzQIHWelCSwQ6AEwAXoECAoQAQ#v=onepage&q=dark%20matter%20uranium%20and%20thorium%20contained%20in%20stainless%20steel&f=false
+# And V. Kudryavtsev: https://www.sciencedirect.com/science/article/pii/S0168900208009984 says 1E-11
+
+# For 10cm Acrylic
+# So, our cryoskin has 2E-10*0.012*(4*12*60+2*12*12)*1E6 * 3.1415E7 /yr = 238854 evts/yr, so my run here has evtwt=238854/31000000 for a year.
+
+##/run/beamOn 31000000 # 10x fewer evts after first 10cm Acrylic run
+##/run/beamOn 4 # 10000
+/run/beamOn 1000000

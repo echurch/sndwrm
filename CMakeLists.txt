@@ -15,6 +15,10 @@ else()
   find_package(Geant4 REQUIRED)
 endif()
 
+message(STATUS "GEANT4 include dir: ${Geant4_INCLUDE_DIR}")
+message(STATUS "GEANT4 libraries dir: ${Geant4_LIBRARIES_DDIR}")
+message(STATUS "GEANT4 libraries libs: ${Geant4_LIBRARIES}")
+
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
 #
@@ -26,13 +30,15 @@ include(${Geant4_USE_FILE})
 include_directories(${PROJECT_SOURCE_DIR}/include 
                     ${Geant4_INCLUDE_DIR})
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
+##file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cxx)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
+##file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.h)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(rdecay02 rdecay02.cc ${sources} ${headers})
-target_link_libraries(rdecay02 ${Geant4_LIBRARIES} )
+target_link_libraries(rdecay02  ${Geant4_LIBRARIES} )
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
