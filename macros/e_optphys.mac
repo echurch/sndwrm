@@ -7,7 +7,7 @@
 #                                                                         
 /control/verbose 2
 /run/verbose 0
-/tracking/verbose 1
+/tracking/verbose 0
 
 #
 # set the target/detector geometry

@@ -162,6 +162,8 @@ void HistoManager::Book()
   analysis->CreateNtupleDColumn("Z");         //column 5
   analysis->CreateNtupleDColumn("Length");         //column 6
   analysis->CreateNtupleDColumn("Event");         //column 7
+  analysis->CreateNtupleDColumn("PID");         //column 8
+  analysis->CreateNtupleDColumn("TrkID");         //column 9
 
   
   analysis->SetNtupleActivation(false);          

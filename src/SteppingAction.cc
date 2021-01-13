@@ -84,24 +84,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4double edepStep = aStep->GetTotalEnergyDeposit();
 
   process = aStep->GetPreStepPoint()->GetProcessDefinedStep();
-  static G4ParticleDefinition* opticalphoton = G4OpticalPhoton::OpticalPhotonDefinition();
-
-  /*
-  // This does not work to find the optical processes. See below chunk instead. EC, 12-Jan-2021.
-  if ( process && (process->GetProcessName().find("intil")!=std::string::npos  ||
-		   process->GetProcessName().find("WLS")!=std::string::npos  ||
-		   process->GetProcessName().find("Op")!=std::string::npos  ||
-		   process->GetProcessName().find("kov")!=std::string::npos  )
-       ) // looking for opticalphoton production evidence
-    {
-      const G4ParticleDefinition* particleType = aStep->GetTrack()->GetParticleDefinition();
-      G4String name = particleType->GetParticleName();
-      G4int pid = particleType->GetPDGEncoding();
-            std::cout << "Process Name, daughter name / pid: " << process->GetProcessName() << ", " << name << " / " << pid << std::endl;
-            std::cout << "EdepStep is " << edepStep << std::endl;
-    }
-*/  
-
 
 
   if (edepStep <= 0.) return;
@@ -114,6 +96,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   const G4double length = aStep->GetStepLength();
   const G4ThreeVector pos(aStep->GetPreStepPoint()->GetPosition());
 
+
+  G4Track* track = aStep->GetTrack();
+  const G4ParticleDefinition* particle = track->GetParticleDefinition();  
+  G4int pID       = particle->GetPDGEncoding();
+  G4double tID = track->GetTrackID();
+
   //  std::cout << "SteppingAction.cc: Event,edep" << event << ", " << edepStep << std::endl;
   analysisManager->FillNtupleDColumn(id,0, edepStep);
   analysisManager->FillNtupleDColumn(id,1, time/s);
@@ -123,6 +111,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,5, pos[2]/mm);
   analysisManager->FillNtupleDColumn(id,6, length/mm);
   analysisManager->FillNtupleDColumn(id,7, event);
+  analysisManager->FillNtupleDColumn(id,8, pID);
+  analysisManager->FillNtupleDColumn(id,9, tID);
   analysisManager->AddNtupleRow(id);      
 }
 

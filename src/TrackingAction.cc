@@ -86,7 +86,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   run->ParticleCount(name,energy,iVol);
   
   //Radioactive decay products
-  G4int processType = track->GetCreatorProcess()->GetProcessSubType();
+  //G4int processType = track->GetCreatorProcess()->GetProcessSubType();
   //  if (processType == fRadioactiveDecay) {
     //fill ntuple id = 3
 

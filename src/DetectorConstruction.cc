@@ -73,12 +73,13 @@ DetectorConstruction::DetectorConstruction()
   // 13-Feb-2020 Make the acrylic walls go out 1m beyond fiducial.
   fAcrylicRadius    = 3.0*m; fAcrylicRadius += 0.1*m;
   fAcrylicLength    = 40.0*m;  fAcrylicLength += 2.0*m;
-  fAcrylicThickness = 10.0 /*5.08   ....  2.54*/ *cm;
   fAcrylicThickness = 5.0 *cm;
   /*
   fAcrylicThickness = 15.0 *cm;
   fAcrylicThickness = 20.0 *cm;
   */
+
+  fTPBThickness = 3.0 *um; // ala DEAP
 
   fWorldLength = std::max(fTargetLength,fDetectorLength);
   fWorldRadius = fTargetRadius + 1.0*m;
@@ -170,7 +171,9 @@ void DetectorConstruction::DefineMaterials()
   Acrylic->AddElement(H, number_of_atoms=8);
   Acrylic->AddElement(O, number_of_atoms=2);
 
-
+  G4Material* TPB = new G4Material("TPB",1.079*g/cm3,2);
+  TPB->AddElement (C, 28);
+  TPB->AddElement (H, 22);
 
 
   //
@@ -186,7 +189,7 @@ void DetectorConstruction::DefineMaterials()
   fG10Mater = g10;
   fColdSkinMater = ss;
   fAcrylicMater = Acrylic;
-  
+  fTPBMater = TPB;
   /*
 
     Target is a Box nested inside World box. Detector is a Box inset from Target walls, nested Target, as tall (Length) as Target.
@@ -371,8 +374,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   // that might mean even taller than fTargRad to come in under cryoskin on top and bottom, but this should be good approx insofar as n's go. eps to prevent overlap.
 
   G4Box* sOutAcrylic = new G4Box("InAcrylic",fAcrylicRadius, fTargetRadius , fAcrylicLength/2);
-  // 13-Feb-2020 make the top/bottom 0 thickness.
-  G4Box* sInAcrylic = new G4Box("OutAcrylic", fAcrylicRadius-fAcrylicThickness, fTargetRadius-fAcrylicThickness*0.0, fAcrylicLength/2.-fAcrylicThickness);
+  // 13-Feb-2020 make the top/bottom 0 thickness. 
+  // Note we shave fTPBThickness here off the Acrylic thickness. Will use it for TPB below. EC, 13-Jan-2020
+  G4Box* sInAcrylic = new G4Box("OutAcrylic", fAcrylicRadius-fAcrylicThickness+fTPBThickness, fTargetRadius, fAcrylicLength/2.-fAcrylicThickness+fTPBThickness);
   G4SubtractionSolid *sAcrylic = new G4SubtractionSolid("Acrylic",sOutAcrylic, sInAcrylic);  
 
   fLogicAcrylic = new G4LogicalVolume(sAcrylic,       //shape
@@ -383,6 +387,23 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
                            fLogicAcrylic,              //logical volume
                            "Acrylic",                  //name
+			   lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0);                          //copy number
+
+  G4Box* sInTPB = new G4Box("InTPB",fAcrylicRadius-fAcrylicThickness, fTargetRadius , fAcrylicLength/2-fAcrylicThickness);
+  // 13-Feb-2020 make the top/bottom 0 thickness.
+  G4Box* sOutTPB = new G4Box("OutTPB", fAcrylicRadius-fAcrylicThickness+fTPBThickness, fTargetRadius, fAcrylicLength/2.-fAcrylicThickness+fTPBThickness);
+  G4SubtractionSolid *sTPB = new G4SubtractionSolid("TPB",sOutTPB, sInTPB);  
+
+  fLogicTPB = new G4LogicalVolume(sTPB,       //shape
+                             fTPBMater,            //material
+                             "TPB");               //name
+                               
+         new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+                           fLogicTPB,              //logical volume
+                           "TPB",                  //name
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
                            0);                          //copy number
@@ -404,6 +425,21 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   fTargetMater->GetMaterialPropertiesTable()->GetProperty("FASTCOMPONENT") ->DumpValues();
   std::cout << "DetConst::ConstructVolumes(): Argon " << " Slow Intensity" << std::endl;
   fTargetMater->GetMaterialPropertiesTable()->GetProperty("SLOWCOMPONENT") ->DumpValues();
+  fTPBMater->GetMaterialPropertiesTable()->DumpTable();
+  if (fTPBMater->GetMaterialPropertiesTable()->ConstPropertyExists("WLSTIMECONSTANT") )
+    {
+      std::cout <<  "DetConst::ConstructVolumes(): TPB " << "Re-emission time const [ns]" << 
+	fTPBMater->GetMaterialPropertiesTable()->GetConstProperty("WLSTIMECONSTANT") << std::endl;
+    }
+    else
+      std::cout <<  "DetConst::ConstructVolumes(): TPB WLSTIMECONST weirdly doesn't exist" << std::endl;
+      
+  std::cout <<  "DetConst::ConstructVolumes(): TPB " << " ABS length [m]" << std::endl;
+  fTPBMater->GetMaterialPropertiesTable()->GetProperty("WLSABSLENGTH") ->DumpValues();
+  std::cout << "DetConst::ConstructVolumes(): TPB " << " EMIS Spect" << std::endl;
+  fTPBMater->GetMaterialPropertiesTable()->GetProperty("WLSCOMPONENT") ->DumpValues();
+  std::cout <<  "DetConst::ConstructVolumes(): TPB " << "Refr Index [eV]" << std::endl;
+  fTPBMater->GetMaterialPropertiesTable()->GetProperty("RINDEX") ->DumpValues();
 
 
 
@@ -443,6 +479,8 @@ void DetectorConstruction::PrintParameters()
          << " Radius = " << G4BestUnit(fAcrylicRadius,"Length")  
          << " Length = " << G4BestUnit(fAcrylicLength,"Length")  
          << " Material = " << fAcrylicMater->GetName() << G4endl;          
+  G4cout << "\n TPB : Thickness = " << G4BestUnit(fTPBThickness,"Length")
+         << " Material = " << fTPBMater->GetName() << G4endl;          
 
 }
 
