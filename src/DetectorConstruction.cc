@@ -79,7 +79,8 @@ DetectorConstruction::DetectorConstruction()
   fAcrylicThickness = 20.0 *cm;
   */
 
-  fTPBThickness = 3.0 *um; // ala DEAP
+  fTPBThickness = 3.0 *um; // 13-Jan-2021, ala DEAP
+  fTPBThickness = 0.0 ; //  14-Jan-2021. Instead of simulating WLS-TPB, turn on reflective Acrylic. 
 
   fWorldLength = std::max(fTargetLength,fDetectorLength);
   fWorldRadius = fTargetRadius + 1.0*m;
@@ -425,7 +426,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   fTargetMater->GetMaterialPropertiesTable()->GetProperty("FASTCOMPONENT") ->DumpValues();
   std::cout << "DetConst::ConstructVolumes(): Argon " << " Slow Intensity" << std::endl;
   fTargetMater->GetMaterialPropertiesTable()->GetProperty("SLOWCOMPONENT") ->DumpValues();
+  std::cout << "Dumping TPB MaterialPropertiesTable:" << std::endl;  
   fTPBMater->GetMaterialPropertiesTable()->DumpTable();
+  /*
   if (fTPBMater->GetMaterialPropertiesTable()->ConstPropertyExists("WLSTIMECONSTANT") )
     {
       std::cout <<  "DetConst::ConstructVolumes(): TPB " << "Re-emission time const [ns]" << 
@@ -440,8 +443,11 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   fTPBMater->GetMaterialPropertiesTable()->GetProperty("WLSCOMPONENT") ->DumpValues();
   std::cout <<  "DetConst::ConstructVolumes(): TPB " << "Refr Index [eV]" << std::endl;
   fTPBMater->GetMaterialPropertiesTable()->GetProperty("RINDEX") ->DumpValues();
+  */
 
-
+  std::cout << "Dumping Acrylic MaterialPropertiesTable:" << std::endl;
+  fAcrylicMater->GetMaterialPropertiesTable()->DumpTable();
+  
 
 
   PrintParameters();

@@ -113,6 +113,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,7, event);
   analysisManager->FillNtupleDColumn(id,8, pID);
   analysisManager->FillNtupleDColumn(id,9, tID);
+  analysisManager->FillNtupleSColumn(id,10, track->GetVolume()->GetLogicalVolume()->GetName());
+  analysisManager->FillNtupleSColumn(id,11, track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName());
   analysisManager->AddNtupleRow(id);      
 }
 

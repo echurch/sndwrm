@@ -154,8 +154,10 @@ void PhysicsList::ConstructPhys()
   opticalPhysics->SetTrackSecondariesFirst(kCerenkov,true);
   opticalPhysics->SetTrackSecondariesFirst(kScintillation,true);
   opticalPhysics->SetScintillationYieldFactor(1.);
-  G4int fMaxNumPhotonStep(700);
+  G4int fMaxNumPhotonStep(7000);
   opticalPhysics->SetMaxNumPhotonsPerStep(fMaxNumPhotonStep);
+
+  // Consider putting a macro-driven switch to shut off next line, if optical physics not desired.
   RegisterPhysics(opticalPhysics);
 
 }

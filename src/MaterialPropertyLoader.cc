@@ -155,6 +155,7 @@
       //
 
       //--------------------------> FIXME <-----------------(parameters from fcl files(?))
+
       G4MaterialPropertyVector* PropertyPointer = 0;
       if(MaterialTables[Material])
         PropertyPointer = MaterialTables[Material]->GetProperty("REFLECTIVITY");
@@ -222,6 +223,22 @@
         else
           std::cout<< "Warning: STEEL_STAINLESS_Fe7Cr2Ni surface in the geometry without REFLECTIVITY assigned"<<std::endl;
       }
+      
+      // EC: adding Acrylic
+      if(Material=="Acrylic"){
+        std::cout<< "Acrylic surface set "<<volume->GetName()<<std::endl;
+	G4MaterialPropertyVector* PropertyPointer2 = 0;
+        PropertyPointer2 = MaterialTables[Material]->GetProperty("REFLECTANCE_Acrylic");
+        if(PropertyPointer || PropertyPointer2 ) {
+          std::cout<< "defining Acrylic optical boundary "<<std::endl;
+          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface Acrylic",glisur,ground,dielectric_metal);
+          refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
+          refl_opsurfs->SetPolish(0.5);
+          new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
+        }
+        else
+          std::cout<< "Warning: Acrylic surface in the geometry without REFLECTIVITY assigned"<<std::endl;
+      }
       //-----------------------------------------------------------------------------
 
       //
@@ -233,7 +250,7 @@
 	  std::cout << "MLP::UpdateGeometry(): Material/Pointer" << Material << "/" << TheMaterial << std::endl;
           //Birks Constant, for some reason, must be set separately
           if(fBirksConstants[Material]!=0)
-	    std::cout << "MLP::UpdateGeometry(): Setting Briks Constant: " << fBirksConstants[Material]  << std::endl;
+	    std::cout << "MLP::UpdateGeometry(): Setting Birks Constant: " << fBirksConstants[Material]  << std::endl;
             TheMaterial->GetIonisation()->SetBirksConstant(fBirksConstants[Material]);
           volume->SetMaterial(TheMaterial);
         }
@@ -242,7 +259,7 @@
   }
 
 
-void MaterialPropertyLoader::SetReflectances(std::string /*Material*/, std::map<std::string,std::map<double, double> > Reflectances,  std::map<std::string,std::map<double, double> >  DiffuseFractions)
+void MaterialPropertyLoader::SetReflectances(std::string Material, std::map<std::string,std::map<double, double> > Reflectances,  std::map<std::string,std::map<double, double> >  DiffuseFractions)
   {
     std::map<double, double> ReflectanceToStore;
     std::map<double, double> DiffuseToStore;
@@ -259,7 +276,7 @@ void MaterialPropertyLoader::SetReflectances(std::string /*Material*/, std::map<
           {
             ReflectanceToStore[itEn->first]=itEn->second;
           }
-        SetMaterialProperty("Argon", ReflectancePropName, ReflectanceToStore,1);
+        SetMaterialProperty(Material, ReflectancePropName, ReflectanceToStore,1);
       }
 
     for(std::map<std::string,std::map<double,double> >::const_iterator itMat=DiffuseFractions.begin();
@@ -274,7 +291,7 @@ void MaterialPropertyLoader::SetReflectances(std::string /*Material*/, std::map<
           {
             DiffuseToStore[itEn->first]=itEn->second;
           }
-        SetMaterialProperty("Argon", DiffusePropName, DiffuseToStore,1);
+        SetMaterialProperty(Material, DiffusePropName, DiffuseToStore,1);
       }
 
   }
@@ -413,7 +430,7 @@ void MaterialPropertyLoader::SetReflectances(std::string /*Material*/, std::map<
  //  surface type
   std::vector<double> ReflectiveSurfaceEnergies {  7, 9, 10 };
   LarProp->SetReflectiveSurfaceEnergies(ReflectiveSurfaceEnergies);
-  std::vector<std::string> ReflectiveSurfaceNames {  "STEEL_STAINLESS_Fe7Cr2Ni" };
+  std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" };
   LarProp->SetReflectiveSurfaceNames (ReflectiveSurfaceNames );
   std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {0.25, 0.25, 0.25 } };
   LarProp->SetReflectiveSurfaceReflectances(ReflectiveSurfaceReflectances);
@@ -467,7 +484,8 @@ void MaterialPropertyLoader::SetReflectances(std::string /*Material*/, std::map<
 
     SetBirksConstant("Argon",LarProp->ScintBirksConstant(), CLHEP::cm/CLHEP::MeV);
     //    if(DetProp->SimpleBoundary())
-    SetReflectances("Argon", LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
+    //    SetReflectances("Argon", LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
+    SetReflectances("Acrylic", LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
       //    else
       //      SetReflectances(LarProp->SurfaceReflectances());
 
