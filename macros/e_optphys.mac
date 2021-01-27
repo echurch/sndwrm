@@ -1,4 +1,4 @@
-# 									
+#
 # Demonstrate that isotopes produced in hadronic processes
 # can be treated by RadioactiveDecay.  
 #
@@ -34,7 +34,7 @@
 /grdm/selectVolume Detector
 
 /gps/particle e-
-/gps/ene/mono 5 MeV
+/gps/ene/mono 1 MeV
 ###/gps/hist/type arb
 ###/gps/hist/file ../ana/neutron_distn_vk.txt
 ###/gps/hist/inter Lin
@@ -45,11 +45,12 @@
 /gps/pos/type Volume
 /gps/pos/shape Para
 /gps/pos/halfx 6.1 m
-/gps/pos/halfy 6.1 m
+/gps/pos/halfy 2.0 m
 /gps/pos/halfz 30.1 m
-/gps/pos/centre 0. 0. 0. m
-/gps/pos/confine Detector
-# This is for emitting e's from the 1.2cm thick coldskin
+/gps/pos/centre 0. 2.5 0. m
+#/gps/pos/confine Detector
+# This is for emitting e's from the 1.2cm thick coldskin OR the bulk Ar in detector
+
 
 
 ###/gps/pos/centre 0. 5.994 0. m
@@ -66,7 +67,7 @@
 
 #/analysis/setFileName neutron_shield
 #/analysis/setFileName neutron_plastic20cm
-/analysis/setFileName  e_opthys
+/analysis/setFileName  e_optphys
 /analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 2. MeV
 /analysis/h1/set 6 100 0. 2. MeV
@@ -74,7 +75,7 @@
 /analysis/ntuple/setActivation 1 true
 /analysis/ntuple/setActivation 2 true
 /analysis/ntuple/setActivation 3 true
-/analysis/ntuple/setActivation 4 false ## true ## Steps
+/analysis/ntuple/setActivation 4 true ## Steps
 /run/printProgress 1000
 /control/execute vis.mac
 

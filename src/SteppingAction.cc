@@ -75,15 +75,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // count processes
   // 
   const G4StepPoint* endPoint = aStep->GetPostStepPoint();
-  const G4VProcess* process   = endPoint->GetProcessDefinedStep();
-  run->CountProcesses(process, iVol);
+  const G4VProcess* tprocess   = endPoint->GetProcessDefinedStep();
+  const G4VProcess* sprocess   = aStep->GetPreStepPoint()->GetProcessDefinedStep();
+  run->CountProcesses(tprocess, iVol);
 
   
   // energy deposit
   //
   G4double edepStep = aStep->GetTotalEnergyDeposit();
 
-  process = aStep->GetPreStepPoint()->GetProcessDefinedStep();
+  tprocess = aStep->GetPreStepPoint()->GetProcessDefinedStep();
 
 
   if (edepStep <= 0.) return;
@@ -95,13 +96,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4int id = 4;   
   const G4double length = aStep->GetStepLength();
   const G4ThreeVector pos(aStep->GetPreStepPoint()->GetPosition());
+  const G4ThreeVector tpos(aStep->GetPostStepPoint()->GetPosition());
 
 
   G4Track* track = aStep->GetTrack();
   const G4ParticleDefinition* particle = track->GetParticleDefinition();  
   G4int pID       = particle->GetPDGEncoding();
   G4double tID = track->GetTrackID();
-
+  std::string startp("null");
+  std::string endp("null");
   //  std::cout << "SteppingAction.cc: Event,edep" << event << ", " << edepStep << std::endl;
   analysisManager->FillNtupleDColumn(id,0, edepStep);
   analysisManager->FillNtupleDColumn(id,1, time/s);
@@ -113,8 +116,20 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,7, event);
   analysisManager->FillNtupleDColumn(id,8, pID);
   analysisManager->FillNtupleDColumn(id,9, tID);
+
   analysisManager->FillNtupleSColumn(id,10, track->GetVolume()->GetLogicalVolume()->GetName());
   analysisManager->FillNtupleSColumn(id,11, track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName());
+  analysisManager->FillNtupleDColumn(id,12, track->GetCurrentStepNumber());
+  if (sprocess)
+      startp = sprocess->GetProcessName();
+  if (tprocess)
+    endp = tprocess->GetProcessName();
+  analysisManager->FillNtupleSColumn(id,13, startp);
+  analysisManager->FillNtupleSColumn(id,14, endp);
+  analysisManager->FillNtupleDColumn(id,15, tpos[0]/mm);
+  analysisManager->FillNtupleDColumn(id,16, tpos[1]/mm);
+  analysisManager->FillNtupleDColumn(id,17, tpos[2]/mm);
+
   analysisManager->AddNtupleRow(id);      
 }
 

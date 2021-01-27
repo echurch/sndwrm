@@ -153,10 +153,10 @@ void HistoManager::Book()
   analysis->CreateNtupleDColumn("Event");         //column 10
   analysis->FinishNtuple();
 
-  analysis->CreateNtuple("Step", "Step Summaries");
+  analysis->CreateNtuple("Step", "Step Summaries"); 
   analysis->CreateNtupleDColumn("Edep");       //column 0
   analysis->CreateNtupleDColumn("Time");         //column 1
-  analysis->CreateNtupleDColumn("Weight");         //column 2
+  analysis->CreateNtupleDColumn("Weight");         //colum 2
   analysis->CreateNtupleDColumn("X");         //column 3
   analysis->CreateNtupleDColumn("Y");         //column 4
   analysis->CreateNtupleDColumn("Z");         //column 5
@@ -166,7 +166,13 @@ void HistoManager::Book()
   analysis->CreateNtupleDColumn("TrkID");         //column 9
   analysis->CreateNtupleSColumn("Volume");         //column 10
   analysis->CreateNtupleSColumn("Material");         //column 11
-
+  analysis->CreateNtupleDColumn("StepNum");         //column 12
+  analysis->CreateNtupleSColumn("SProcess");         //column 13
+  analysis->CreateNtupleSColumn("TProcess");         //column 14
+  analysis->CreateNtupleDColumn("TX");         //column 15
+  analysis->CreateNtupleDColumn("TY");         //column 16
+  analysis->CreateNtupleDColumn("TZ");         //column 17
+  analysis->FinishNtuple();
   
   analysis->SetNtupleActivation(false);          
 }

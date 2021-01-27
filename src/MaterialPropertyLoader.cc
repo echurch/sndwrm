@@ -233,7 +233,7 @@
           std::cout<< "defining Acrylic optical boundary "<<std::endl;
           G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface Acrylic",glisur,ground,dielectric_metal);
           refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
-          refl_opsurfs->SetPolish(0.5);
+          refl_opsurfs->SetPolish(0.5); // Turning this up to 0.99 increases light for Y>6m by 50% (for 4 evts). EC, 23-Jan-2021.
           new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
         }
         else
@@ -417,7 +417,7 @@ void MaterialPropertyLoader::SetReflectances(std::string Material, std::map<std:
  //absorption length as function of energy
   std::vector<double> AbsLengthEnergies { 4,     5,     6,     7,     8,     9,     10,    11   };
   LarProp->SetAbsLengthEnergies(AbsLengthEnergies);
-  std::vector<double> AbsLengthSpectrum { 2000., 2000., 2000., 2000., 2000., 2000., 2000., 2000.};
+  std::vector<double> AbsLengthSpectrum { 2000., 2000., 2000., 2000., 2000., 2000., 2000., 2000.};  // EC, 22-Jan-2021. Change back to 2000!!!!
   LarProp->SetAbsLengthSpectrum(AbsLengthSpectrum);
 
 //Rayleigh scattering length (cm) @ 90K as a function of energy (eV) from arXiv:1502.04213
@@ -433,6 +433,7 @@ void MaterialPropertyLoader::SetReflectances(std::string Material, std::map<std:
   std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" };
   LarProp->SetReflectiveSurfaceNames (ReflectiveSurfaceNames );
   std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {0.25, 0.25, 0.25 } };
+
   LarProp->SetReflectiveSurfaceReflectances(ReflectiveSurfaceReflectances);
   std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  } };
   LarProp->SetReflectiveSurfaceDiffuseFractions(ReflectiveSurfaceDiffuseFractions);
