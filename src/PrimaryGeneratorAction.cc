@@ -83,6 +83,18 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   //create vertex
   //   
   fParticleGun->GeneratePrimaryVertex(anEvent);
+
+
+
+  // fPrimaryGenerator->GeneratePrimaryVertexExtra(event);  
+  // see extended/eventgenerator/userPrimaryGeneratorSource/src/PrimaryGeneratorAction.cc::GeneratePrimaryVertex(), which should work to add other 
+  // particles beyond those generated from our macro to the event. EC, 6-Feb-2021 
+
+  //  ---------- OR  --------------------
+
+  // do it perhaps from the mac file itself! 
+  // see test31.g4mac at  http://hurel.hanyang.ac.kr/Geant4/Geant4_GPS/reat.space.qinetiq.com/gps/examples/examples.html
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

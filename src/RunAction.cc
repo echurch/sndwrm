@@ -94,7 +94,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
     analysisManager->OpenFile();
   }  
   else
-    {
+   {
       std::cout << "AnalysisManager is NOT active." << std::endl;
     }
 }

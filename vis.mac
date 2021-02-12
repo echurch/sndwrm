@@ -34,23 +34,30 @@
 /vis/drawVolume
 #
 # Specify view angle:
-##/vis/viewer/set/viewpointThetaPhi 90. 0.
-##/vis/viewer/set/viewpointThetaPhi 0. 90.
-/vis/viewer/set/viewpointThetaPhi 30. 30.
+##/vis/viewer/set/viewpointThetaPhi 90. 0. ## along x
+/vis/viewer/set/viewpointThetaPhi 0. 90. ## along z
+##/vis/viewer/set/viewpointThetaPhi 90. 90. ## along y
+##/vis/viewer/set/viewpointThetaPhi 30. 30.
 #
 # Specify zoom value:
-/vis/viewer/zoom 1.4
+/vis/viewer/zoom 4. # 1.4
 #
 # Specify style (surface or wireframe):
 /vis/viewer/set/style wireframe
 # To get nice view
 /vis/geometry/set/visibility World 0 false
-/vis/viewer/set/style surface
+
 /vis/geometry/set/visibility Shield 1 true
 /vis/viewer/set/style wireframe
 /vis/geometry/set/visibility Target 1 true
-/vis/geometry/set/visibility Detector 1 true
+/vis/viewer/set/style wireframe
+/vis/geometry/set/visibility Detector 1 false
 /vis/geometry/set/visibility G10 1 true
+/vis/viewer/set/style wireframe
+/vis/geometry/set/visibility SiPM 0 true
+
+
+
 #
 # Draw coordinate axes:
 #/vis/scene/add/axes 0 0 0 1 m

@@ -34,8 +34,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #ifndef PrimaryGeneratorAction_h
-#define PrimaryGeneratorAction_h 1
-
+#define PrimaryGeneratorAction_h 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
 #include "G4GeneralParticleSource.hh"

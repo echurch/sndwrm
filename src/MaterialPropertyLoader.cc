@@ -231,13 +231,30 @@
         PropertyPointer2 = MaterialTables[Material]->GetProperty("REFLECTANCE_Acrylic");
         if(PropertyPointer || PropertyPointer2 ) {
           std::cout<< "defining Acrylic optical boundary "<<std::endl;
-          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface Acrylic",glisur,ground,dielectric_metal);
+          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface Acrylic",glisur,ground,dielectric_dielectric); //dielectric_metal);
           refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
           refl_opsurfs->SetPolish(0.5); // Turning this up to 0.99 increases light for Y>6m by 50% (for 4 evts). EC, 23-Jan-2021.
           new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
         }
         else
           std::cout<< "Warning: Acrylic surface in the geometry without REFLECTIVITY assigned"<<std::endl;
+      }
+      //-----------------------------------------------------------------------------
+
+      // EC: adding SiPM
+      if(Material=="SiPM"){
+        std::cout<< "SiPM surface set "<<volume->GetName()<<std::endl;
+	G4MaterialPropertyVector* PropertyPointer3 = 0;
+        PropertyPointer3 = MaterialTables[Material]->GetProperty("REFLECTANCE_SiPM");
+        if(PropertyPointer || PropertyPointer3 ) {
+          std::cout<< "defining SiPM optical boundary "<<std::endl;
+          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface SiPM",glisur,ground,dielectric_dielectric);  //dielectric_metal);
+          refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
+          refl_opsurfs->SetPolish(0.0); 
+          new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
+        }
+        else
+          std::cout<< "Warning: SiPM surface in the geometry without REFLECTIVITY assigned"<<std::endl;
       }
       //-----------------------------------------------------------------------------
 
@@ -292,6 +309,44 @@ void MaterialPropertyLoader::SetReflectances(std::string Material, std::map<std:
             DiffuseToStore[itEn->first]=itEn->second;
           }
         SetMaterialProperty(Material, DiffusePropName, DiffuseToStore,1);
+      }
+
+  }
+
+// To work over all Materials for which we've set ReflectanceFractions/DiffuseFractions EC, 11-Feb-2021.
+void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<double, double> > Reflectances,  std::map<std::string,std::map<double, double> >  DiffuseFractions)
+  {
+    std::map<double, double> ReflectanceToStore;
+    std::map<double, double> DiffuseToStore;
+
+    for(std::map<std::string,std::map<double,double> >::const_iterator itMat=Reflectances.begin();
+        itMat!=Reflectances.end();
+        ++itMat)
+      {
+        std::string ReflectancePropName = std::string("REFLECTANCE_") + itMat->first;
+        ReflectanceToStore.clear();
+        for(std::map<double,double>::const_iterator itEn=itMat->second.begin();
+            itEn!=itMat->second.end();
+            ++itEn)
+          {
+            ReflectanceToStore[itEn->first]=itEn->second;
+          }
+        SetMaterialProperty(itMat->first, ReflectancePropName, ReflectanceToStore,1);
+      }
+
+    for(std::map<std::string,std::map<double,double> >::const_iterator itMat=DiffuseFractions.begin();
+        itMat!=DiffuseFractions.end();
+        ++itMat)
+      {
+        std::string DiffusePropName = std::string("DIFFUSE_REFLECTANCE_FRACTION_") + itMat->first;
+        DiffuseToStore.clear();
+        for(std::map<double,double>::const_iterator itEn=itMat->second.begin();
+            itEn!=itMat->second.end();
+            ++itEn)
+          {
+            DiffuseToStore[itEn->first]=itEn->second;
+          }
+        SetMaterialProperty(itMat->first, DiffusePropName, DiffuseToStore,1);
       }
 
   }
@@ -430,12 +485,12 @@ void MaterialPropertyLoader::SetReflectances(std::string Material, std::map<std:
  //  surface type
   std::vector<double> ReflectiveSurfaceEnergies {  7, 9, 10 };
   LarProp->SetReflectiveSurfaceEnergies(ReflectiveSurfaceEnergies);
-  std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" };
+  std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" , "SiPM"};
   LarProp->SetReflectiveSurfaceNames (ReflectiveSurfaceNames );
-  std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {0.25, 0.25, 0.25 } };
+  std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {0.25, 0.25, 0.25 }, {0., 0., 0.} };
 
   LarProp->SetReflectiveSurfaceReflectances(ReflectiveSurfaceReflectances);
-  std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  } };
+  std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  }, {0., 0., 0.} };
   LarProp->SetReflectiveSurfaceDiffuseFractions(ReflectiveSurfaceDiffuseFractions);
 
 //Information related with the simulation of the Wavelength Shifter (TPB) 
@@ -473,6 +528,25 @@ void MaterialPropertyLoader::SetReflectances(std::string Material, std::map<std:
     SetMaterialProperty( "Argon", "ABSLENGTH",     LarProp->AbsLengthSpectrum(), CLHEP::cm );
     SetMaterialProperty( "Argon", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );
 
+    // Just use Argon optphoton properties for Acrylic
+    SetMaterialProperty( "Acrylic", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
+    SetMaterialProperty( "Acrylic", "ABSLENGTH",     LarProp->AbsLengthSpectrum(), CLHEP::cm );
+    SetMaterialProperty( "Acrylic", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );
+
+    auto VShortAbsLength = LarProp->AbsLengthSpectrum();
+    for (auto& kv : VShortAbsLength)
+      {
+	// aMap has key value pairs kv.first and kv.second
+	kv.second = 0.01 ;
+      }
+
+    // Just try to get all optphotons to enter SiPM and then die, so that the Termination Volume shows they entered. EC, 12-Feb-2021
+    std::vector<double> VShortAbsLengthSpectrum { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01};
+    // Just use Argon optphoton properties for Acrylic
+    SetMaterialProperty( "SiPM", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
+    SetMaterialProperty( "SiPM", "ABSLENGTH",     VShortAbsLength, CLHEP::cm );
+    SetMaterialProperty( "SiPM", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );
+
 
     // scalar properties
 
@@ -485,10 +559,12 @@ void MaterialPropertyLoader::SetReflectances(std::string Material, std::map<std:
 
     SetBirksConstant("Argon",LarProp->ScintBirksConstant(), CLHEP::cm/CLHEP::MeV);
     //    if(DetProp->SimpleBoundary())
+    SetReflectances(LarProp->SurfaceReflectances()); // not else, but Also. EC, 12-Feb-2021.
     //    SetReflectances("Argon", LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
-    SetReflectances("Acrylic", LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
+    // SetReflectances("Acrylic", LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
+    SetReflectances(LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
       //    else
-      //      SetReflectances(LarProp->SurfaceReflectances());
+    //    SetReflectances(LarProp->SurfaceReflectances()); // not else, but Also. EC, 12-Feb-2021.
 
     // If we are using scint by particle type, load these
 

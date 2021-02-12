@@ -183,6 +183,8 @@ void DetectorConstruction::DefineMaterials()
   fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, 1.4 *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
 
 
+  G4Material* SiPM = new G4Material("SiPM", 14, 28.086*g/mole, 2.331 *g/cm3, kStateSolid,  300.*kelvin, 1.*atmosphere);
+
 
   //  fShieldMater = H2O;
   fShieldMater =  foam /*plastic*/ ;
@@ -191,6 +193,7 @@ void DetectorConstruction::DefineMaterials()
   fColdSkinMater = ss;
   fAcrylicMater = Acrylic;
   fTPBMater = TPB;
+  fSiPMMater = SiPM;
   /*
 
     Target is a Box nested inside World box. Detector is a Box inset from Target walls, nested Target, as tall (Length) as Target.
@@ -356,7 +359,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   
   fDetectorRadius = fTargetRadius-fInsetRadius;
   G4Box* sDetector = new G4Box("Detector",fDetectorRadius, fDetectorRadius, fDetectorLength/2);
-
+  /*
   
   fLogicDetector = new G4LogicalVolume(sDetector,       //shape
                              fDetectorMater,            //material
@@ -369,7 +372,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
                            0);                          //copy number
-
+  */
 	   
   // in fact, we want y to go top to bottom to allow charge drift and E-field to be unperturbed. Indeed, see the 13-Feb changes.
   // that might mean even taller than fTargRad to come in under cryoskin on top and bottom, but this should be good approx insofar as n's go. eps to prevent overlap.
@@ -388,9 +391,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
                            fLogicAcrylic,              //logical volume
                            "Acrylic",                  //name
-			   lWorld,                      //mother  volume
+			   fLogicTarget, //lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0);                          //copy number
+                           0,1);                          //copy number
 
   G4Box* sInTPB = new G4Box("InTPB",fAcrylicRadius-fAcrylicThickness, fTargetRadius , fAcrylicLength/2-fAcrylicThickness);
   // 13-Feb-2020 make the top/bottom 0 thickness.
@@ -409,7 +412,17 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            false,                       //no boolean operation
                            0);                          //copy number
 
+  // These 5 should be read in from g4mac file.
+  fSiPMsOnAcrylic = true;
+  fSiPMsOnCathode = false;
+  fSiPMSize = 24.* cm;
+  fSiPMThickness = 1. * cm;
+  fSiPMPhotoCathodeCoverage = 0.8;
 
+  if (fSiPMsOnAcrylic)
+    DetSiPMs("Acrylic",fLogicTarget);
+  if (fSiPMsOnCathode)
+    DetSiPMs("Cathode",lWorld);
 
   // Now for the purpose of tracking optical photons we do the following to the Argon and TPB to endow them w optical physics properties.
   // Must wait till this late, cuz MLP works by looping over all Logical Volumes which are only just now established.
@@ -447,6 +460,8 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
   std::cout << "Dumping Acrylic MaterialPropertiesTable:" << std::endl;
   fAcrylicMater->GetMaterialPropertiesTable()->DumpTable();
+  std::cout << "Dumping SiPM MaterialPropertiesTable:" << std::endl;
+  fSiPMMater->GetMaterialPropertiesTable()->DumpTable();
   
 
 
@@ -482,9 +497,12 @@ void DetectorConstruction::PrintParameters()
   G4cout << "\n ColdSkin : Thickness = " << G4BestUnit(fColdSkinThickness,"Length")
          << " Material = " << fColdSkinMater->GetName() << G4endl;          
   G4cout << "\n Acrylic : Thickness = " << G4BestUnit(fAcrylicThickness,"Length")
-         << " Radius = " << G4BestUnit(fAcrylicRadius,"Length")  
-         << " Length = " << G4BestUnit(fAcrylicLength,"Length")  
+         << " x -size  = " << G4BestUnit(fAcrylicRadius,"Length")  
+         << " z Length = " << G4BestUnit(fAcrylicLength,"Length")  
          << " Material = " << fAcrylicMater->GetName() << G4endl;          
+  G4cout << "\n SiPM : Thickness = " << G4BestUnit(fSiPMThickness,"Length")
+         << " Size = " << G4BestUnit(fSiPMSize,"Length")  
+         << " Material = " << fSiPMMater->GetName() << G4endl;          
   G4cout << "\n TPB : Thickness = " << G4BestUnit(fTPBThickness,"Length")
          << " Material = " << fTPBMater->GetName() << G4endl;          
 
@@ -646,6 +664,131 @@ G4Material* DetectorConstruction::GetDetectorMaterial()
 G4LogicalVolume* DetectorConstruction::GetLogicDetector()
 {
   return fLogicDetector;
+}
+
+void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiW)
+{
+  
+
+  const double halfSpacing = (sqrt(fSiPMSize*fSiPMSize/fSiPMPhotoCathodeCoverage)- fSiPMSize)/2. ;
+
+  std::cout << "fTargetRadius, fAcrylicLength, fAcrylicRadius, halfSpacing, SiPMSize+2*halfSpacing" << fTargetRadius << ", " << fAcrylicLength << ", " << fAcrylicRadius << ", "<< halfSpacing <<  ", " << fSiPMSize+2*halfSpacing<< std::endl;
+
+  double area = 2*fTargetRadius*fAcrylicLength;
+  double areaL = 4*fTargetRadius*fAcrylicRadius;
+  int numLateral = int((2*fAcrylicRadius/(fSiPMSize+2*halfSpacing) ));
+  int numLength = int((fAcrylicLength/(fSiPMSize+2*halfSpacing)) );
+  int numHeight = int((2*fTargetRadius/(fSiPMSize+2*halfSpacing) ));
+
+  G4Box* sSiPM = new G4Box("SiPM", fSiPMThickness/2, fSiPMSize/2, fSiPMSize/2);
+  fLogicSiPM = new G4LogicalVolume(sSiPM,       //shape  
+				   fSiPMMater,    //material  
+				   "SiPM");      //name                                                                                                                              
+  double offsetLat = 0;
+  if (!(numLateral%2))
+    offsetLat = 0.5;
+  double offsetHeight = 0;
+  if (!(numHeight%2))
+    offsetHeight = 0.5;
+  double offsetLength = 0;
+  if (!(numLength%2)) 
+    offsetLength = 0.5;
+
+  G4RotationMatrix* rotationMatrix = new G4RotationMatrix();
+
+  if (component=="Acrylic") 
+    {
+      std::cout << "DetectorConstruction::DetSiPMs: Placing " << numHeight*numLength << " SiPMs just inside x Acrylic each wall, each of area " << area/1E6 << " [m^2] of VD detector." << std::endl;
+      int nSiPM(0);
+      int nSiPM2(numHeight*numLength);
+      int nSiPM3(2*numHeight*numLength);
+      int nSiPM4(2*numHeight*numLength+numHeight*numLength);
+
+
+      for (int ii=-numHeight/2; ii<=numHeight/2; ii++)
+      {
+	for (int jj=-numLength/2; jj<=numLength/2; jj++)
+	  {
+
+	    if (!(numHeight%2) && ii==int(numHeight/2)) // if numLateral is even we need to stagger placement by 0.5 integer and skip the last one.
+	      continue;
+	    if (!(numLength%2) && jj==int(numLength/2)) // if numLength is even we need to stagger placement by 0.5 integer and skip the last one.
+	      continue;
+
+ 	    // neg x Acrylic wall
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(-fAcrylicRadius+fAcrylicThickness+fTPBThickness+fSiPMThickness/2,(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(jj+offsetLength)*(fSiPMSize+2*halfSpacing)),   //cm
+			      fLogicSiPM,              //logical volume                         
+			      "SiPM",                  //name                                                                                                                         
+			      logiW,                      //mother  volume
+			      false,                       //no boolean operation
+			      nSiPM++,0);                          //copy number   
+	    // pos x Acrylic wall
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(+fAcrylicRadius-fAcrylicThickness-fTPBThickness-fSiPMThickness/2,(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(jj+offsetLength)*(fSiPMSize+2*halfSpacing)),  
+			      fLogicSiPM,              //logical volume                         
+			      "SiPM",                  //name                                                                                                                         
+			      logiW,                      //mother  volume
+			      false,                       //no boolean operation
+			      nSiPM2++,0);                          //copy number
+
+	  }
+      }
+
+      std::cout << "DetectorConstruction::DetSiPMs: Placing " << numLateral*numHeight << " SiPMs just inside each z Acrylic wall, each of area " << areaL/1E6 << " [m^2] of VD detector." << std::endl;
+      *rotationMatrix = G4RotationMatrix();
+      rotationMatrix->rotateY(90.*deg);
+      for (int ii=-numHeight/2; ii<=numHeight/2; ii++)
+      {
+	for (int jj=-numLateral/2; jj<=numLateral/2; jj++)
+	  {
+
+	    if (!(numHeight%2) && ii==int(numHeight/2)) // if numLateral is even we need to stagger placement by 0.5 integer and skip the last one.
+	      continue;
+	    if (!(numLateral%2) && jj==int(numLateral/2)) // if numLength is even we need to stagger placement by 0.5 integer and skip the last one.
+	      continue;
+
+ 	    // neg z Acrylic wall
+	    new G4PVPlacement(rotationMatrix,                         
+			      G4ThreeVector((jj+offsetLat)*(fSiPMSize+2*halfSpacing),(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(-fAcrylicLength/2+fAcrylicThickness+fTPBThickness+fSiPMThickness/2)),  
+			      fLogicSiPM,              //logical volume                         
+			      "SiPM",                  //name                                                                                                                         
+			      logiW,                      //mother  volume
+			      false,                       //no boolean operation
+			      nSiPM3++,0);                          //copy number   
+
+	    // pos z Acrylic wall	    
+	    new G4PVPlacement(rotationMatrix,                         
+			      G4ThreeVector((jj+offsetLat)*(fSiPMSize+2*halfSpacing),(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(+fAcrylicLength/2-fAcrylicThickness-fTPBThickness-fSiPMThickness/2)),  
+			      fLogicSiPM,              //logical volume                         
+			      "SiPM",                  //name                                                                                                                         
+			      logiW,                      //mother  volume
+			      false,                       //no boolean operation
+			      nSiPM4++,0);                          //copy number
+
+
+	  }
+      }
+
+
+
+      *rotationMatrix = G4RotationMatrix();
+      rotationMatrix->rotateY(90.*deg);
+
+    }
+
+  else if (component=="Cathode") 
+    {
+      std::cout << "DetectorConstruction::DetSiPMs: Placing " << numLateral*numLateral << " SiPMs in central VD cathode." << std::endl;
+      *rotationMatrix = G4RotationMatrix();
+      rotationMatrix->rotateZ(90.*deg);
+
+    }
+
+  else
+    {
+      std::cout << "DetSiPMs: No entiendo where to poner los SiPMs."  << std::endl;
+    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

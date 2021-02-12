@@ -79,12 +79,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   const G4VProcess* sprocess   = aStep->GetPreStepPoint()->GetProcessDefinedStep();
   run->CountProcesses(tprocess, iVol);
 
-  
+  G4TouchableHandle touch = endPoint->GetTouchableHandle();
+  G4VPhysicalVolume* eVolume = touch->GetVolume();
+  G4String eVname("null");
+  if (eVolume)
+    eVname = eVolume->GetName();  
   // energy deposit
   //
   G4double edepStep = aStep->GetTotalEnergyDeposit();
 
-  tprocess = aStep->GetPreStepPoint()->GetProcessDefinedStep();
+  tprocess = aStep->GetPostStepPoint()->GetProcessDefinedStep();
 
 
   if (edepStep <= 0.) return;
@@ -118,17 +122,19 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,9, tID);
 
   analysisManager->FillNtupleSColumn(id,10, track->GetVolume()->GetLogicalVolume()->GetName());
-  analysisManager->FillNtupleSColumn(id,11, track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName());
-  analysisManager->FillNtupleDColumn(id,12, track->GetCurrentStepNumber());
+  analysisManager->FillNtupleDColumn(id,11, track->GetVolume()->GetCopyNo());
+  analysisManager->FillNtupleSColumn(id,12, track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName());
+  analysisManager->FillNtupleDColumn(id,13, track->GetCurrentStepNumber());
   if (sprocess)
       startp = sprocess->GetProcessName();
   if (tprocess)
     endp = tprocess->GetProcessName();
-  analysisManager->FillNtupleSColumn(id,13, startp);
-  analysisManager->FillNtupleSColumn(id,14, endp);
-  analysisManager->FillNtupleDColumn(id,15, tpos[0]/mm);
-  analysisManager->FillNtupleDColumn(id,16, tpos[1]/mm);
-  analysisManager->FillNtupleDColumn(id,17, tpos[2]/mm);
+  analysisManager->FillNtupleSColumn(id,14, startp);
+  analysisManager->FillNtupleSColumn(id,15, endp);
+  analysisManager->FillNtupleDColumn(id,16, tpos[0]/mm);
+  analysisManager->FillNtupleDColumn(id,17, tpos[1]/mm);
+  analysisManager->FillNtupleDColumn(id,18, tpos[2]/mm);
+  analysisManager->FillNtupleSColumn(id,19,eVname);
 
   analysisManager->AddNtupleRow(id);      
 }

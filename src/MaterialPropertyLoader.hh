@@ -132,7 +132,8 @@ class G4LogicalVolumeStore;
     void SetReflectances( std::string, std::map<std::string, std::map<double,double> >, std::map<std::string, std::map<double, double> >);
     // TODO turn the argument into constant reference (using type aliases)
     void SetReflectances( std::map<std::string, std::map<double,double> >);
-
+    // EC, 11-Feb-2021.
+    void SetReflectances( std::map<std::string,std::map<double, double> >,  std::map<std::string,std::map<double, double> >  );
     /// @}
     // --- END Setting of specific properties ----------------------------------
 

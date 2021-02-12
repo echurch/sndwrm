@@ -112,6 +112,7 @@ class LArPropertiesStandard { //: public LArProperties {
   std::map<double, double> RIndexSpectrum() const ;
   std::map<double, double> AbsLengthSpectrum() const ;
   std::map<double, double> RayleighSpectrum() const ;
+  std::vector<std::string> ReflectiveSurfaceNames() const {return fReflectiveSurfaceNames;} 
 
     std::map<std::string, std::map<double, double> > SurfaceReflectances() const;
     std::map<std::string, std::map<double, double> > SurfaceReflectanceDiffuseFractions() const;

@@ -146,14 +146,15 @@ void HistoManager::Book()
   analysis->CreateNtupleDColumn("Startx");         //column 6    
   analysis->CreateNtupleDColumn("Starty");         //column 7    
   analysis->CreateNtupleDColumn("Startz");         //column 8    
-  analysis->CreateNtupleDColumn("Px");         //column 6    
-  analysis->CreateNtupleDColumn("Py");         //column 7    
-  analysis->CreateNtupleDColumn("Pz");         //column 8    
-  analysis->CreateNtupleDColumn("Length");         //column 9
-  analysis->CreateNtupleDColumn("Event");         //column 10
+  analysis->CreateNtupleDColumn("Px");         //column 9    
+  analysis->CreateNtupleDColumn("Py");         //column 10    
+  analysis->CreateNtupleDColumn("Pz");         //column 11   
+  analysis->CreateNtupleDColumn("Length");         //column 12
+  analysis->CreateNtupleDColumn("Event");         //column 13
+  analysis->CreateNtupleSColumn("Process");         //column 14
   analysis->FinishNtuple();
 
-  analysis->CreateNtuple("Step", "Step Summaries"); 
+  analysis->CreateNtuple("Steps", "Step Summaries"); 
   analysis->CreateNtupleDColumn("Edep");       //column 0
   analysis->CreateNtupleDColumn("Time");         //column 1
   analysis->CreateNtupleDColumn("Weight");         //colum 2
@@ -165,13 +166,15 @@ void HistoManager::Book()
   analysis->CreateNtupleDColumn("PID");         //column 8
   analysis->CreateNtupleDColumn("TrkID");         //column 9
   analysis->CreateNtupleSColumn("Volume");         //column 10
-  analysis->CreateNtupleSColumn("Material");         //column 11
-  analysis->CreateNtupleDColumn("StepNum");         //column 12
-  analysis->CreateNtupleSColumn("SProcess");         //column 13
-  analysis->CreateNtupleSColumn("TProcess");         //column 14
-  analysis->CreateNtupleDColumn("TX");         //column 15
-  analysis->CreateNtupleDColumn("TY");         //column 16
-  analysis->CreateNtupleDColumn("TZ");         //column 17
+  analysis->CreateNtupleDColumn("CopyNo");         //column 11
+  analysis->CreateNtupleSColumn("Material");         //column 12
+  analysis->CreateNtupleDColumn("StepNum");         //column 13
+  analysis->CreateNtupleSColumn("SProcess");         //column 14
+  analysis->CreateNtupleSColumn("TProcess");         //column 15
+  analysis->CreateNtupleDColumn("TX");         //column 16
+  analysis->CreateNtupleDColumn("TY");         //column 17
+  analysis->CreateNtupleDColumn("TZ");         //column 18
+  analysis->CreateNtupleSColumn("TVolume");         //column 19
   analysis->FinishNtuple();
   
   analysis->SetNtupleActivation(false);          

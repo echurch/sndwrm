@@ -96,12 +96,18 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double           fAcrylicLength; 
     G4double           fAcrylicRadius;
     G4double           fInsetRadius;
+    bool               fSiPMsOnAcrylic;
+    bool               fSiPMsOnCathode;
+    G4double           fSiPMSize;
+    G4double           fSiPMThickness;
+    G4double           fSiPMPhotoCathodeCoverage;
     G4Material*        fTargetMater;
     G4Material*        fShieldMater;
     G4Material*        fG10Mater;
     G4Material*        fWoodMater;
     G4Material*        fColdSkinMater;
     G4Material*        fAcrylicMater;
+    G4Material*        fSiPMMater;
     G4Material*        fTPBMater;
     G4LogicalVolume*   fLogicTarget;
     G4LogicalVolume*   fLogicShield;
@@ -110,6 +116,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume*   fLogicColdSkin;
     G4LogicalVolume*   fLogicAcrylic;
     G4LogicalVolume*   fLogicTPB;
+    G4LogicalVolume*   fLogicSiPM;
                  
     G4double           fDetectorLength;
     G4double           fDetectorThickness;
@@ -128,6 +135,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     
     void               DefineMaterials();
     G4VPhysicalVolume* ConstructVolumes();     
+    void               DetSiPMs(G4String , G4LogicalVolume* );
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

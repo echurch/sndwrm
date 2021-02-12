@@ -82,11 +82,16 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   const G4ThreeVector& vtx = track->GetVertexPosition();
   const G4double length = track->GetTrackLength();
   const G4ThreeVector pvtx =  track->GetMomentumDirection () ;
+  
+  const G4VProcess* process   = track->GetCreatorProcess();
+  G4String processName("null") ;
+  if (process)
+    processName = process->GetProcessName();
 
   run->ParticleCount(name,energy,iVol);
   
   //Radioactive decay products
-  //G4int processType = track->GetCreatorProcess()->GetProcessSubType();
+  //G4int procaessType = track->GetCreatorProcess()->GetProcessSubType();
   //  if (processType == fRadioactiveDecay) {
     //fill ntuple id = 3
 
@@ -107,6 +112,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
     analysisManager->FillNtupleDColumn(id,11, pvtx[2]/sqrt(pvtx[0]*pvtx[0]+pvtx[1]*pvtx[1]+pvtx[2]*pvtx[2]));
     analysisManager->FillNtupleDColumn(id,12, length);
     analysisManager->FillNtupleDColumn(id,13, event);
+    analysisManager->FillNtupleSColumn(id,14, processName);
     analysisManager->AddNtupleRow(id);
 
     if (charge < 3.) {   
