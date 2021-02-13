@@ -39,7 +39,9 @@
 class DetectorConstruction;
 class G4UIdirectory;
 class G4UIcmdWithAString;
+class G4UIcmdWithABool;
 class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithADouble;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -66,8 +68,14 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fDetectThicknessCmd;
     G4UIcmdWithADoubleAndUnit* fTargLengthCmd;
     G4UIcmdWithADoubleAndUnit* fDetectLengthCmd;    
-};
 
+    G4UIcmdWithADouble* fSiPMPhotoCathodeCoverageCmd;    
+    G4UIcmdWithADoubleAndUnit* fSiPMSizeCmd;    
+    G4UIcmdWithADoubleAndUnit* fSiPMThicknessCmd;    
+    G4UIcmdWithABool* fSiPMsOnAcrylicCmd;    
+    G4UIcmdWithABool* fSiPMsOnCathodeCmd;    
+
+};
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif

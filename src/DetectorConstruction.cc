@@ -85,6 +85,15 @@ DetectorConstruction::DetectorConstruction()
   fWorldLength = std::max(fTargetLength,fDetectorLength);
   fWorldRadius = fTargetRadius + 1.0*m;
       
+  // These 5 read in from g4mac file.
+  fSiPMsOnAcrylic = true;
+  fSiPMsOnCathode = false;
+  fSiPMSize = 24.* cm;
+  fSiPMThickness = 1. * cm;
+  fSiPMPhotoCathodeCoverage = 0.8;
+
+
+
   DefineMaterials();
     
   fDetectorMessenger = new DetectorMessenger(this);
@@ -341,13 +350,6 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
 
-  // Detector
-  //
-  /*
-  G4Tubs* 
-  sDetector = new G4Tubs("Detector",  
-                fTargetRadius, fWorldRadius, 0.5*fDetectorLength, 0.,twopi);
-  */
 
   
   std::cout << "fInsetRadius is " << fInsetRadius << std::endl;
@@ -358,8 +360,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
   
   fDetectorRadius = fTargetRadius-fInsetRadius;
-  G4Box* sDetector = new G4Box("Detector",fDetectorRadius, fDetectorRadius, fDetectorLength/2);
   /*
+  G4Box* sDetector = new G4Box("Detector",fDetectorRadius, fDetectorRadius, fDetectorLength/2);
+
   
   fLogicDetector = new G4LogicalVolume(sDetector,       //shape
                              fDetectorMater,            //material
@@ -412,17 +415,11 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            false,                       //no boolean operation
                            0);                          //copy number
 
-  // These 5 should be read in from g4mac file.
-  fSiPMsOnAcrylic = true;
-  fSiPMsOnCathode = false;
-  fSiPMSize = 24.* cm;
-  fSiPMThickness = 1. * cm;
-  fSiPMPhotoCathodeCoverage = 0.8;
 
   if (fSiPMsOnAcrylic)
     DetSiPMs("Acrylic",fLogicTarget);
   if (fSiPMsOnCathode)
-    DetSiPMs("Cathode",lWorld);
+    DetSiPMs("Cathode",fLogicTarget);
 
   // Now for the purpose of tracking optical photons we do the following to the Argon and TPB to endow them w optical physics properties.
   // Must wait till this late, cuz MLP works by looping over all Logical Volumes which are only just now established.
@@ -666,7 +663,40 @@ G4LogicalVolume* DetectorConstruction::GetLogicDetector()
   return fLogicDetector;
 }
 
-void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiW)
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void DetectorConstruction::SetSiPMsOnAcrylic(G4bool value)
+{
+  fSiPMsOnAcrylic = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void DetectorConstruction::SetSiPMsOnCathode(G4bool value)
+{
+  fSiPMsOnCathode = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void DetectorConstruction::SetSiPMThickness(G4double value)
+{
+  fSiPMThickness = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void DetectorConstruction::SetSiPMSize(G4double value)
+{
+  fSiPMSize = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+void DetectorConstruction::SetSiPMPhotoCathodeCoverage(G4double value)
+{
+  fSiPMPhotoCathodeCoverage = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+
+
+
+void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiMother)
 {
   
 
@@ -720,7 +750,7 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiW)
 			      G4ThreeVector(-fAcrylicRadius+fAcrylicThickness+fTPBThickness+fSiPMThickness/2,(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(jj+offsetLength)*(fSiPMSize+2*halfSpacing)),   //cm
 			      fLogicSiPM,              //logical volume                         
 			      "SiPM",                  //name                                                                                                                         
-			      logiW,                      //mother  volume
+			      logiMother,                      //mother  volume
 			      false,                       //no boolean operation
 			      nSiPM++,0);                          //copy number   
 	    // pos x Acrylic wall
@@ -728,7 +758,7 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiW)
 			      G4ThreeVector(+fAcrylicRadius-fAcrylicThickness-fTPBThickness-fSiPMThickness/2,(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(jj+offsetLength)*(fSiPMSize+2*halfSpacing)),  
 			      fLogicSiPM,              //logical volume                         
 			      "SiPM",                  //name                                                                                                                         
-			      logiW,                      //mother  volume
+			      logiMother,                      //mother  volume
 			      false,                       //no boolean operation
 			      nSiPM2++,0);                          //copy number
 
@@ -753,7 +783,7 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiW)
 			      G4ThreeVector((jj+offsetLat)*(fSiPMSize+2*halfSpacing),(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(-fAcrylicLength/2+fAcrylicThickness+fTPBThickness+fSiPMThickness/2)),  
 			      fLogicSiPM,              //logical volume                         
 			      "SiPM",                  //name                                                                                                                         
-			      logiW,                      //mother  volume
+			      logiMother,                      //mother  volume
 			      false,                       //no boolean operation
 			      nSiPM3++,0);                          //copy number   
 
@@ -762,7 +792,7 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiW)
 			      G4ThreeVector((jj+offsetLat)*(fSiPMSize+2*halfSpacing),(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(+fAcrylicLength/2-fAcrylicThickness-fTPBThickness-fSiPMThickness/2)),  
 			      fLogicSiPM,              //logical volume                         
 			      "SiPM",                  //name                                                                                                                         
-			      logiW,                      //mother  volume
+			      logiMother,                      //mother  volume
 			      false,                       //no boolean operation
 			      nSiPM4++,0);                          //copy number
 

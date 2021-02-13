@@ -36,6 +36,8 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWithADouble.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -105,6 +107,37 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
   fDetectLengthCmd->SetUnitCategory("Length");
   fDetectLengthCmd->SetParameterName("choice",false);
   fDetectLengthCmd->AvailableForStates(G4State_PreInit);
+
+
+  fSiPMsOnAcrylicCmd =
+       new G4UIcmdWithABool("/rdecay02/det/setDetectorSiPMsOnAcrylic",this);
+  fSiPMsOnAcrylicCmd->SetGuidance("Put SiPMs on side Acrylic walls");
+  fSiPMsOnAcrylicCmd->SetParameterName("choice",false);
+  fSiPMsOnAcrylicCmd->AvailableForStates(G4State_PreInit);
+  fSiPMsOnCathodeCmd =
+       new G4UIcmdWithABool("/rdecay02/det/setDetectorSiPMsOnCathode",this);
+  fSiPMsOnCathodeCmd->SetGuidance("Put SiPMs on side Cathode");
+  fSiPMsOnCathodeCmd->SetParameterName("choice",false);
+  fSiPMsOnCathodeCmd->AvailableForStates(G4State_PreInit);
+  fSiPMSizeCmd =
+    new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setDetectorSiPMSize",this);
+  fSiPMSizeCmd->SetGuidance("Size of SiPM on side");
+  fSiPMSizeCmd->SetUnitCategory("Length");
+  fSiPMSizeCmd->SetParameterName("choice",false);
+  fSiPMSizeCmd->AvailableForStates(G4State_PreInit);
+  fSiPMThicknessCmd =
+    new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setDetectorSiPMThickness",this);
+  fSiPMThicknessCmd->SetGuidance("Thickness of SiPM");
+  fSiPMThicknessCmd->SetUnitCategory("Length");
+  fSiPMThicknessCmd->SetParameterName("choice",false);
+  fSiPMThicknessCmd->AvailableForStates(G4State_PreInit);
+  fSiPMPhotoCathodeCoverageCmd =
+    new G4UIcmdWithADouble("/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage",this);
+  fSiPMPhotoCathodeCoverageCmd->SetGuidance("Fractional PhotoCathodeCoverage of SiPM");
+  fSiPMPhotoCathodeCoverageCmd->SetParameterName("choice",false);
+  fSiPMPhotoCathodeCoverageCmd->AvailableForStates(G4State_PreInit);
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -154,6 +187,26 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
   if (command == fDetectThicknessCmd ) 
     {fDetector->SetDetectorThickness(
                      fDetectThicknessCmd->GetNewDoubleValue(newValue));}      
+
+
+
+  if (command == fSiPMsOnAcrylicCmd ) 
+    {fDetector->SetSiPMsOnAcrylic(
+                     fSiPMsOnAcrylicCmd->GetNewBoolValue(newValue));}      
+  if (command == fSiPMsOnCathodeCmd ) 
+    {fDetector->SetSiPMsOnCathode(
+                     fSiPMsOnCathodeCmd->GetNewBoolValue(newValue));}      
+  if (command == fSiPMSizeCmd ) 
+    {fDetector->SetSiPMSize(
+                     fSiPMSizeCmd->GetNewDoubleValue(newValue));}      
+  if (command == fSiPMThicknessCmd ) 
+    {fDetector->SetSiPMThickness(
+                     fSiPMThicknessCmd->GetNewDoubleValue(newValue));}      
+  if (command == fSiPMPhotoCathodeCoverageCmd ) 
+    {fDetector->SetSiPMPhotoCathodeCoverage(
+                     fSiPMPhotoCathodeCoverageCmd->GetNewDoubleValue(newValue));}      
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

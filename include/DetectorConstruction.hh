@@ -64,7 +64,13 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetDetectorThickness(G4double value);  
     void SetDetectorRadius(G4double value);  
     void SetDetectorMaterial(G4String);               
-                   
+         
+  void SetSiPMsOnAcrylic(G4bool);
+  void SetSiPMsOnCathode(G4bool);
+  void SetSiPMSize(G4double);
+  void SetSiPMThickness(G4double);
+  void SetSiPMPhotoCathodeCoverage(G4double);
+          
     void PrintParameters();
     
   public:

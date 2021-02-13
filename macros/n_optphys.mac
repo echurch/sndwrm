@@ -24,6 +24,14 @@
 
 /rdecay02/det/setShieldThickness +77.6 cm
 
+
+/rdecay02/det/setDetectorSiPMsOnAcrylic true
+/rdecay02/det/setDetectorSiPMsOnCathode false
+/rdecay02/det/setDetectorSiPMSize 24.0 cm
+/rdecay02/det/setDetectorSiPMThickness 0.1 cm
+/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.05
+
+
 #
 /run/initialize
 #
@@ -34,7 +42,7 @@
 /grdm/selectVolume Detector
 
 /gps/particle neutron
-/gps/ene/mono 100.00 keV
+/gps/ene/mono 1000.00 keV
 #/gps/particle opticalphoton
 #/gps/ene/mono 7.5 eV
 
