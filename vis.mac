@@ -35,8 +35,8 @@
 #
 # Specify view angle:
 ##/vis/viewer/set/viewpointThetaPhi 90. 0. ## along x
-/vis/viewer/set/viewpointThetaPhi 0. 90. ## along z
-##/vis/viewer/set/viewpointThetaPhi 90. 90. ## along y
+##/vis/viewer/set/viewpointThetaPhi 0. 90. ## along z
+/vis/viewer/set/viewpointThetaPhi 90. 90. ## along y
 ##/vis/viewer/set/viewpointThetaPhi 30. 30.
 #
 # Specify zoom value:
@@ -51,7 +51,6 @@
 /vis/viewer/set/style wireframe
 /vis/geometry/set/visibility Target 1 true
 /vis/viewer/set/style wireframe
-/vis/geometry/set/visibility Detector 1 false
 /vis/geometry/set/visibility G10 1 true
 /vis/viewer/set/style wireframe
 /vis/geometry/set/visibility SiPM 0 true
