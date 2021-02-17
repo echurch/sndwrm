@@ -26,10 +26,10 @@
 
 
 /rdecay02/det/setDetectorSiPMsOnAcrylic true
-/rdecay02/det/setDetectorSiPMsOnCathode false
+/rdecay02/det/setDetectorSiPMsOnCathode true
 /rdecay02/det/setDetectorSiPMSize 24.0 cm
 /rdecay02/det/setDetectorSiPMThickness 0.1 cm
-/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.05
+/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
 
 
 #

@@ -723,16 +723,17 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiMot
   double offsetLength = 0;
   if (!(numLength%2)) 
     offsetLength = 0.5;
+  int nSiPM(0);
+  int nSiPM2(numHeight*numLength);
+  int nSiPM3(2*numHeight*numLength);
+  int nSiPM4(2*numHeight*numLength+numHeight*numLength);
+  int nSiPMC(0);
 
   G4RotationMatrix* rotationMatrix = new G4RotationMatrix();
 
   if (component=="Acrylic") 
     {
       std::cout << "DetectorConstruction::DetSiPMs: Placing " << numHeight*numLength << " SiPMs just inside x Acrylic each wall, each of area " << area/1E6 << " [m^2] of VD detector." << std::endl;
-      int nSiPM(0);
-      int nSiPM2(numHeight*numLength);
-      int nSiPM3(2*numHeight*numLength);
-      int nSiPM4(2*numHeight*numLength+numHeight*numLength);
 
 
       for (int ii=-numHeight/2; ii<=numHeight/2; ii++)
@@ -809,10 +810,34 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiMot
 
   else if (component=="Cathode") 
     {
-      std::cout << "DetectorConstruction::DetSiPMs: Placing " << numLateral*numLateral << " SiPMs in central VD cathode." << std::endl;
+      std::cout << "DetectorConstruction::DetSiPMs: Placing " << numLateral*numLength << " SiPMs in central VD cathode." << std::endl;
       *rotationMatrix = G4RotationMatrix();
       rotationMatrix->rotateZ(90.*deg);
 
+      if (nSiPM4 > (2*numHeight*numLength+numHeight*numLength)) // if this is true its cuz we've already placed a bunch of SiPMs and should start our Cathode count at this value.
+	nSiPMC = nSiPM4;
+
+      for (int ii=-numLateral/2; ii<=numLateral/2; ii++)
+      {
+	for (int jj=-numLength/2; jj<=numLength/2; jj++)
+	  {
+
+	    if (!(numLateral%2) && ii==int(numLateral/2)) // if numLateral is even we need to stagger placement by 0.5 integer and skip the last one.
+	      continue;
+	    if (!(numLength%2) && jj==int(numLength/2)) // if numLength is even we need to stagger placement by 0.5 integer and skip the last one.
+	      continue;
+
+	    new G4PVPlacement(rotationMatrix, 
+			      G4ThreeVector((ii+offsetLat)*(fSiPMSize+2*halfSpacing),0.0,(jj+offsetLength)*(fSiPMSize+2*halfSpacing)),   //cm
+			      fLogicSiPM,              //logical volume                         
+			      "SiPM",                  //name                                                                                                                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nSiPMC++,0);                          //copy number   
+
+	  }
+      }
+      
     }
 
   else

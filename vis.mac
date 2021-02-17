@@ -36,11 +36,11 @@
 # Specify view angle:
 ##/vis/viewer/set/viewpointThetaPhi 90. 0. ## along x
 ##/vis/viewer/set/viewpointThetaPhi 0. 90. ## along z
-/vis/viewer/set/viewpointThetaPhi 90. 90. ## along y
-##/vis/viewer/set/viewpointThetaPhi 30. 30.
+##/vis/viewer/set/viewpointThetaPhi 90. 90. ## along y
+/vis/viewer/set/viewpointThetaPhi 30. 30.
 #
 # Specify zoom value:
-/vis/viewer/zoom 4. # 1.4
+/vis/viewer/zoom  1.4
 #
 # Specify style (surface or wireframe):
 /vis/viewer/set/style wireframe
