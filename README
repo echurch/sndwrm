@@ -25,7 +25,7 @@ source ~/venvs/bin/activate
 
 To build your rdecay02 after downloading, make a build directory parallel to /src and /macro called /build. Go to it and do 
 
-cmake ../src
+cmake ../
 make
 
 Run from the build directory, as
