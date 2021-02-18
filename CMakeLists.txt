@@ -45,20 +45,21 @@ target_link_libraries(rdecay02  ${Geant4_LIBRARIES} )
 # build rdecay02. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(rdecay02_SCRIPTS
-#    debug.mac
-#    plotHisto.C
-    rdecay02.in
-    vis.mac
-  )
 
-foreach(_script ${rdecay02_SCRIPTS})
-  configure_file(
-    ${PROJECT_SOURCE_DIR}/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
-    COPYONLY
-    )
-endforeach()
+##set(rdecay02_SCRIPTS
+##    debug.mac
+##    plotHisto.C
+##    rdecay02.in
+##    vis.mac
+##  )
+
+##foreach(_script ${rdecay02_SCRIPTS})
+##  configure_file(
+##    ${PROJECT_SOURCE_DIR}/${_script}
+##    ${PROJECT_BINARY_DIR}/${_script}
+##    COPYONLY
+##    )
+##endforeach()
 
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
