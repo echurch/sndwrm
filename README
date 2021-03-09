@@ -41,15 +41,21 @@ Ctl-D out of the executable when done, and note that the above created your new 
 Then, in python, do something like the following
 > from ROOT import TFile
 > f = TFile("n_optphys.root")
-> f.Steps.Draw("TZ:TY","TVolume!=\"SiPM\"&&PID==0") # for example, to see the termination z-y coordinate of photons that end their step (and lives) in a SiPM
+> f.Steps.Draw("TZ:TY","TVolume==\"SiPM\"&&PID==0") # for example, to see the termination z-y coordinate of photons that end their step (and lives) in a SiPM
 > # The below will show you the TTree variables available to you.
 > f.Steps.Show(0)
 > f.Tracks.Show(0)
 
 
-To run a multi-event job with no graphics, comment out with a '#' the line that says vis.mac in n_optphys.mac, and comment back in at the end a line like /run/beamOn 200.
-Then at your command line, say
+To run a multi-event job with no graphics, comment out with a '#' the line that says vis.mac in n_optphys.mac, and comment back in at the end a 
+line like /run/beamOn 200. Then at your command line, say
 nohup ./rdecay02 ../macros/n_optphys.mac >& noh.out &
+
+
+I have a trick to run "photon bombs," employed in ../macros/pbomb_optphys.mac. If you specify to launch a "geantino," the code in ~/src/PrimaryGenerator*
+will reinterpret that to launch a fixed number of isotropic opticalphotons inside a hard-coded box (inside the Acrylic volume, for now). Try it as:
+./rdecay02 ../macros/pbomb_optphys.mac
+
 
 # Ask eric.church@pnnl.gov for help, as needed.
 

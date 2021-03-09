@@ -69,6 +69,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4LogicalVolume* lVolume = aStep->GetPreStepPoint()->GetTouchableHandle()
                              ->GetVolume()->GetLogicalVolume();
   G4int iVol = 0;
+  G4Track* track = aStep->GetTrack();
+  G4double tID = track->GetTrackID();
+
+
+
   if (lVolume == fDetector->GetLogicTarget())   iVol = 1;
   if (lVolume == fDetector->GetLogicDetector()) iVol = 2;
 
@@ -78,6 +83,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   const G4VProcess* tprocess   = endPoint->GetProcessDefinedStep();
   const G4VProcess* sprocess   = aStep->GetPreStepPoint()->GetProcessDefinedStep();
   run->CountProcesses(tprocess, iVol);
+
 
   G4TouchableHandle touch = endPoint->GetTouchableHandle();
   G4VPhysicalVolume* eVolume = touch->GetVolume();
@@ -90,10 +96,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   tprocess = aStep->GetPostStepPoint()->GetProcessDefinedStep();
 
+  const G4ParticleDefinition* particle = track->GetParticleDefinition();  
+  G4int pID       = particle->GetPDGEncoding();
 
-  if (edepStep <= 0.) return;
+  if (edepStep <= 0. && pID!=0 ) return;
   G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
   G4double weight = aStep->GetPreStepPoint()->GetWeight();   
+
   fEventAction->AddEdep(iVol, edepStep, time, weight);
   
   //fill ntuple id = 2
@@ -103,13 +112,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   const G4ThreeVector tpos(aStep->GetPostStepPoint()->GetPosition());
 
 
-  G4Track* track = aStep->GetTrack();
-  const G4ParticleDefinition* particle = track->GetParticleDefinition();  
-  G4int pID       = particle->GetPDGEncoding();
-  G4double tID = track->GetTrackID();
+
   std::string startp("null");
   std::string endp("null");
-  //  std::cout << "SteppingAction.cc: Event,edep" << event << ", " << edepStep << std::endl;
+
+
   analysisManager->FillNtupleDColumn(id,0, edepStep);
   analysisManager->FillNtupleDColumn(id,1, time/s);
   analysisManager->FillNtupleDColumn(id,2, weight);
@@ -122,7 +129,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,9, tID);
 
   analysisManager->FillNtupleSColumn(id,10, track->GetVolume()->GetLogicalVolume()->GetName());
-  analysisManager->FillNtupleDColumn(id,11, track->GetVolume()->GetCopyNo());
+  analysisManager->FillNtupleDColumn(id,11, eVolume->GetCopyNo());
   analysisManager->FillNtupleSColumn(id,12, track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName());
   analysisManager->FillNtupleDColumn(id,13, track->GetCurrentStepNumber());
   if (sprocess)

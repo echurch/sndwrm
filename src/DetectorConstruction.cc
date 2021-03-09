@@ -750,7 +750,7 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiMot
 	    new G4PVPlacement(0, 
 			      G4ThreeVector(-fAcrylicRadius+fAcrylicThickness+fTPBThickness+fSiPMThickness/2,(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(jj+offsetLength)*(fSiPMSize+2*halfSpacing)),   //cm
 			      fLogicSiPM,              //logical volume                         
-			      "SiPM",                  //name                                                                                                                         
+			      "SiPM",                  //name                         
 			      logiMother,                      //mother  volume
 			      false,                       //no boolean operation
 			      nSiPM++,0);                          //copy number   
@@ -830,7 +830,7 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiMot
 	    new G4PVPlacement(rotationMatrix, 
 			      G4ThreeVector((ii+offsetLat)*(fSiPMSize+2*halfSpacing),0.0,(jj+offsetLength)*(fSiPMSize+2*halfSpacing)),   //cm
 			      fLogicSiPM,              //logical volume                         
-			      "SiPM",                  //name                                                                                                                         
+			      "SiPM",                  //name                           
 			      logiMother,                      //mother  volume
 			      false,                       //no boolean operation
 			      nSiPMC++,0);                          //copy number   

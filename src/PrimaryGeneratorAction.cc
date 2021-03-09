@@ -46,12 +46,13 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
-: G4VUserPrimaryGeneratorAction(),fParticleGun(0)
+  : G4VUserPrimaryGeneratorAction(),fParticleGun(0),
+  fPrimaryGenerator(0)
 {
-  G4int n_particle = 1;
+  //  G4int n_particle = 1;
   //  fParticleGun  = new G4ParticleGun(n_particle);
   fParticleGun  = new G4GeneralParticleSource();
-  
+  fPrimaryGenerator = new PrimaryGenerator();  
   /*
   fParticleGun->SetParticleEnergy(0*eV);
   fParticleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm,0.*cm));
@@ -63,27 +64,27 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
-  delete fParticleGun;
+  if (fPrimaryGenerator)
+    delete fPrimaryGenerator;
+  if (fParticleGun)
+    delete fParticleGun;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
+  // if there's a geantino in .mac file create a "photon bomb"
   if (fParticleGun->GetParticleDefinition() == G4Geantino::Geantino()) {  
-    G4int Z = 10, A = 24;
-    G4double ionCharge   = 0.*eplus;
-    G4double excitEnergy = 0.*keV;
-    
-    G4ParticleDefinition* ion
-       = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
-    fParticleGun->SetParticleDefinition(ion);
-    fParticleGun->SetParticleCharge(ionCharge);
+    std::cout << "GeneratePrimaries: detect that a 'photon bomb' is to be created." << std::endl;
+
+    fPrimaryGenerator->GeneratePrimaryVertex(anEvent);
+    return;
   }    
   //create vertex
   //   
-  fParticleGun->GeneratePrimaryVertex(anEvent);
 
+  fParticleGun->GeneratePrimaryVertex(anEvent);
 
 
   // fPrimaryGenerator->GeneratePrimaryVertexExtra(event);  

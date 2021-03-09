@@ -233,7 +233,7 @@
           std::cout<< "defining Acrylic optical boundary "<<std::endl;
           G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface Acrylic",glisur,ground,dielectric_dielectric); //dielectric_metal);
           refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
-          refl_opsurfs->SetPolish(0.5); // Turning this up to 0.99 increases light for Y>6m by 50% (for 4 evts). EC, 23-Jan-2021.
+          refl_opsurfs->SetPolish(0.5);
           new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
         }
         else
@@ -541,7 +541,7 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
       }
 
     // Just try to get all optphotons to enter SiPM and then die, so that the Termination Volume shows they entered. EC, 12-Feb-2021
-    std::vector<double> VShortAbsLengthSpectrum { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01};
+    std::vector<double> VShortAbsLengthSpectrum { 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001};
     // Just use Argon optphoton properties for Acrylic
     SetMaterialProperty( "SiPM", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
     SetMaterialProperty( "SiPM", "ABSLENGTH",     VShortAbsLength, CLHEP::cm );
