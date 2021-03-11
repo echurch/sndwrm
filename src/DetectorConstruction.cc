@@ -52,6 +52,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4UnitsTable.hh"
+#include "G4UserLimits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -131,11 +132,12 @@ void DetectorConstruction::DefineMaterials()
   fWorldMater = Air20;
 
   G4double gasFactor;
-  gasFactor = 3.28; // 2 bar: gm/L 
+  gasFactor = 5.894; // 1 bar: gm/L 
   gasFactor /= 1E3; // gm/cm^3
+  gasFactor *= 15.0 ; // presuming wrongly ideal gas law
 
-  fTargetMater   = new G4Material("Argon", 18, 40.00*g/mole, gasFactor *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
-  fDetectorMater = new G4Material("Argon", 18, 40.00*g/mole, gasFactor *g/cm3, kStateLiquid,  77.*kelvin, 1.*atmosphere);
+  fTargetMater   = new G4Material("Xenon", 54, 131.3*g/mole, gasFactor *g/cm3, kStateGas,  77.*kelvin, 15.0*atmosphere);
+  //  fDetectorMater = new G4Material("Xenon", 54, 131.3*g/mole, gasFactor *g/cm3, kStateGas,  77.*kelvin, 1.0*atmosphere);
   //  fShieldMater = H2O;
   fShieldMater = plastic;
   fG10Mater = g10;
@@ -243,6 +245,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            0);                          //copy number
 
 
+	   G4UserLimits *lim = new G4UserLimits();
+	   G4double maxStep = 1.0 * mm;
+	   lim->SetMaxAllowedStep(maxStep);
+	   fLogicTarget->SetUserLimits(lim);
 
   // Detector
   //
@@ -257,7 +263,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   std::cout << "fShieldThickness is " << fShieldThickness << std::endl;
   std::cout << "fG10Thickness is " << fG10Thickness << std::endl;
 
-  
+  /*
   fDetectorRadius = fTargetRadius-fInsetRadius;
   G4Box* sDetector = new G4Box("Detector",fDetectorRadius, fDetectorRadius, fDetectorLength/2);
 
@@ -274,7 +280,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            false,                       //no boolean operation
                            0);                          //copy number
 
-
+  */
   
 
   PrintParameters();
@@ -294,11 +300,12 @@ void DetectorConstruction::PrintParameters()
   G4cout << "\n Target : Length = " << G4BestUnit(fTargetLength,"Length")
          << " Radius = " << G4BestUnit(fTargetRadius,"Length")  
          << " Material = " << fTargetMater->GetName();
+  /*
   G4cout << "\n Detector : Length = " << G4BestUnit(fDetectorLength,"Length")
          << " Radius = " << G4BestUnit(fDetectorRadius,"Length")  
     //         << " Thickness = " << G4BestUnit(fDetectorThickness,"Length")  
          << " Material = " << fDetectorMater->GetName() << G4endl;          
-
+  */
   G4cout << "\n Shield : Thickness = " << G4BestUnit(fShieldThickness,"Length")
          << " Material = " << fShieldMater->GetName() << G4endl;          
   G4cout << "\n G10 : Thickness = " << G4BestUnit(fG10Thickness,"Length")

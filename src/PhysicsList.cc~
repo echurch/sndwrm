@@ -92,7 +92,7 @@ PhysicsList::PhysicsList()
   RegisterPhysics(new G4EmStandardPhysics());
   G4EmParameters* param = G4EmParameters::Instance();
   param->SetAugerCascade(true);
-  param->SetStepFunction(1., 1*CLHEP::mm);
+  //  param->SetStepFunction(1., 1*CLHEP::mm);
   param->SetStepFunctionMuHad(1., 1*CLHEP::mm);
 
   // Decay

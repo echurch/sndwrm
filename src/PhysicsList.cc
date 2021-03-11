@@ -95,6 +95,7 @@ PhysicsList::PhysicsList()
   //  param->SetStepFunction(1., 1*CLHEP::mm);
   param->SetStepFunctionMuHad(1., 1*CLHEP::mm);
 
+
   // Decay
   RegisterPhysics(new G4DecayPhysics());
 

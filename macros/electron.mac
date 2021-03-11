@@ -36,14 +36,12 @@
 
 /gps/particle e-
 
-##/gps/ene/type Mono
-##/gps/ene/mono 1.0 MeV
 
 /gps/ene/type Lin
 /gps/ene/gradient 0
 /gps/ene/intercept 1
-/gps/ene/min 0 MeV
-/gps/ene/max 2.0 MeV
+/gps/ene/min 2.45 MeV
+/gps/ene/max 2.60 MeV
 
 ### from end cap
 #/gps/position 0 0 -29 m
@@ -81,4 +79,4 @@
 
 # 0.8 Bq/kg leads to 10 Hz. 10 * piE7 sec is ~31 E7. Let's run 1/10th of one year.
 #/run/beamOn 31000000  # 10000
-/run/beamOn 3000000
+/run/beamOn 30

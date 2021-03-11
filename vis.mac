@@ -47,7 +47,7 @@
 /vis/geometry/set/visibility Shield 1 true
 /vis/viewer/set/style wireframe
 /vis/geometry/set/visibility Target 1 true
-/vis/geometry/set/visibility Detector 1 true
+#/vis/geometry/set/visibility Detector 1 true
 /vis/geometry/set/visibility G10 1 true
 #
 # Draw coordinate axes:

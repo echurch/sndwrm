@@ -47,6 +47,7 @@
 #include "ActionInitialization.hh"
 #include "SteppingVerbose.hh"
 
+#include "G4StepLimiterPhysics.hh"
 #include "G4UIExecutive.hh"
 #include "G4VisExecutive.hh"
 
@@ -78,7 +79,12 @@ int main(int argc,char** argv) {
   runManager->SetUserInitialization(det);
 
   PhysicsList* phys = new PhysicsList;
+  
+  // Added, to force small stepsize in Xenon, along w additions in DetectorConstruction.cc. EC, 11-Mar-2021.
+  phys->RegisterPhysics(new G4StepLimiterPhysics());
+
   runManager->SetUserInitialization(phys);
+
 
   runManager->SetUserInitialization(new ActionInitialization(det));
 
