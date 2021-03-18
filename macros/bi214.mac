@@ -20,7 +20,7 @@
 
 /rdecay02/det/setShieldThickness 0.12 m
 # This scales density wrongly per Ideal Gas Law and pressure too directly. (Though only the former matters, I think).
-/rdecay02/det/setTargetPressure 1. atm
+/rdecay02/det/setTargetPressure 15. atm
 
 
 
@@ -31,38 +31,21 @@
 #
 # rdm is applied only to the target volume
 /grdm/noVolumes
-/grdm/selectVolume Target
+/grdm/selectVolume Shield
 
-/gps/particle e-
+/gps/particle ion
+/gps/energy 0 MeV
+/gps/ion 83 214 0 0 # Bi214
 
-/gps/ene/type Lin
-/gps/ene/gradient 0
-/gps/ene/intercept 1
-/gps/ene/min 2.45 MeV
-/gps/ene/max 2.60 MeV
-
-### from end cap
-#/gps/position 0 0 -29 m
-#/gps/pos/type Volume
-#/gps/pos/shape Para
-#/gps/pos/halfx 6 m
-#/gps/pos/halfy 6 m
-# This is for emitting n's from outside the water shielding
-##/gps/pos/centre 0. 6.4 0. m
-#/gps/pos/centre 0. 3.0 0. m
-/gps/position 0. 0. 0. m
-#/gps/pos/type Plane
-/gps/pos/type Point
-#/gps/pos/shape Rectangle
-##/gps/pos/rot1 0 1 0 
-/gps/pos/rot2 0 0 -1
+/gps/pos/centre 0. 0. 0. m
+/gps/pos/type Volume
+/gps/pos/shape Para
 /gps/pos/halfx 6 m
-/gps/pos/halfy 29 m
+/gps/pos/halfy 6 m
+/gps/pos/halfz 30 m
 
-/gps/ang/type iso
-#/gps/ang/maxtheta 90 deg
 
-/analysis/setFileName electron
+/analysis/setFileName bi214
 /analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 2. MeV
 /analysis/h1/set 6 100 0. 2. MeV

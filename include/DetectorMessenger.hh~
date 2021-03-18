@@ -59,12 +59,17 @@ class DetectorMessenger: public G4UImessenger
     G4UIdirectory*             fRdecayDir;
     G4UIdirectory*             fDetDir;
     G4UIcmdWithAString*        fTargMatCmd;
-    G4UIcmdWithAString*        fDetectMatCmd;
-    G4UIcmdWithADoubleAndUnit* fTargRadiusCmd;
-    G4UIcmdWithADoubleAndUnit* fInsetRadiusCmd;
-    G4UIcmdWithADoubleAndUnit* fDetectThicknessCmd;
-    G4UIcmdWithADoubleAndUnit* fTargLengthCmd;
-    G4UIcmdWithADoubleAndUnit* fDetectLengthCmd;    
+    G4UIcmdWithADoubleAndUnit* fGapTargetPressureCmd;
+
+    G4UIcmdWithAString*        fGapMatCmd;
+    G4UIcmdWithADoubleAndUnit* fGapThicknessCmd;
+    G4UIcmdWithADoubleAndUnit* fShieldRadiusCmd;
+    G4UIcmdWithADoubleAndUnit* fShieldThicknessCmd;
+    G4UIcmdWithADoubleAndUnit* fTubeThicknessCmd;
+    G4UIcmdWithADoubleAndUnit* fTubeLengthCmd;
+    G4UIcmdWithADoubleAndUnit* fTubeRadiusCmd;
+
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

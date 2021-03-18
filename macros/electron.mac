@@ -11,18 +11,17 @@
 
 #
 # set the target/detector geometry
-#/rdecay02/det/setTargetMate G4_SODIUM_IODIDE
-# set the target/detector geometry
-/rdecay02/det/setTargetLength 58 m
-# "Radius" means halfXBox, halfYBox
-/rdecay02/det/setTargetRadius 6 m
-/rdecay02/det/setDetectorLength 20. m
-# Detector"Radius" is set to TargetRadius-InsetRadius
-/rdecay02/det/setInsetRadius 3 m
-# postive puts shield outside cryostat
-#/rdecay02/det/setShieldThickness 40 cm
-# a negative value puts shield inside cryostat
-/rdecay02/det/setShieldThickness -20 cm
+/rdecay02/det/setTubeLength 86. m
+/rdecay02/det/setTubeRadius 4. m
+/rdecay02/det/setTubeThickness 0.2 m
+
+/rdecay02/det/setGapThickness 10. cm
+/rdecay02/det/setGapMate Air
+
+/rdecay02/det/setShieldThickness 0.12 m
+# This scales density wrongly per Ideal Gas Law and pressure too directly. (Though only the former matters, I think).
+/rdecay02/det/setTargetPressure 15. atm
+
 
 
 #
@@ -35,7 +34,6 @@
 /grdm/selectVolume Target
 
 /gps/particle e-
-
 
 /gps/ene/type Lin
 /gps/ene/gradient 0
@@ -75,8 +73,7 @@
 /analysis/ntuple/setActivation 4 true
 /run/printProgress 1000
 
-/control/execute vis.mac
+/control/execute ../macros/vis_crkr.mac
 
 # 0.8 Bq/kg leads to 10 Hz. 10 * piE7 sec is ~31 E7. Let's run 1/10th of one year.
-#/run/beamOn 31000000  # 10000
 /run/beamOn 30

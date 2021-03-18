@@ -54,11 +54,16 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   
     virtual G4VPhysicalVolume* Construct();
     
-    void SetTargetLength (G4double value);
-    void SetTargetRadius (G4double value);
+    void SetTubeLength (G4double value);
+    void SetTubeThickness (G4double value);
+    void SetTubeRadius (G4double value);
     void SetShieldThickness (G4double value);
+    void SetShieldRadius (G4double value);
+    void SetGapThickness (G4double value);
     void SetInsetRadius (G4double value);
+    void SetTargetPressure (G4double value);
     void SetTargetMaterial (G4String);
+    void SetGapMaterial (G4String);
     
     void SetDetectorLength(G4double value);           
     void SetDetectorThickness(G4double value);  
@@ -87,20 +92,29 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   
     G4double           fTargetLength; 
     G4double           fTargetRadius;
+    G4double           fTargetPressure;
     G4double           fShieldThickness;
+    G4double           fShieldRadius;
+    G4double           fTubeThickness;
+    G4double           fTubeRadius;
+    G4double           fTubeLength;
+    G4double           fGapThickness;
+  
+
+    G4double           fG10Thickness;
     G4double           fInsetRadius;
+    G4Material*        fTubeMater;
     G4Material*        fTargetMater;
     G4Material*        fShieldMater;
+    G4Material*        fGapMater;
     G4Material*        fG10Mater;
     G4LogicalVolume*   fLogicTarget;
+    G4LogicalVolume*   fLogicDetector;
+    G4LogicalVolume*   fLogicTube;
     G4LogicalVolume*   fLogicShield;
+    G4LogicalVolume*   fLogicGap;
     G4LogicalVolume*   fLogicG10;
                  
-    G4double           fDetectorLength;
-  G4double           fDetectorThickness;
-    G4double           fDetectorRadius;
-    G4Material*        fDetectorMater;
-    G4LogicalVolume*   fLogicDetector;
                
     G4double           fWorldLength;
     G4double           fWorldRadius;

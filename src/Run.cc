@@ -258,30 +258,6 @@ void Run::EndOfRun()
   G4cout << "\n The run is " << numberOfEvent << " "<< Particle << " of "
          << G4BestUnit(fEkin,"Energy") << " through : ";
           
-  G4cout << "\n G10   : Length = " 
-         << "3mm "
-         << " Material = " 
-         << "Nema-Arkani-HamedG10";
-  G4cout << "\n Shield   : Length = " 
-         << G4BestUnit(fDetector->GetShieldThickness(),"Length")  
-         << " Material = " 
-         << fDetector->GetShieldMaterial()->GetName();
-  G4cout << "\n Target   : Length = " 
-         << G4BestUnit(fDetector->GetTargetLength(),"Length")
-         << " Radius    = " 
-         << G4BestUnit(fDetector->GetTargetRadius(),"Length")  
-         << " Material = " 
-         << fDetector->GetTargetMaterial()->GetName();
-  /*
-  G4cout << "\n Detector : Length = " 
-         << G4BestUnit(fDetector->GetDetectorLength(),"Length")
-         << " Thickness = " 
-         << G4BestUnit(fDetector->GetDetectorThickness(),"Length")  
-         << " Radius = " 
-         << G4BestUnit(fDetector->GetDetectorRadius(),"Length")  
-         << " Material = " 
-         << fDetector->GetDetectorMaterial()->GetName() << G4endl;
-  */
   if (numberOfEvent == 0) { G4cout.precision(dfprec);   return;}
   
   // compute mean Energy deposited and rms in target

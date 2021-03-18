@@ -42,8 +42,8 @@
 DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
 :G4UImessenger(), 
  fDetector(Det), fRdecayDir(0), fDetDir(0),
- fTargMatCmd(0), fDetectMatCmd(0), fTargRadiusCmd(0), fInsetRadiusCmd(0),
- fDetectThicknessCmd(0), fTargLengthCmd(0), fDetectLengthCmd(0) 
+ fTargMatCmd(0), fTargetPressureCmd(0),  fGapMatCmd(0), fGapThicknessCmd(0), fShieldRadiusCmd(0),
+ fShieldThicknessCmd(0), fTubeThicknessCmd(0), fTubeLengthCmd(0), fTubeRadiusCmd(0)
 { 
   fRdecayDir = new G4UIdirectory("/rdecay02/");
   fRdecayDir->SetGuidance("commands specific to this example");
@@ -56,6 +56,13 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
   fTargMatCmd->SetGuidance("Select material of the target");
   fTargMatCmd->SetParameterName("choice",false);
   fTargMatCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fTargetPressureCmd =
+       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setTargetPressure", this);
+  fTargetPressureCmd->SetGuidance("Set the Target Pressure.");
+  fTargetPressureCmd->SetUnitCategory("Pressure");
+  fTargetPressureCmd->SetParameterName("choice",false);
+  fTargetPressureCmd->AvailableForStates(G4State_PreInit);  
   
   fShieldThicknessCmd =
        new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setShieldThickness", this);
@@ -64,47 +71,40 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
   fShieldThicknessCmd->SetParameterName("choice",false);
   fShieldThicknessCmd->AvailableForStates(G4State_PreInit);  
 
-  fTargRadiusCmd =
-       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setTargetRadius", this);
-  fTargRadiusCmd->SetGuidance("Set the Target Radius.");
-  fTargRadiusCmd->SetUnitCategory("Length");
-  fTargRadiusCmd->SetParameterName("choice",false);
-  fTargRadiusCmd->AvailableForStates(G4State_PreInit);  
+  fTubeRadiusCmd =
+       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setTubeRadius", this);
+  fTubeRadiusCmd->SetGuidance("Set the Tube Radius.");
+  fTubeRadiusCmd->SetUnitCategory("Length");
+  fTubeRadiusCmd->SetParameterName("choice",false);
+  fTubeRadiusCmd->AvailableForStates(G4State_PreInit);  
 
-  fInsetRadiusCmd =
-       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setInsetRadius", this);
-  fInsetRadiusCmd->SetGuidance("Set the Inset Radius.");
-  fInsetRadiusCmd->SetUnitCategory("Length");
-  fInsetRadiusCmd->SetParameterName("choice",false);
-  fInsetRadiusCmd->AvailableForStates(G4State_PreInit);  
-
+  fTubeThicknessCmd =
+       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setTubeThickness", this);
+  fTubeThicknessCmd->SetGuidance("Set the Tube Radius.");
+  fTubeThicknessCmd->SetUnitCategory("Length");
+  fTubeThicknessCmd->SetParameterName("choice",false);
+  fTubeThicknessCmd->AvailableForStates(G4State_PreInit);  
   
-  fTargLengthCmd =
-       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setTargetLength", this);
-  fTargLengthCmd->SetGuidance("Set the Target Length.");
-  fTargLengthCmd->SetUnitCategory("Length");
-  fTargLengthCmd->SetParameterName("choice",false);
-  fTargLengthCmd->AvailableForStates(G4State_PreInit);
+  fTubeLengthCmd =
+       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setTubeLength", this);
+  fTubeLengthCmd->SetGuidance("Set the Tube Length.");
+  fTubeLengthCmd->SetUnitCategory("Length");
+  fTubeLengthCmd->SetParameterName("choice",false);
+  fTubeLengthCmd->AvailableForStates(G4State_PreInit);
   
 
-  fDetectMatCmd = new G4UIcmdWithAString("/rdecay02/det/setDetectorMate",this);
-  fDetectMatCmd->SetGuidance("Select Material of the Detector.");
-  fDetectMatCmd->SetParameterName("choice",false);
-  fDetectMatCmd->AvailableForStates(G4State_PreInit,G4State_Idle);  
+  fGapMatCmd = new G4UIcmdWithAString("/rdecay02/det/setGapMate",this);
+  fGapMatCmd->SetGuidance("Select Material of the Gap.");
+  fGapMatCmd->SetParameterName("choice",false);
+  fGapMatCmd->AvailableForStates(G4State_PreInit,G4State_Idle);  
 
-  fDetectThicknessCmd =
-       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setDetectorThickness",this);
-  fDetectThicknessCmd->SetGuidance("Set the Detector Thickness.");
-  fDetectThicknessCmd->SetUnitCategory("Length");
-  fDetectThicknessCmd->SetParameterName("choice",false);
-  fDetectThicknessCmd->AvailableForStates(G4State_PreInit);
+  fGapThicknessCmd =
+       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setGapThickness",this);
+  fGapThicknessCmd->SetGuidance("Set the Gap Thickness.");
+  fGapThicknessCmd->SetUnitCategory("Length");
+  fGapThicknessCmd->SetParameterName("choice",false);
+  fGapThicknessCmd->AvailableForStates(G4State_PreInit);
 
-  fDetectLengthCmd =
-       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setDetectorLength",this);
-  fDetectLengthCmd->SetGuidance("Set the Detector Length.");
-  fDetectLengthCmd->SetUnitCategory("Length");
-  fDetectLengthCmd->SetParameterName("choice",false);
-  fDetectLengthCmd->AvailableForStates(G4State_PreInit);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -112,13 +112,14 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
 DetectorMessenger::~DetectorMessenger()
 {
   delete fTargMatCmd;
-  delete fDetectMatCmd;
-  delete fTargRadiusCmd;
+  delete fTargetPressureCmd;
+  delete fTubeRadiusCmd;
+  delete fGapMatCmd;
+  delete fGapThicknessCmd;
   delete fShieldThicknessCmd;
-  delete fInsetRadiusCmd;
-  delete fDetectThicknessCmd;
-  delete fTargLengthCmd;
-  delete fDetectLengthCmd;
+  delete fShieldRadiusCmd;
+  delete fTubeLengthCmd;
+
   delete fDetDir;
   delete fRdecayDir;  
 }
@@ -129,31 +130,28 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 { 
   if (command == fTargMatCmd )
    { fDetector->SetTargetMaterial(newValue);}
+  if (command == fTargetPressureCmd ) 
+    {fDetector->SetTargetPressure(fTargetPressureCmd->GetNewDoubleValue(newValue));}
 
-    // I believe to get desired nesting of volumes, I must go in this order.
+  if (command == fTubeThicknessCmd ) 
+    {fDetector->SetTubeThickness(fTubeThicknessCmd->GetNewDoubleValue(newValue));}
+  if (command == fTubeRadiusCmd ) 
+    {fDetector->SetTubeRadius(fTubeRadiusCmd->GetNewDoubleValue(newValue));}
+  if (command == fTubeLengthCmd ) 
+    {fDetector->SetTubeLength(fTubeLengthCmd->GetNewDoubleValue(newValue));}
+
   if (command == fShieldThicknessCmd ) 
     {fDetector->SetShieldThickness(fShieldThicknessCmd->GetNewDoubleValue(newValue));}
    
-  if (command == fTargLengthCmd ) 
-    { fDetector->SetTargetLength(fTargLengthCmd->GetNewDoubleValue(newValue));}
-    
-  if (command == fTargRadiusCmd ) 
-    {fDetector->SetTargetRadius(fTargLengthCmd->GetNewDoubleValue(newValue));}
 
-
-  if (command == fInsetRadiusCmd ) 
-    {fDetector->SetInsetRadius(fInsetRadiusCmd->GetNewDoubleValue(newValue));}
+  if (command == fShieldRadiusCmd ) 
+    {fDetector->SetShieldRadius(fShieldRadiusCmd->GetNewDoubleValue(newValue));}
     
-  if (command == fDetectMatCmd )
-    { fDetector->SetDetectorMaterial(newValue);}
-    
-  if (command == fDetectLengthCmd ) 
-    {fDetector->SetDetectorLength(
-                     fDetectLengthCmd->GetNewDoubleValue(newValue));}
+  if (command == fGapMatCmd )
+    { fDetector->SetGapMaterial(newValue);}
+  if (command == fGapThicknessCmd )
+    { fDetector->SetGapThickness(fGapThicknessCmd->GetNewDoubleValue(newValue));}
 
-  if (command == fDetectThicknessCmd ) 
-    {fDetector->SetDetectorThickness(
-                     fDetectThicknessCmd->GetNewDoubleValue(newValue));}      
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

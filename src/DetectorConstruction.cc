@@ -59,24 +59,18 @@
 DetectorConstruction::DetectorConstruction()
 :G4VUserDetectorConstruction(),
  fTargetMater(0), fLogicTarget(0), 
- fDetectorMater(0), fLogicDetector(0), 
  fWorldMater(0), fPhysiWorld(0),
  fDetectorMessenger(0)
 {
-  fTargetLength      = 1*cm; 
-  fTargetRadius      = 0.5*cm;
-  fDetectorLength    = 5*cm; 
-  fDetectorThickness = 2*cm;
   fInsetRadius = 0.0*cm;
-  fDetectorRadius = 0.0*cm;
 
-
-  fWorldLength = std::max(fTargetLength,fDetectorLength);
-  fWorldRadius = fTargetRadius + 1.0*m;
+  fWorldLength = fTubeLength + 1.0*m;
+  fWorldRadius = fTubeRadius + 1.0*m;
       
   DefineMaterials();
     
   fDetectorMessenger = new DetectorMessenger(this);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -102,6 +96,10 @@ void DetectorConstruction::DefineMaterials()
   G4Element* O  = new G4Element("Oxygen",   "O", 8, 16.00*g/mole);
   G4Element* C  = new G4Element("Carbon",   "C", 6, 12.00*g/mole);
   G4Element* Si  = new G4Element("Silicon", "Si", 14, 28.0855*g/mole);
+  G4Element* Cu  = new G4Element("Copper", "Cu", 29, 63.5*g/mole);
+  G4Element* Cr = new G4Element("Chromium" ,"Cr" , 24., 51.99*g/mole);
+  G4Element* Fe = new G4Element("Iron"     ,"Fe" , 26., 55.84*g/mole);
+  G4Element* Ni = new G4Element("Nickel"   ,"Ni" , 28., 58.69*g/mole);
 
   G4int ncomponents; G4double fractionmass;      
   G4Material* Air20 = new G4Material("Air", 1.205*mg/cm3, ncomponents=2,
@@ -127,19 +125,24 @@ void DetectorConstruction::DefineMaterials()
   g10->AddElement(C , number_of_atoms=3);
   g10->AddElement(H , number_of_atoms=3);
 
+  G4Material* ssteel = 
+    new G4Material("Stainless-Steel", 8*g/cm3, ncomponents=3);
+  ssteel->AddElement(Fe, 74*perCent);
+  ssteel->AddElement(Cr, 18*perCent);
+  ssteel->AddElement(Ni,  8*perCent);
+
+  G4Material* copper = 
+    new G4Material("Copper", 8.96*g/cm3, ncomponents=1);
+  copper->AddElement(Cu, 100*perCent);
+
 
   //
   fWorldMater = Air20;
+  //  fGapMater = Air20;
 
-  G4double gasFactor;
-  gasFactor = 5.894; // 1 bar: gm/L 
-  gasFactor /= 1E3; // gm/cm^3
-  gasFactor *= 15.0 ; // presuming wrongly ideal gas law
 
-  fTargetMater   = new G4Material("Xenon", 54, 131.3*g/mole, gasFactor *g/cm3, kStateGas,  77.*kelvin, 15.0*atmosphere);
-  //  fDetectorMater = new G4Material("Xenon", 54, 131.3*g/mole, gasFactor *g/cm3, kStateGas,  77.*kelvin, 1.0*atmosphere);
-  //  fShieldMater = H2O;
-  fShieldMater = plastic;
+  fTubeMater = ssteel;
+  fShieldMater = copper;
   fG10Mater = g10;
 
   /*
@@ -156,14 +159,21 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 {
 
 
+  // This G4Material requires having read up the TargetPressure from config file, which hasn't been done by  DefineMaterials() above.
+  G4double gasFactor;
+  gasFactor = 5.894; // 1 bar: gm/L 
+  gasFactor /= 1E3; // gm/cm^3
+  gasFactor *= fTargetPressure / atmosphere ; // presuming wrongly ideal gas law
+
+  fTargetMater   = new G4Material("Xenon", 54, 131.3*g/mole, gasFactor *g/cm3, kStateGas,  77.*kelvin, fTargetPressure/atmosphere);
 
   /*
   G4Tubs*
   sWorld = new G4Tubs("World",                                 //name
                  0.,fWorldRadius, 0.5*fWorldLength, 0.,twopi); //dimensions  
   */
-  fWorldRadius = 2*fTargetRadius;
-  fWorldLength = 2*fTargetLength;
+  fWorldRadius = 2*fTubeRadius;
+  fWorldLength = 2*fTubeLength;
 
   G4Box* sWorld = new G4Box("World", fWorldRadius,fWorldRadius,fWorldLength/2.);
                
@@ -181,12 +191,44 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                             0);                         //copy number
 
 
-  // Shield. Now plastic inside Target,if I use a negative fShieldThickness.
-  // And launch neutrons from TargetRadius
-  G4Box* sOutShield = new G4Box("OutShield",fTargetRadius, fTargetRadius, fTargetLength/2);
-  G4Box* sInShield = new G4Box("InShield", fTargetRadius+fShieldThickness, fTargetRadius+fShieldThickness, fTargetLength/2.+fShieldThickness);
-  G4SubtractionSolid *sShield = new G4SubtractionSolid("Shield",sOutShield, sInShield);  
+  // Tube
+  //
+  
+  G4Tubs*  sTube = new G4Tubs("Tube",                                   //name
+                  fTubeRadius, fTubeRadius+fTubeThickness, 0.5*fTubeLength+fTubeThickness/2., 0.,twopi); //dimensions
+    fLogicTube = new G4LogicalVolume(sTube,           //shape
+                             fTubeMater,              //material
+                             "Tube");                 //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),             //at (0,0,0)
+                           fLogicTube,                //logical volume
+                           "Tube",                    //name
+                           lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0);                          //copy number
 
+  // Gap 
+	   //  fGapThickness = 2.0*cm;
+
+  G4Tubs *sGap = new G4Tubs("Gap",fTubeRadius-fGapThickness, fTubeRadius, 0.5*fTubeLength, 0.,twopi);
+  fLogicGap = new G4LogicalVolume(sGap,       //shape
+                             fGapMater,            //material
+                             "Gap");               //name
+                               
+         new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+                           fLogicGap,              //logical volume
+                           "Gap",                  //name
+			   lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0);                          //copy number
+
+
+  // Inner SS Shield
+
+  G4Tubs *sShield = new G4Tubs("Shield",fTubeRadius-fShieldThickness-fGapThickness, fTubeRadius-fGapThickness, 0.5*fTubeLength, 0.,twopi);  
+  // Shield
   fLogicShield = new G4LogicalVolume(sShield,       //shape
                              fShieldMater,            //material
                              "Shield");               //name
@@ -199,14 +241,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            false,                       //no boolean operation
                            0);                          //copy number
 
-  // G10 outside Target, if I use a positive fShieldThickness.
-  // And decay K40s from box this thick
+  // G10 
+	   /*
   fG10Thickness = 3.0*mm;
-
-  G4Box* sInG10 = new G4Box("InG10",fTargetRadius, fTargetRadius, fTargetLength/2);
-  G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius+fG10Thickness, fTargetRadius+fG10Thickness, fTargetLength/2.+fG10Thickness);
-  G4SubtractionSolid *sG10 = new G4SubtractionSolid("G10",sOutG10, sInG10);  
-
+  G4Tubs *sG10 = new G4Tubs("G10",1.0,1.0,1.0,0.,twopi);
   fLogicG10 = new G4LogicalVolume(sG10,       //shape
                              fG10Mater,            //material
                              "G10");               //name
@@ -218,20 +256,12 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
                            0);                          //copy number
-
-
                             
-  // Target
-  //
-  /*
-  G4Tubs* 
-  sTarget = new G4Tubs("Target",                                   //name
-                  0., fTargetRadius, 0.5*fTargetLength, 0.,twopi); //dimensions
-  */
-	   // With a negative fShieldThickness this will put the target inside the plastic. EC, 1-Nov-2019.
+	   */
 
-  G4Box* sTarget = new G4Box("Target", fTargetRadius+fShieldThickness, fTargetRadius+fShieldThickness, fTargetLength/2.+fShieldThickness);
-
+  fTargetRadius = fTubeRadius-fShieldThickness-fGapThickness;
+  fTargetLength = fTubeLength;
+  G4Tubs* sTarget = new G4Tubs("Target", 0.0, fTubeRadius-fShieldThickness-fGapThickness, fTargetLength/2.,0.0,twopi);
   fLogicTarget = new G4LogicalVolume(sTarget,           //shape
                              fTargetMater,              //material
                              "Target");                 //name
@@ -250,38 +280,17 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 	   lim->SetMaxAllowedStep(maxStep);
 	   fLogicTarget->SetUserLimits(lim);
 
-  // Detector
-  //
-  /*
-  G4Tubs* 
-  sDetector = new G4Tubs("Detector",  
-                fTargetRadius, fWorldRadius, 0.5*fDetectorLength, 0.,twopi);
-  */
 
   
-  std::cout << "fInsetRadius is " << fInsetRadius << std::endl;
+  std::cout << "fTubeRadius is " << fTubeRadius << std::endl;
+  std::cout << "fTubeThickness is " << fTubeThickness << std::endl;
+  std::cout << "fGapThickness is " << fGapThickness << std::endl;
   std::cout << "fShieldThickness is " << fShieldThickness << std::endl;
-  std::cout << "fG10Thickness is " << fG10Thickness << std::endl;
+  std::cout << "fTargetLength is " << fTargetLength << std::endl;
+  std::cout << "fTargetRadius is " << fTargetRadius << std::endl;
 
-  /*
-  fDetectorRadius = fTargetRadius-fInsetRadius;
-  G4Box* sDetector = new G4Box("Detector",fDetectorRadius, fDetectorRadius, fDetectorLength/2);
+  //  std::cout << "fG10Thickness is " << fG10Thickness << std::endl;
 
-  
-  fLogicDetector = new G4LogicalVolume(sDetector,       //shape
-                             fDetectorMater,            //material
-                             "Detector");               //name
-                               
-           new G4PVPlacement(0,                         //no rotation
-			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
-                           fLogicDetector,              //logical volume
-                           "Detector",                  //name
-			   lWorld,                      //mother  volume
-                           false,                       //no boolean operation
-                           0);                          //copy number
-
-  */
-  
 
   PrintParameters();
   
@@ -297,19 +306,23 @@ void DetectorConstruction::PrintParameters()
   G4cout << "\n World : Length = " << G4BestUnit(fWorldLength,"Length")
          << " Radius = " << G4BestUnit(fWorldRadius,"Length")  
          << " Material = " << fWorldMater->GetName();
-  G4cout << "\n Target : Length = " << G4BestUnit(fTargetLength,"Length")
-         << " Radius = " << G4BestUnit(fTargetRadius,"Length")  
-         << " Material = " << fTargetMater->GetName();
-  /*
-  G4cout << "\n Detector : Length = " << G4BestUnit(fDetectorLength,"Length")
-         << " Radius = " << G4BestUnit(fDetectorRadius,"Length")  
-    //         << " Thickness = " << G4BestUnit(fDetectorThickness,"Length")  
-         << " Material = " << fDetectorMater->GetName() << G4endl;          
-  */
+  G4cout << "\n Tube : Thickness = " << G4BestUnit(fTubeThickness,"Length")
+         << " Material = " << fTubeMater->GetName() << G4endl;          
   G4cout << "\n Shield : Thickness = " << G4BestUnit(fShieldThickness,"Length")
          << " Material = " << fShieldMater->GetName() << G4endl;          
-  G4cout << "\n G10 : Thickness = " << G4BestUnit(fG10Thickness,"Length")
-         << " Material = " << fG10Mater->GetName() << G4endl;          
+  
+  G4cout << "\n Target : Length = " << G4BestUnit(fTargetLength,"Length")
+         << " Radius = " << G4BestUnit(fTargetRadius,"Length")  
+	 << " Material = " << fTargetMater->GetName()
+         << " Pressure = " << G4BestUnit(fTargetPressure,"Pressure")  ;
+  
+  
+  G4cout << "\n Gap : Length = " << G4BestUnit(fGapThickness,"Length")
+         << " Radius = " << G4BestUnit(fGapThickness,"Length")  
+         << " Material = " << fGapMater->GetName();
+  
+  //  G4cout << "\n G10 : Thickness = " << G4BestUnit(fG10Thickness,"Length")
+  //     << " Material = " << fG10Mater->GetName() << G4endl;          
 
 }
 
@@ -340,8 +353,6 @@ void DetectorConstruction::SetDetectorMaterial(G4String materialChoice)
      G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
   
   if (pttoMaterial) { 
-    fDetectorMater = pttoMaterial;
-    if(fLogicDetector) { fLogicDetector->SetMaterial(fDetectorMater); }
     G4RunManager::GetRunManager()->PhysicsHasBeenModified();
   } else {
     G4cout << "\n--> warning from DetectorConstruction::SetDetectorMaterial : "
@@ -349,13 +360,8 @@ void DetectorConstruction::SetDetectorMaterial(G4String materialChoice)
   }              
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void DetectorConstruction::SetTargetRadius(G4double value)
-{
-  fTargetRadius = value;
-  G4RunManager::GetRunManager()->ReinitializeGeometry();
-}
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -365,11 +371,46 @@ void DetectorConstruction::SetInsetRadius(G4double value)
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
+
+void DetectorConstruction::SetTargetPressure(G4double value)
+{
+  fTargetPressure = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void DetectorConstruction::SetGapThickness(G4double value)
+{
+  fGapThickness = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void DetectorConstruction::SetGapMaterial(G4String value)
+{
+
+  G4Material* pttoMaterial =
+     G4NistManager::Instance()->FindOrBuildMaterial(value);   
+
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+  fGapMater = pttoMaterial;
+
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void DetectorConstruction::SetTargetLength(G4double value)
+
+void DetectorConstruction::SetTubeLength(G4double value)
 {
-  fTargetLength = value;
+  fTubeLength = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+void DetectorConstruction::SetTubeRadius(G4double value)
+{
+  fTubeRadius = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+void DetectorConstruction::SetTubeThickness(G4double value)
+{
+  fTubeThickness = value;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
@@ -378,28 +419,14 @@ void DetectorConstruction::SetShieldThickness(G4double value)
   fShieldThickness = value;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void DetectorConstruction::SetDetectorThickness(G4double value)
+void DetectorConstruction::SetShieldRadius(G4double value)
 {
-  fDetectorThickness = value;
+  fShieldRadius = value;
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void DetectorConstruction::SetDetectorLength(G4double value)
-{
-  fDetectorLength = value;
-  G4RunManager::GetRunManager()->ReinitializeGeometry();
-}
-
-void DetectorConstruction::SetDetectorRadius(G4double value)
-{
-  fDetectorRadius = value;
-  G4RunManager::GetRunManager()->ReinitializeGeometry();
-}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -417,6 +444,11 @@ G4double DetectorConstruction::GetTargetRadius()
 G4double DetectorConstruction::GetShieldThickness()
 {
   return fShieldThickness;
+}
+
+G4double DetectorConstruction::GetTargetPressure()
+{
+  return fTargetPressure;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -440,35 +472,12 @@ G4LogicalVolume* DetectorConstruction::GetLogicTarget()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double DetectorConstruction::GetDetectorLength()
-{
-  return fDetectorLength;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-G4double DetectorConstruction::GetDetectorThickness()
-{
-  return fDetectorThickness;
-}
-
-G4double DetectorConstruction::GetDetectorRadius()
-{
-  return fDetectorRadius;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-G4Material* DetectorConstruction::GetDetectorMaterial()
-{
-  return fDetectorMater;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 G4LogicalVolume* DetectorConstruction::GetLogicDetector()
 {
   return fLogicDetector;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+
+

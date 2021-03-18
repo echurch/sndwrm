@@ -272,6 +272,7 @@ void Run::EndOfRun()
          << G4BestUnit(fDetector->GetTargetRadius(),"Length")  
          << " Material = " 
          << fDetector->GetTargetMaterial()->GetName();
+  /*
   G4cout << "\n Detector : Length = " 
          << G4BestUnit(fDetector->GetDetectorLength(),"Length")
          << " Thickness = " 
@@ -280,7 +281,7 @@ void Run::EndOfRun()
          << G4BestUnit(fDetector->GetDetectorRadius(),"Length")  
          << " Material = " 
          << fDetector->GetDetectorMaterial()->GetName() << G4endl;
-
+  */
   if (numberOfEvent == 0) { G4cout.precision(dfprec);   return;}
   
   // compute mean Energy deposited and rms in target
