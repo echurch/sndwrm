@@ -8,9 +8,9 @@
 
 
 This simulation began as the G4 example rdecay02, which has the physics lists and starter code to decay radioactive isotopes. It has since evolved to have correct neutron 
-physics lists, a simple C++-coded DUNE FD-like geometry (no gdml). The geometry is basically a big box of gas Xe.
+physics lists, a simple C++-coded NEXT1kT-like geometry (no gdml). The geometry is basically a big Tube of gas Xe.
 
-Isotopes can be decayed, single particles like neutrons or electrons may be launched, etc. All to be arranged in the control n_optphys.mac file.
+Isotopes can be decayed, single particles like neutrons or electrons may be launched, etc. All to be arranged in the control bi214.mac file.
 
 First, you must set up in a manner similar to the following. These are Eric's paths. Yours will surely  be different. But you must have G410.4+ and ROOT6+ installed. The last setup
 is for python and is not strictly necessary; it allows to write analysis macros in python, not ROOT. 
@@ -20,7 +20,7 @@ source ~/geant4.10.05/install/bin/geant4.sh
 source /usr/local/bin/thisroot.sh 
 source ~/venvs/bin/activate
 
-To build your rdecay02 after downloading, make a build directory parallel to /src and /macro called /build. Go to it and do 
+To build your rdecay02 after downloading, git checkout next1kt (as you have already done to be seeing this README), then make a build directory parallel to /src and /macro called /build. Go to it and do 
 
 cmake ../
 make
@@ -29,13 +29,13 @@ Run from the build directory, as
 ./rdecay02
 
 You should now be at an interactive geant4 prompt. Say
-g4> /control/execute ../macros/electrons.mac
+g4> /control/execute ../macros/bi214.mac   # or electrons.mac
 
-Ctl-D out of the executable when done, and note that the above created your new ROOT file, n_optphys.root.
+Ctl-D out of the executable when done, and note that the above created your new ROOT file, bi214.root.
 
 Then, in python, do something like the following
 > from ROOT import TFile
-> f = TFile("electron.root")
+> f = TFile("bi214.root")
 > f.Steps.Draw("X:Y:Z","PID==11") # for example, to see the electron trajectory.
 > # The below will show you the TTree variables available to you.
 > f.Steps.Show(0)
@@ -43,8 +43,8 @@ Then, in python, do something like the following
 
 
 To run a multi-event job with no graphics, comment out with a '#' the line that says vis.mac in electron.mac, and edit
-the line  /run/beamOn 10 to increase number of primary e-s launched. Then at your command line, say
-nohup ./rdecay02 ../macros/electron.mac >& noh.out &
+the line  /run/beamOn 10 to increase number of primary bi214 decayed. Then at your command line, say
+nohup ./rdecay02 ../macros/bi214.mac >& noh.out &
 
 # Ask eric.church@pnnl.gov for help, as needed.
 
