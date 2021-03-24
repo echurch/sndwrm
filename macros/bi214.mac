@@ -33,9 +33,13 @@
 /grdm/noVolumes
 /grdm/selectVolume Shield
 
-/gps/particle ion
-/gps/energy 0 MeV
-/gps/ion 83 214 0 0 # Bi214
+##/gps/particle ion
+##/gps/energy 0 MeV
+##/gps/ion 83 214 0 0 # Bi214
+
+/gps/particle gamma
+/gps/ene/mono 2.448 MeV
+/gps/ang/type iso
 
 /gps/pos/centre 0. 0. 0. m
 /gps/pos/type Volume
