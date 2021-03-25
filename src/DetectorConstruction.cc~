@@ -165,7 +165,6 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   gasFactor /= 1E3; // gm/cm^3
   gasFactor *= fTargetPressure / atmosphere ; // presuming wrongly ideal gas law
 
-  std::cout << " fTargPress" << fTargetPressure/atmosphere << " atm" <<std::endl;
   fTargetMater   = new G4Material("Xenon", 54, 131.3*g/mole, gasFactor *g/cm3, kStateGas,  77.*kelvin, fTargetPressure/atmosphere);
 
   /*
@@ -176,7 +175,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   fWorldRadius = 2*fTubeRadius;
   fWorldLength = 2*fTubeLength;
 
-  G4Box* sWorld = new G4Box("World", fWorldRadius,fWorldRadius,fWorldLength/2.);
+  G4Tubs* sWorld = new G4Tubs("World", 0.0, fWorldRadius, 0.0, fWorldLength/2., 0., twopi);
                
   G4LogicalVolume*
   lWorld = new G4LogicalVolume(sWorld,                  //shape
@@ -189,7 +188,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                             "World",                    //name
                             0,                          //mother volume
                             false,                      //no boolean operation
-                            0);                         //copy number
+                            0, true);                         //copy number
 
 
   // Tube
@@ -207,7 +206,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            "Tube",                    //name
                            lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0);                          //copy number
+                           0, true);                          //copy number
 
   // Gap 
 	   //  fGapThickness = 2.0*cm;
@@ -223,7 +222,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            "Gap",                  //name
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0);                          //copy number
+                           0, true);                          //copy number
 
 
   // Inner SS Shield
@@ -240,7 +239,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            "Shield",                  //name
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0);                          //copy number
+                           0, true);                          //copy number
 
   // G10 
 	   /*
@@ -273,7 +272,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            "Target",                    //name
                            lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0);                          //copy number
+                           0, true);                          //copy number
 
 
 	   G4UserLimits *lim = new G4UserLimits();

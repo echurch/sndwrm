@@ -175,7 +175,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   fWorldRadius = 2*fTubeRadius;
   fWorldLength = 2*fTubeLength;
 
-  G4Box* sWorld = new G4Box("World", fWorldRadius,fWorldRadius,fWorldLength/2.);
+  G4Tubs* sWorld = new G4Tubs("World", 0.0, fWorldRadius, fWorldLength/2., 0., twopi);
                
   G4LogicalVolume*
   lWorld = new G4LogicalVolume(sWorld,                  //shape
@@ -188,7 +188,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                             "World",                    //name
                             0,                          //mother volume
                             false,                      //no boolean operation
-                            0);                         //copy number
+                            0, true);                         //copy number
 
 
   // Tube
@@ -206,7 +206,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            "Tube",                    //name
                            lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0);                          //copy number
+                           0, true);                          //copy number
 
   // Gap 
 	   //  fGapThickness = 2.0*cm;
@@ -222,7 +222,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            "Gap",                  //name
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0);                          //copy number
+                           0, true);                          //copy number
 
 
   // Inner SS Shield
@@ -239,7 +239,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            "Shield",                  //name
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0);                          //copy number
+                           0, true);                          //copy number
 
   // G10 
 	   /*
@@ -272,7 +272,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            "Target",                    //name
                            lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0);                          //copy number
+                           0, true);                          //copy number
 
 
 	   G4UserLimits *lim = new G4UserLimits();

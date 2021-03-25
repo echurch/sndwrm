@@ -111,8 +111,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   const G4ThreeVector pos(aStep->GetPreStepPoint()->GetPosition());
   const G4ThreeVector tpos(aStep->GetPostStepPoint()->GetPosition());
 
-
-
   std::string startp("null");
   std::string endp("null");
 
@@ -129,13 +127,18 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,9, tID);
 
   analysisManager->FillNtupleSColumn(id,10, track->GetVolume()->GetLogicalVolume()->GetName());
-  analysisManager->FillNtupleDColumn(id,11, eVolume->GetCopyNo());
+  G4int copyNo(0);
+  if (eVolume)
+    copyNo = eVolume->GetCopyNo();
+  analysisManager->FillNtupleDColumn(id,11, copyNo);
   analysisManager->FillNtupleSColumn(id,12, track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName());
   analysisManager->FillNtupleDColumn(id,13, track->GetCurrentStepNumber());
   if (sprocess)
       startp = sprocess->GetProcessName();
   if (tprocess)
     endp = tprocess->GetProcessName();
+
+
   analysisManager->FillNtupleSColumn(id,14, startp);
   analysisManager->FillNtupleSColumn(id,15, endp);
   analysisManager->FillNtupleDColumn(id,16, tpos[0]/mm);

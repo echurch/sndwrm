@@ -40,7 +40,9 @@
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
-                           
+
+#include "G4OpticalPhoton.hh" 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(DetectorConstruction* det, EventAction* event)
@@ -67,30 +69,52 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4LogicalVolume* lVolume = aStep->GetPreStepPoint()->GetTouchableHandle()
                              ->GetVolume()->GetLogicalVolume();
   G4int iVol = 0;
+  G4Track* track = aStep->GetTrack();
+  G4double tID = track->GetTrackID();
+
+
+
   if (lVolume == fDetector->GetLogicTarget())   iVol = 1;
   if (lVolume == fDetector->GetLogicDetector()) iVol = 2;
 
   // count processes
   // 
   const G4StepPoint* endPoint = aStep->GetPostStepPoint();
-  const G4VProcess* process   = endPoint->GetProcessDefinedStep();
-  run->CountProcesses(process, iVol);
-  
+  const G4VProcess* tprocess   = endPoint->GetProcessDefinedStep();
+  const G4VProcess* sprocess   = aStep->GetPreStepPoint()->GetProcessDefinedStep();
+  run->CountProcesses(tprocess, iVol);
+
+
+  G4TouchableHandle touch = endPoint->GetTouchableHandle();
+  G4VPhysicalVolume* eVolume = touch->GetVolume();
+  G4String eVname("null");
+  if (eVolume)
+    eVname = eVolume->GetName();  
   // energy deposit
   //
   G4double edepStep = aStep->GetTotalEnergyDeposit();
 
-  if (edepStep <= 0.) return;
+  tprocess = aStep->GetPostStepPoint()->GetProcessDefinedStep();
+
+  const G4ParticleDefinition* particle = track->GetParticleDefinition();  
+  G4int pID       = particle->GetPDGEncoding();
+
+  if (edepStep <= 0. && pID!=0 ) return;
   G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
   G4double weight = aStep->GetPreStepPoint()->GetWeight();   
+
   fEventAction->AddEdep(iVol, edepStep, time, weight);
   
   //fill ntuple id = 2
   G4int id = 4;   
   const G4double length = aStep->GetStepLength();
   const G4ThreeVector pos(aStep->GetPreStepPoint()->GetPosition());
+  const G4ThreeVector tpos(aStep->GetPostStepPoint()->GetPosition());
 
-  std::cout << "SteppingAction.cc: Event,edep" << event << ", " << edepStep << std::endl;
+  std::string startp("null");
+  std::string endp("null");
+
+
   analysisManager->FillNtupleDColumn(id,0, edepStep);
   analysisManager->FillNtupleDColumn(id,1, time/s);
   analysisManager->FillNtupleDColumn(id,2, weight);
@@ -99,6 +123,29 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,5, pos[2]/mm);
   analysisManager->FillNtupleDColumn(id,6, length/mm);
   analysisManager->FillNtupleDColumn(id,7, event);
+  analysisManager->FillNtupleDColumn(id,8, pID);
+  analysisManager->FillNtupleDColumn(id,9, tID);
+
+  analysisManager->FillNtupleSColumn(id,10, track->GetVolume()->GetLogicalVolume()->GetName());
+  G4int copyNo(1);
+  if (eVolume)
+    copyNo = eVolume->GetCopyNo();
+  analysisManager->FillNtupleDColumn(id,11, copyNo);
+  analysisManager->FillNtupleSColumn(id,12, track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName());
+  analysisManager->FillNtupleDColumn(id,13, track->GetCurrentStepNumber());
+  if (sprocess)
+      startp = sprocess->GetProcessName();
+  if (tprocess)
+    endp = tprocess->GetProcessName();
+
+
+  analysisManager->FillNtupleSColumn(id,14, startp);
+  analysisManager->FillNtupleSColumn(id,15, endp);
+  analysisManager->FillNtupleDColumn(id,16, tpos[0]/mm);
+  analysisManager->FillNtupleDColumn(id,17, tpos[1]/mm);
+  analysisManager->FillNtupleDColumn(id,18, tpos[2]/mm);
+  analysisManager->FillNtupleSColumn(id,19,eVname);
+
   analysisManager->AddNtupleRow(id);      
 }
 
