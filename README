@@ -14,13 +14,15 @@ central "would-be" cathode plane (ala the VD design) also.
 
 Isotopes can be decayed, single particles like neutrons or electrons may be launched, etc. All to be arranged in the control n_optphys.mac file.
 
-First, you must set up in a manner similar to the following. These are Eric's paths. Yours will surely  be different. But you must have G410.4+ and ROOT6+ installed. The last setup
+First, you must set up in a manner similar to the following. These are Eric's paths. Yours will surely  be different. But you must have G410.4+ and ROOT6+ and now MARLEY installed. The last setup
 is for python and is not strictly necessary; it allows to write analysis macros in python, not ROOT. 
 
-
+NOTE: as of v1.0 of this code, you need MARLEY. Download it at https://github.com/MARLEY-MC/marley.git, build it, before proceeding to execute commands below.
 
 source ~/geant4.10.05/install/bin/geant4.sh 
 source /usr/local/bin/thisroot.sh 
+export MARLEY=/Users/chur558/marley
+export DYLD_LIBRARY_PATH=/usr/local/lib:/Users/chur558/marley/build
 source ~/venvs/bin/activate
 
 To build your rdecay02 after downloading, make a build directory parallel to /src and /macro called /build. Go to it and do 
@@ -31,7 +33,7 @@ make
 Run from the build directory, as
 ./rdecay02
 
-You should now be at an interactive geant4 prompt. Say
+You should now be at an interactive geant4 prompt. Say the following to launch neutrons
 g4> /control/execute ../macros/n_optphys.mac
 Then, to run one event, do
 g4> /run/beamOn 1
@@ -54,8 +56,12 @@ nohup ./rdecay02 ../macros/n_optphys.mac >& noh.out &
 
 I have a trick to run "photon bombs," employed in ../macros/pbomb_optphys.mac. If you specify to launch a "geantino," the code in ~/src/PrimaryGenerator*
 will reinterpret that to launch a fixed number of isotropic opticalphotons inside a hard-coded box (inside the Acrylic volume, for now). Try it as:
+
 ./rdecay02 ../macros/pbomb_optphys.mac
 
+The similar trick to run MARLEY events is employed in ../macros/marley_optphys.mac. It specifies to launch "nu_e"s, which tells PrimaryGenerator* to interpret
+that to launch one MARLEY event. Running 10 events in marley_optphys.mac causes 10 MARLEY events to run inside the Acrylic volume -- one per G4 event. Try it as
+./rdecay02 ../macros/marley_optphys.mac
 
 # Ask eric.church@pnnl.gov for help, as needed.
 

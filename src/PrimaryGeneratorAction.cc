@@ -40,14 +40,16 @@
 #include "G4IonTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Geantino.hh"
+#include "G4NeutrinoE.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
   : G4VUserPrimaryGeneratorAction(),fParticleGun(0),
-  fPrimaryGenerator(0)
+    fPrimaryGenerator(0), config_file_name(std::string(std::getenv("MARLEY"))+"/examples/config/annotated.js")
 {
   //  G4int n_particle = 1;
   //  fParticleGun  = new G4ParticleGun(n_particle);
@@ -58,6 +60,10 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   fParticleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm,0.*cm));
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   */
+
+  marley::JSONConfig config(config_file_name);
+  marley_generator_= config.create_generator();
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -75,6 +81,9 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
   // if there's a geantino in .mac file create a "photon bomb"
+
+  std::cout << "GeneratePrimaries() particle requested is " << fParticleGun->GetParticleDefinition() << std::endl;
+
   if (fParticleGun->GetParticleDefinition() == G4Geantino::Geantino()) {  
     std::cout << "GeneratePrimaries: detect that a 'photon bomb' is to be created." << std::endl;
 
@@ -83,6 +92,16 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   }    
   //create vertex
   //   
+
+  else if (fParticleGun->GetParticleDefinition() == G4NeutrinoE::NeutrinoE()) {
+    std::cout << "GeneratePrimaries: detect that a Marley event is to be created." << std::endl;
+
+    // Generate a new MARLEY event using the owned marley::Generator object  
+    marley::Event ev = marley_generator_.create_event();
+    fPrimaryGenerator->GeneratePrimaryVertexMarley(anEvent,ev);
+
+    return;
+  }
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
 

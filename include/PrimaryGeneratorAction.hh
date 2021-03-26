@@ -41,6 +41,11 @@
 #include "G4GeneralParticleSource.hh"
 #include "globals.hh"
 
+#include "marley/Event.hh"
+#include "marley/Particle.hh"
+#include "marley/JSONConfig.hh"
+
+
 class G4Event;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -59,7 +64,10 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   private:
   //    G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
     G4GeneralParticleSource*  fParticleGun;        //pointer a to G4 service class
-  PrimaryGenerator* fPrimaryGenerator;
+    PrimaryGenerator* fPrimaryGenerator;
+
+  marley::Generator marley_generator_;
+  std::string config_file_name;
 };
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
