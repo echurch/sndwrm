@@ -32,6 +32,7 @@
 # rdm is applied only to the target volume
 /grdm/noVolumes
 /grdm/selectVolume Shield
+/gps/pos/confine Shield
 
 ##/gps/particle ion
 ##/gps/energy 0 MeV
@@ -46,7 +47,7 @@
 /gps/pos/shape Para
 /gps/pos/halfx 6 m
 /gps/pos/halfy 6 m
-/gps/pos/halfz 30 m
+/gps/pos/halfz 100 m
 
 
 /analysis/setFileName bi214
