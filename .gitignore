@@ -1,0 +1,8 @@
+*~
+*.png
+*.root
+*.out
+*.pdf
+*.so
+*.pcm
+build/
