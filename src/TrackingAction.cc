@@ -95,8 +95,8 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   //  if (processType == fRadioactiveDecay) {
     //fill ntuple id = 3
 
-  //  std::cout << "Inside TrackingAction::PreUserTrackingAction()..." << std::endl ;
-  //  std::cout << "\t pid, energy, length, " << pid << ", " << energy << ", "  << length << std::endl;
+  //    std::cout << "TrackingAction::PreUserTrackingAction()..." << std::endl ;
+  // std::cout << "\t pid, energy, length, " << pid << ", " << energy << ", "  << length << std::endl;
     G4int id = 3;
     analysisManager->FillNtupleDColumn(id,0, double(pid));
     analysisManager->FillNtupleDColumn(id,1, double(Z));

@@ -26,10 +26,10 @@
 
 
 /rdecay02/det/setDetectorSiPMsOnAcrylic true
-/rdecay02/det/setDetectorSiPMsOnCathode false #true
+/rdecay02/det/setDetectorSiPMsOnCathode true
 /rdecay02/det/setDetectorSiPMSize 24.0 cm
 /rdecay02/det/setDetectorSiPMThickness 0.1 cm
-/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.40
+/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
 
 
 #
@@ -42,7 +42,7 @@
 /grdm/selectVolume Detector
 
 # When 'nu_e' is seen in PrimaryGenerator.cc it launches 1 Marley event
-# and it launches them insdie the Acrylic volume, igoring below /gps/pos commands
+# and it launches them inside the Acrylic volume, igoring below /gps/pos commands
 /gps/particle nu_e
 
 
@@ -57,7 +57,7 @@
 # This is for emitting e's from the 1.2cm thick coldskin OR the bulk Ar in detector
 
 
-/analysis/setFileName  marley_optphys
+/analysis/setFileName  marley_optphys_SN-liv-CEvNS
 /analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 2. MeV
 /analysis/h1/set 6 100 0. 2. MeV

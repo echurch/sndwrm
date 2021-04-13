@@ -110,6 +110,8 @@ void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, marley::Event
   const G4double y = ymax*2*(G4UniformRand()-0.5);
   const G4double z = zmax*2*(G4UniformRand()-0.5);
 
+  const G4int n_particle = 1250; // from our DkMatter paper, via SCENE. 1250 photons per 100 keV n.r.                                                           
+
   G4ThreeVector positionA(x,y,z);
   G4double timeA = 0*s;
   G4PrimaryVertex* vertex = new G4PrimaryVertex(positionA, timeA);
@@ -118,19 +120,48 @@ void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, marley::Event
 
     // Convert each one from a marley::Particle into a G4PrimaryParticle.
     // Do this by first setting the PDG code and the 4-momentum components.
-    G4PrimaryParticle* particle = new G4PrimaryParticle( fp->pdg_code(),
-      fp->px(), fp->py(), fp->pz(), fp->total_energy() );
 
-    // Also set the charge of the G4PrimaryParticle appropriately
-    particle->SetCharge( fp->charge() );
+    //    std::cout << "GenPrimVertMarl:  final state particle PID is: " << fp->pdg_code() << " of energy " << fp->kinetic_energy() << std::endl;
+    // If this is an Ar nuclear recoil, let's place opticalphotons on stack, instead.
+    if (fp->pdg_code() == 1000180400) {
+      int Nphotons_stack = fp->kinetic_energy() * 1000. * n_particle/100.;
+      G4ParticleDefinition* particleDefinition
+	= G4ParticleTable::GetParticleTable()->FindParticle("opticalphoton");
 
-    // Add the fully-initialized G4PrimaryParticle to the primary vertex
-    vertex->SetPrimary( particle );
-  }
+      for (int phot=0; phot<Nphotons_stack; phot++)
+	{
+	  G4double alpha = pi*2.*(G4UniformRand()-0.5);     //alpha uniform in (-pi, pi)
+	  G4double beta = pi*G4UniformRand();     //alpha uniform in (0, pi)
+	  G4double ux = std::cos(alpha)*std::sin(beta);
+	  G4double uy = std::sin(alpha)*std::sin(beta);
+	  G4double uz = std::cos(beta);
+
+	  G4PrimaryParticle* particle = new G4PrimaryParticle(particleDefinition);
+	  particle->SetMomentumDirection(G4ThreeVector(ux,uy,uz));
+	  particle->SetKineticEnergy(9.686 * eV); // 128nm
+	  vertex->SetPrimary(particle);
+	}
+      if (Nphotons_stack)
+	std::cout << "GeneratePrimaryVertexMarley: Put " << int(Nphotons_stack) << " 9.7 eV photons on stack in lieu of Ar nucleus of KE " << fp->kinetic_energy()*1000. << " keV" << std::endl;
+
+    }
+    else {
+      G4PrimaryParticle* particle = new G4PrimaryParticle( fp->pdg_code(),
+							   fp->px(), fp->py(), fp->pz(), fp->total_energy() );
+
+      // Also set the charge of the G4PrimaryParticle appropriately
+      particle->SetCharge( fp->charge() );
+
+      // Add the fully-initialized G4PrimaryParticle to the primary vertex
+      vertex->SetPrimary( particle );
+    }
+
+  } // end of loop on particles
 
   // The primary vertex has been fully populated with all final-state particles
   // from the MARLEY event. Add it to the G4Event object so that Geant4 can
   // begin tracking the particles through the simulated geometry.
+
   event->AddPrimaryVertex( vertex );
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
