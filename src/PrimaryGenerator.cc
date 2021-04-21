@@ -46,7 +46,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGenerator::PrimaryGenerator()
-: G4VPrimaryGenerator()
+  : G4VPrimaryGenerator(), fFSNeutrino(false)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -96,6 +96,8 @@ void PrimaryGenerator::GeneratePrimaryVertex(G4Event* event)
       vertexA->SetPrimary(particle1);
       event->AddPrimaryVertex(vertexA);
     }
+
+  SetParticlePosition(positionA);
   std::cout << "PrimaryGenerator: Added " << n_particle << " isotropic opticalphotons as primaries at " << x/1000. <<", " << y/1000. << ", " << z/1000. << " [m]. "  << std::endl;
 }
 
@@ -115,7 +117,8 @@ void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, marley::Event
   G4ThreeVector positionA(x,y,z);
   G4double timeA = 0*s;
   G4PrimaryVertex* vertex = new G4PrimaryVertex(positionA, timeA);
-
+  fFSNeutrino = false;
+      
   for ( const auto& fp : marlev.get_final_particles() ) {
 
     // Convert each one from a marley::Particle into a G4PrimaryParticle.
@@ -123,6 +126,10 @@ void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, marley::Event
 
     //    std::cout << "GenPrimVertMarl:  final state particle PID is: " << fp->pdg_code() << " of energy " << fp->kinetic_energy() << std::endl;
     // If this is an Ar nuclear recoil, let's place opticalphotons on stack, instead.
+
+    if( fp->pdg_code() == 12)
+      fFSNeutrino = true;
+
     if (fp->pdg_code() == 1000180400) {
       int Nphotons_stack = fp->kinetic_energy() * 1000. * n_particle/100.;
       G4ParticleDefinition* particleDefinition
@@ -162,7 +169,9 @@ void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, marley::Event
   // from the MARLEY event. Add it to the G4Event object so that Geant4 can
   // begin tracking the particles through the simulated geometry.
 
+  SetParticlePosition(positionA);
   event->AddPrimaryVertex( vertex );
+
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

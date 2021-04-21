@@ -436,6 +436,8 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   fTargetMater->GetMaterialPropertiesTable()->GetProperty("FASTCOMPONENT") ->DumpValues();
   std::cout << "DetConst::ConstructVolumes(): Argon " << " Slow Intensity" << std::endl;
   fTargetMater->GetMaterialPropertiesTable()->GetProperty("SLOWCOMPONENT") ->DumpValues();
+  std::cout << "DetConst::ConstructVolumes(): Argon " << " All Properties" << std::endl;
+  fTargetMater->GetMaterialPropertiesTable()->DumpTable();
   std::cout << "Dumping TPB MaterialPropertiesTable:" << std::endl;  
   fTPBMater->GetMaterialPropertiesTable()->DumpTable();
   /*
@@ -628,6 +630,11 @@ G4Material* DetectorConstruction::GetShieldMaterial()
 G4LogicalVolume* DetectorConstruction::GetLogicTarget()
 {
   return fLogicTarget;
+}
+
+G4LogicalVolume* DetectorConstruction::GetLogicSiPM()
+{
+  return fLogicSiPM;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

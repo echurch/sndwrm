@@ -97,10 +97,13 @@ void RunAction::BeginOfRunAction(const G4Run*)
    {
       std::cout << "AnalysisManager is NOT active." << std::endl;
     }
+
+  fRun->ReadPhotonsToMeV();
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void RunAction::EndOfRunAction(const G4Run*)
 {
   if (isMaster) fRun->EndOfRun();    

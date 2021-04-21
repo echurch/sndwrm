@@ -433,8 +433,8 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
     bool EnableCerenkovLight( true);    //whether to switch on cerenkov light (slow)
     LarProp->SetEnableCerenkovLight(EnableCerenkovLight);
 
-    //    bool ScintByParticleType(true);
-    bool ScintByParticleType(false);
+    bool ScintByParticleType(true);
+    //    bool ScintByParticleType(false);
     LarProp->SetScintByParticleType(ScintByParticleType);
  //Scintillation yields and fast/slow ratios per particle type 
     double MuonScintYield          (24000);
@@ -461,6 +461,10 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
     LarProp->SetAlphaScintYield(AlphaScintYield);
     double AlphaScintYieldRatio    (0.56);
     LarProp->SetAlphaScintYieldRatio(AlphaScintYieldRatio);
+    double Ar40ScintYield         (16800);
+    LarProp->SetAr40ScintYield(Ar40ScintYield);
+    double Ar40ScintYieldRatio    (0.90); // EC made-up!
+    LarProp->SetAr40ScintYieldRatio(Ar40ScintYieldRatio);
 
 
 //Refractive index as a function of energy (eV) from arXiv:1502.04213v1
@@ -583,6 +587,8 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
         SetMaterialConstProperty("Argon", "ELECTRONYIELDRATIO",        LarProp->ElectronScintYieldRatio(), 1.);
         SetMaterialConstProperty("Argon", "ALPHASCINTILLATIONYIELD",   LarProp->AlphaScintYield(true),     1./CLHEP::MeV );
         SetMaterialConstProperty("Argon", "ALPHAYIELDRATIO",           LarProp->AlphaScintYieldRatio(),    1.);
+        SetMaterialConstProperty("Argon", "AR40SCINTILLATIONYIELD",   LarProp->Ar40ScintYield(true),     1./CLHEP::MeV );
+        SetMaterialConstProperty("Argon", "AR40YIELDRATIO",           LarProp->Ar40ScintYieldRatio(),    1.);
       }
 
     // If we are simulating the TPB load this

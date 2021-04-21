@@ -35,6 +35,9 @@
 #define EventAction_h 1
 
 #include "G4UserEventAction.hh"
+#include "Run.hh"
+#include "PrimaryGeneratorAction.hh"
+
 #include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -42,7 +45,8 @@
 class EventAction : public G4UserEventAction
 {
   public:
-    EventAction();
+  EventAction();
+  EventAction(PrimaryGeneratorAction* prim);
    ~EventAction();
 
   public:
@@ -50,11 +54,19 @@ class EventAction : public G4UserEventAction
     virtual void   EndOfEventAction(const G4Event*);
     
     void AddEdep (G4int iVol, G4double Edep, G4double time, G4double weight);
-                
+    void SetFiducial(bool fid) {fFiducial = fid;};              
+    bool GetFiducial() {return fFiducial;}; 
+
+
   private:
+    PrimaryGeneratorAction* fPGA;
     G4double fEdep1,   fEdep2;
     G4double fWeight1, fWeight2;
     G4double fTime0;    
+    G4double fFiducial;
+  
+    G4double EnergyCalc(G4double, Run*);
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

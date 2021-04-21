@@ -77,18 +77,30 @@ void HistoManager::Book()
                        nbins, vmin, vmax);
   analysis->SetH1Activation(id, false);
     
-  id = analysis->CreateH1("H11","Energy deposit (MeV) in the detector",
-                 nbins, vmin, vmax);
+  id = analysis->CreateH1("H11"," total deposits (hits) in the SiPMs",
+			  nbins, vmin, 24000*0.8*20.); //12 MeV max
   analysis->SetH1Activation(id, false);
 
-  id = analysis->CreateH1("H12","Total energy (MeV) in target and detector",
-                 nbins, vmin, vmax);
+  id = analysis->CreateH1("H12"," total deposits (hits) in the SiPMs - ES",
+			  nbins, vmin, 24000*0.8*20.); //12 MeV max
   analysis->SetH1Activation(id, false);
 
-  id = analysis->CreateH1("H13",
-                "Coincidence spectrum (MeV) between the target and detector",
-                 nbins, vmin, vmax);
+  id = analysis->CreateH1("H13"," total deposits (hits) in the SiPMs - non-ES",
+			  nbins, vmin, 24000*0.8*20.); //12 MeV max
   analysis->SetH1Activation(id, false);  
+
+  id = analysis->CreateH1("H21"," total Energy in the SiPMs",
+			  nbins, vmin, 0.8*24.); //12 MeV max
+  analysis->SetH1Activation(id, false);
+
+  id = analysis->CreateH1("H22"," total Energy in the SiPMs - ES",
+			  nbins, vmin, 0.8*24.); //12 MeV max
+  analysis->SetH1Activation(id, false);
+
+  id = analysis->CreateH1("H23"," total Energy in the SiPMs - non-ES",
+			  nbins, vmin, 0.8*24.); //12 MeV max
+  analysis->SetH1Activation(id, false);  
+
 
   id = analysis->CreateH1("H14",
                 "Anti-coincidence spectrum (MeV) in the traget",

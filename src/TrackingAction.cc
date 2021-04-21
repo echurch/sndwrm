@@ -44,8 +44,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TrackingAction::TrackingAction(DetectorConstruction* det)
-:G4UserTrackingAction(), fDetector(det)
+TrackingAction::TrackingAction(DetectorConstruction* det, EventAction* evt)
+ :G4UserTrackingAction(), fDetector(det), fEventAction(evt)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -90,6 +90,9 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
 
   run->ParticleCount(name,energy,iVol);
   
+  if (abs(vtx[0])<3000 && abs(vtx[1])<6000 && abs(vtx[2])<20000)
+    fEventAction->SetFiducial(true);
+
   //Radioactive decay products
   //G4int procaessType = track->GetCreatorProcess()->GetProcessSubType();
   //  if (processType == fRadioactiveDecay) {
@@ -124,7 +127,6 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
       analysisManager->FillNtupleDColumn(id,3, weight);
       analysisManager->AddNtupleRow(id);
     
-      analysisManager->FillH1(6, energy, weight);
       analysisManager->FillH1(7, energy, weight);
       analysisManager->FillH1(8, energy, weight);
     } 

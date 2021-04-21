@@ -33,7 +33,7 @@
 
 #include "EventAction.hh"
 
-#include "Run.hh"
+
 #include "HistoManager.hh"
 
 #include "G4Event.hh"
@@ -45,11 +45,19 @@
 #include "G4Material.hh"
 #include "G4MaterialPropertiesTable.hh"
 #include "G4MaterialPropertyVector.hh"
+#include "G4ThreeVector.hh"
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 EventAction::EventAction()
 :G4UserEventAction(),
+ fEdep1(0.), fEdep2(0.), fWeight1(0.), fWeight2(0.),
+ fTime0(-1*s)
+{ } 
+
+EventAction::EventAction(PrimaryGeneratorAction* prim)
+ :G4UserEventAction(), fPGA(prim), 
  fEdep1(0.), fEdep2(0.), fWeight1(0.), fWeight2(0.),
  fTime0(-1*s)
 { } 
@@ -65,7 +73,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
 {
   fEdep1 = fEdep2 = fWeight1 = fWeight2 = 0.;
   fTime0 = -1*s;
-
+  fFiducial = true;
 
   G4LogicalVolumeStore * lvs =   G4LogicalVolumeStore::GetInstance();
 
@@ -79,11 +87,12 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
     if (aMaterialPropertiesTable)
       {
+	/*
 	G4MaterialPropertyVector* Fast_Intensity =
 	  aMaterialPropertiesTable->GetProperty(kFASTCOMPONENT);
 	G4MaterialPropertyVector* Slow_Intensity =
 	  aMaterialPropertiesTable->GetProperty(kSLOWCOMPONENT);
-	/*
+
 	std::cout <<  Material << " Fast Intensity" << std::endl;
 	Fast_Intensity->DumpValues();
 	std::cout << Material << " Slow Intensity" << std::endl;
@@ -91,6 +100,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
 	*/
       }
   }
+
 
 }
 
@@ -107,7 +117,8 @@ void EventAction::AddEdep(G4int iVol, G4double edep,
   if (std::fabs(time - fTime0) > TimeWindow) return;
   
   if (iVol == 1) { fEdep1 += edep; fWeight1 += edep*weight;}
-  if (iVol == 2) { fEdep2 += edep; fWeight2 += edep*weight;}  
+  if (iVol == 3 and GetFiducial()) { fEdep2 += edep; fWeight2 += edep*weight;}  
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -115,9 +126,6 @@ void EventAction::AddEdep(G4int iVol, G4double edep,
 void EventAction::EndOfEventAction(const G4Event*)
 {
  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
- 
- G4double Etot = fEdep1 + fEdep2;
- G4double Wtot = (fWeight1 + fWeight2)/Etot;
  
  // pulse height in target
  //
@@ -128,39 +136,76 @@ void EventAction::EndOfEventAction(const G4Event*)
    analysisManager->FillH1(0, fEdep1, fWeight1);   
  }
  
- // pulse height in detector
+ // pulse height in SiPM
  //   
  if (fEdep2 > 0.) {
    fWeight2 /= fEdep2;
-   analysisManager->FillH1(1, fEdep2, fWeight2);
+   std::cout << "EndofEvtAction: Total SipM hits: " << fEdep2 << std::endl;
+   analysisManager->FillH1(1, fEdep2, 1.0);    //fWeight2);
+   if (fPGA->GetPrimaryGenerator()->GetFSNeutrino())
+     analysisManager->FillH1(2, fEdep2, 1.0);
+   else 
+     analysisManager->FillH1(3, fEdep2, 1.0);
  }
    
- // total
- //
- analysisManager->FillH1(2, Etot, Wtot);
- 
- // threshold in target and detector        
- const G4double Threshold1(10*keV), Threshold2(10*keV);
-  
- //coincidence, anti-coincidences 
- //  
- G4bool coincidence       = ((fEdep1 >= Threshold1) && (fEdep2 >= Threshold2));
- G4bool anti_coincidence1 = ((fEdep1 >= Threshold1) && (fEdep2 <  Threshold2));
- G4bool anti_coincidence2 = ((fEdep1 <  Threshold1) && (fEdep2 >= Threshold2)); 
 
- if (coincidence)       analysisManager->FillH1(3, fEdep2, fWeight2);
- if (anti_coincidence1) analysisManager->FillH1(4, fEdep1, fWeight1);
- if (anti_coincidence2) analysisManager->FillH1(5, fEdep2, fWeight2); 
-
- // pass energies to Run
- //  
+ // Now get PhotonsToMeV data and fill calibrated-by-Primary-Launch-Location Histograms of Energy.
  Run* run = static_cast<Run*>(
             G4RunManager::GetRunManager()->GetNonConstCurrentRun());
       
 
- run->AddEdep (fEdep1, fEdep2);             
+
+ if (fEdep2 > 0.) {
+   // Fill 3 histograms according after converting to MeV
+   double Energy = EnergyCalc(fEdep2,run);
+
+   std::cout << "EndofEvtAction: Total SipM hits: " << fEdep2 << std::endl;
+
+   analysisManager->FillH1(4, Energy, 1.0);    //fWeight2);
+   if (fPGA->GetPrimaryGenerator()->GetFSNeutrino())
+     analysisManager->FillH1(5, Energy, 1.0);
+   else 
+     analysisManager->FillH1(6, Energy, 1.0);
+ }
+
+
+
+ // run->AddEdep (fEdep1, fEdep2);             
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+G4double EventAction::EnergyCalc(G4double E, Run* run)
+{
 
+ std::vector<double> *data( run->GetPhotonsToMeVData());
+ std::vector<double> *bins( run->GetPhotonsToMeVBins());
+ G4double energyConv(0.);
+
+ G4ThreeVector vtx(fPGA->GetPrimaryGenerator()->GetParticlePosition());
+ std::cout << "EnergyCalc(): vtx is " << vtx[0] << "," << vtx[1] << "," << vtx[2] << std::endl;
+  
+ // Below takes advantage of the x8 symmetry of our detector
+ for (int ii=0; ii<int(bins->size()/3-1) ;ii++)
+   {
+     if (!(abs(vtx[0]/1000.) >= bins->at(ii) && abs(vtx[0]/1000.)< bins->at(ii+1))) continue;
+     for (int jj=bins->size()/3; jj<int(2*bins->size()/3-1) ;jj++)
+       {
+	 if (!(abs(vtx[1]/1000.) >= bins->at(jj) && abs(vtx[1]/1000.)<bins->at(jj+1))) continue;
+	 for (int kk=2*bins->size()/3; kk<int(3*bins->size()/3-1) ;kk++)
+	   {
+	     if (!(abs(vtx[2]/1000.) >= bins->at(kk) && abs(vtx[2]/1000.)<bins->at(kk+1))) continue;
+	     std::cout << "EnergyCalc using bins " << ii <<"," << jj << "," << kk << std::endl;
+	     int dataind (ii + jj + kk);
+	     energyConv = data->at(dataind);
+	     std::cout << "EnergyCalc returning ph/MeV,MeV " << energyConv << ", " << E/energyConv << std::endl;
+	     break;
+	   }
+       }
+   }
+
+
+  return E/energyConv;
+
+}

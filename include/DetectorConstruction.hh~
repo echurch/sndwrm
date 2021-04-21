@@ -65,7 +65,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetDetectorRadius(G4double value);  
     void SetDetectorMaterial(G4String);               
          
-  void SetSiPMsOnAcrylic(G4bool;)
+  void SetSiPMsOnAcrylic(G4bool);
   void SetSiPMsOnCathode(G4bool);
   void SetSiPMSize(G4double);
   void SetSiPMThickness(G4double);

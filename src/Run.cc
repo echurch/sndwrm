@@ -41,6 +41,8 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
+#include "libnpy/npy.hpp"
+
 #include <fstream>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -429,3 +431,81 @@ void Run::WriteActivity(G4int nevent)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void Run::ReadPhotonsToMeV()
+{
+
+ std::vector<unsigned long> shape;
+ std::vector<double> data;
+ std::vector<double> bins;
+ std::string file_pMeV("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-histxyz.npy");
+ std::string file_pMeV_bins("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-binsxyz.npy");
+
+ try {
+
+   for (auto path : {file_pMeV}) {
+       shape.clear();
+       data.clear();
+       bool fortranOrder;
+       npy::LoadArrayFromNumpyEC(path, shape,  fortranOrder, data);
+
+       std::cout << "shape of Photons-per-MeV data from " + file_pMeV + ": ";
+       for (size_t i = 0; i<shape.size(); i++)
+	 {
+	   std::cout << shape[i] << ", ";
+	   //	cout << "fortran order: " << (fortran_order ? "+" : "-");
+	   //	cout << endl;
+	 }
+       std::cout << std::endl;
+       std::cout << "data: ";
+       for (size_t j = 0; j<data.size(); j++)
+	 std::cout << data[j] << ", ";
+       std::cout << std::endl ;
+     }
+     //Also get bins Photons-per-MeV-binsxyz.npy
+
+   for (auto path : {file_pMeV_bins}) {
+       shape.clear();
+       bins.clear();
+       bool fortranOrder;
+       npy::LoadArrayFromNumpyEC(path, shape,  fortranOrder, bins);
+
+       std::cout << "bins shape from " + file_pMeV_bins + ": ";
+       for (size_t i = 0; i<shape.size(); i++)
+	 {
+	   std::cout << shape[i] << ", ";
+	   //	cout << "fortran order: " << (fortran_order ? "+" : "-");
+	   //	cout << endl;
+	 }
+       std::cout << std::endl;
+       std::cout << "bins: ";
+       for (size_t j = 0; j<bins.size(); j++)
+	 std::cout << bins[j] << ", ";
+       std::cout << std::endl ;
+     }
+
+
+   }
+ catch(...){
+   std::cout << "EventAction:;EndOfEventAction(): Can't find npy file with Photon-to-MeV conversion..." + file_pMeV + " or " + file_pMeV_bins << std::endl;
+ }
+
+ SetPhotonsToMeVData(&data);
+ SetPhotonsToMeVBins(&bins);
+
+}
+
+void Run::SetPhotonsToMeVData(std::vector<double> *d)
+{
+  PTMD.reserve(d->size());
+  for (auto it=d->begin(); it<d->end(); it++){
+    PTMD.push_back(*it);
+  }
+}
+void Run::SetPhotonsToMeVBins(std::vector<double> *d)
+{
+  PTMB.reserve(d->size());
+  for (auto it=d->begin(); it<d->end(); it++){
+    PTMB.push_back(*it);
+  }
+}

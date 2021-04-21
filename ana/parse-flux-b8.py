@@ -1,4 +1,7 @@
 
+#curl -G http://www.sns.ias.edu/~jnb/SNdata/Export/B8spectrum/b8spectrum.txt > ../macros/b8.dat
+#curl -G http://www.sns.ias.edu/~jnb/SNdata/Export/hepspectrum/hepspectrum.txt > ../macros/hep.dat
+
 
 from ROOT import TFile, TH1F
 import pdb

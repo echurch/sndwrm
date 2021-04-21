@@ -38,6 +38,7 @@
 #include "globals.hh"
 #include <map>
 
+
 class DetectorConstruction;
 class G4ParticleDefinition;
 
@@ -58,6 +59,10 @@ class Run : public G4Run
     virtual void Merge(const G4Run*);
     void EndOfRun();
     void WriteActivity(G4int);     
+
+    void ReadPhotonsToMeV();
+    std::vector<double>* GetPhotonsToMeVData(){return &PTMD;};
+    std::vector<double>* GetPhotonsToMeVBins(){return &PTMB;};
    
   private:
     struct ParticleData {
@@ -83,6 +88,16 @@ class Run : public G4Run
     std::map<G4String,G4int>        fProcCounter2;    
     std::map<G4String,ParticleData> fParticleDataMap1;                    
     std::map<G4String,ParticleData> fParticleDataMap2;
+
+
+  // PhotonToMeVData
+    std::vector<double> PTMD;
+    std::vector<double> PTMB;
+
+
+    void SetPhotonsToMeVData(std::vector<double>* d);
+    void SetPhotonsToMeVBins(std::vector<double>* b);
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

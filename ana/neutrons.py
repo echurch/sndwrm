@@ -12,7 +12,7 @@ import pdb
 #files = ["../build/marley_optphys_8B.root"]
 #files = ["../build/marley_optphys_SN-liv.root"]
 #files = ["../build/marley_optphys_SN-liv-CEvNS.root"]
-files = ["/Volumes/EC2TB/G4/mod4//marley_optphys_hep_0.root"]
+files = glob.glob("../build/neutron_coldcryoskin_*.root")
 qe = 1.
 birk = 0.7
 sumgvv = []
@@ -37,7 +37,7 @@ for file in files:
     trks = f['Tracks']
     trks = trks.arrays(namedecode='utf-8')
 
-    maxE = 0.016 # len(trks['Event']) ~ 10MeV (3 MeV) [12 MeV] {100 keV} max scale for 8B (CNO) [SN-liv] {CEvNS}
+    maxE = 12. # len(trks['Event']) ~ 10MeV (3 MeV) [12 MeV] {100 keV} max scale for 8B (CNO) [SN-liv] {CEvNS}
     phpE = 24000 # 24000 (12500) photons/MeV ionizing e's (n.r.)
     Nphot = phpE*maxE
     Nevts = trks['Event'].max()+1
@@ -72,7 +72,7 @@ for file in files:
 #        if  not fidV and b'null' in steps['SProcess'][step] :
 #            fidV = abs(steps['X'][step]) < 2200. and ( ( steps['Y'][step] > 1000. and steps['Y'][step] < 3000.) or (steps['Y'][step] < -1000. and steps['Y'][step] > -3000. ) ) and abs(steps['Z'][step]) < 27000.  
 
-        if  not fidV and  b'null' in steps['SProcess'][step] :
+        if  not fidV and  steps['PID'][step]==22 : ## take presence of gamma to mean n capture or robust inelastic thingy happened.
             fidV = abs(steps['X'][step]) < 3000. and abs( steps['Y'][step]) < 6000 and abs(steps['Z'][step]) < 20000.  
             if fidV:
                 cntf += 1
@@ -137,46 +137,21 @@ for file in files:
 
 binsz = Nphot/phpE*qe/20.
 
-
-cts, be, er = skh_plt.hist(sumgvvf,weights=weightsv,bins=np.arange(0,Nphot/phpE*qe,binsz),errorbars=False, histtype='step',label=labelv)#,stacked='true')
+pdb.set_trace()
+cts, be, er = skh_plt.hist([item for sublist in sumgvvf for item in sublist],weights=[item for sublist in weightsvf for item in sublist],bins=np.arange(0,Nphot/phpE*qe,binsz),errorbars=False, histtype='step',label=labelv)#,stacked='true')
 hdict = dict()
 hdict["counts"]=cts
 hdict["binedges"]=be
 hdict["err"]=er
 
-fileout = "ngamma_hep"
+fileout = "neutron_capture"
 plt.legend()
-plt.title(fileout + 'summed SiPM energy from hep evts inside acrylic volume')
+plt.title(fileout + 'summed SiPM energy from coldcryoskin photons - capture inside acrylic volume')
 plt.xlabel('Counted photons - no q.e.')
 plt.ylabel('n gammas - normalized')
 #plt.yscale('log')
 plt.savefig(fileout+'.png')
 plt.close()
-
-
-
-if  range(len(sumgvv)):
-
-    Nphot /= phpE
-    cts, be, er = skh_plt.hist(sumgvvftype,weights=weightsvftype,bins=np.arange(0,Nphot*qe,binsz),errorbars=False, histtype='step',label=labelvtype,stacked='true')
-    hdict = dict()
-    hdict["counts"]=cts
-    hdict["binedges"]=be
-    hdict["err"]=er
-
-#    fileout += "_marley_nue_solar_8B"
-#    fileout += "_marley_nue_solar_CNO"
-#    fileout += "_marley_nue_SN_liv_COH"
-    fileout += "_marley_nue_solar_hep"
-    plt.legend()
-    plt.title(fileout+ ' ES/CC evts ' + 'w cathode SiPMs, MeV/'+str(phpE)+' photons')
-    plt.xlabel('Summed Energy [MeV] - no q.e.,birks=0.7')
-    plt.ylabel('Events - normalized')
-#plt.yscale('log')
-    plt.savefig(fileout+'.png')
-
-else:
-    print ("Not creating pbomb_ngamma_fid, since no events satisfied fidV cut.")
 
 
 npa = np.array(sumgvv)

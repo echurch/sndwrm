@@ -29,7 +29,7 @@
 /rdecay02/det/setDetectorSiPMsOnCathode false #true
 /rdecay02/det/setDetectorSiPMSize 24.0 cm
 /rdecay02/det/setDetectorSiPMThickness 0.1 cm
-/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.40
+/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
 
 
 #
@@ -47,6 +47,8 @@
 /gps/ene/mono 9.686 eV # 128nm
 /gps/ang/type iso
 
+
+# These dimensions for throwing opticalphotons are over-ridden in PrimaryGenerator.cc.
 /gps/position 0 0 0 m
 /gps/pos/type Volume
 /gps/pos/shape Para
@@ -55,7 +57,7 @@
 /gps/pos/halfz 10.1 m
 /gps/pos/centre 0. 0. 0. m
 #/gps/pos/confine Detector
-# This is for emitting e's from the 1.2cm thick coldskin OR the bulk Ar in detector
+
 
 
 

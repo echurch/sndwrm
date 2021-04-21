@@ -6,7 +6,8 @@
 # in PhysicsList.cc
 #                                                                         
 /control/verbose 2
-/run/verbose 0
+/run/verbose 1
+/event/verbose 0
 /tracking/verbose 0
 
 #
@@ -16,10 +17,11 @@
 /rdecay02/det/setTargetLength 58 m
 # "Radius" means halfXBox, halfYBox
 /rdecay02/det/setTargetRadius 6 m
-/rdecay02/det/setDetectorLength 40. m
+#/rdecay02/det/setDetectorLength 40. m
 # Detector"Radius" is set to TargetRadius-InsetRadius
-/rdecay02/det/setInsetRadius 3.9 m
-# postive puts shield outside cryostat
+#/rdecay02/det/setInsetRadius 3.9 m
+# postive puts outside of foam this much outside cryostat, and inside boundary right at TargetRadius.
+# So it goes from outside in: G10,Wood,Foam,ColdSkin,Target
 #/rdecay02/det/setShieldThickness 40 cm
 
 /rdecay02/det/setShieldThickness +77.6 cm
@@ -31,9 +33,14 @@
 #
 # rdm is applied only to the target volume
 /grdm/noVolumes
-/grdm/selectVolume Target
+#/grdm/selectVolume Target
+/grdm/selectVolume ColdSkin
 
-/gps/particle neutron 
+
+/gps/particle neutron
+##/gps/particle ion
+##/gps/ion 18 40 0 0
+##/gps/energy 0.1 MeV
 /gps/ene/type Arb
 /gps/hist/type arb
 /gps/hist/file ../ana/neutron_distn.txt
@@ -48,32 +55,39 @@
 ##/gps/pos/centre 0. 0. 0. m
 #
 
-### from end cap
-#/gps/position 0 0 -29 m
-#/gps/pos/type Volume
-#/gps/pos/shape Para
-#/gps/pos/halfx 6 m
-#/gps/pos/halfy 6 m
+
+/gps/position 0 0 0 m
+/gps/pos/type Volume
+/gps/pos/shape Para
+/gps/pos/halfx 7 m
+/gps/pos/halfy 7 m
+/gps/pos/halfz 30 m
 # This is for emitting n's from outside the water shielding
-/gps/pos/centre 0. 7.08 0. m
+#/gps/pos/centre 0. 7.08 0. m
 # This is for emitting n's from inside the water shielding
 ##/gps/pos/centre 0. 5.9 0. m
-/gps/pos/type Plane
-/gps/pos/shape Rectangle
+##/gps/pos/type Plane
+#/gps/pos/shape Rectangle
 #/gps/pos/rot1 0 1 0 
-/gps/pos/rot2 0 0 -1
-/gps/pos/halfx 6 m
-/gps/pos/halfy 29 m
+#/gps/pos/rot2 0 0 -1
+#/gps/pos/halfx 6 m
+#/gps/pos/halfy 29 m
+
+/gps/pos/confine ColdSkin
+
 
 /gps/ang/type iso
 #/gps/ang/maxtheta 90 deg
 
 #/analysis/setFileName neutron_shield
 #/analysis/setFileName neutron_plastic20cm
-/analysis/setFileName neutron_outsidefoamwoodss_dunedistn_liquid_longskinny
-/analysis/h1/set 0 100 0. 2. MeV
-/analysis/h1/set 1 100 0. 2. MeV
-/analysis/h1/set 6 100 0. 2. MeV
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_0
+/analysis/h1/set 1 100 0. 320000.
+/analysis/h1/set 2 100 0. 320000.
+/analysis/h1/set 3 100 0. 320000.
+/analysis/h1/set 4 100 0. 20. MeV
+/analysis/h1/set 5 100 0. 20. MeV
+/analysis/h1/set 6 100 0. 20. MeV
 /analysis/ntuple/setActivation 0 true
 /analysis/ntuple/setActivation 1 true
 /analysis/ntuple/setActivation 2 true
@@ -91,6 +105,13 @@
 # 1E-5*1E4*12*60*(4+12*12/(12*60))*3.14159E7 = 95.0E6
 
 # 95.0E6/31E6 = 3.064
-/run/beamOn 31000000  # 10000
-##/run/beamOn 10 # 10000
+##/run/beamOn 31000000  # 10000
+
+/run/beamOn 2500
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_1
+/run/beamOn 2500
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_2
+/run/beamOn 2500
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_3
+/run/beamOn 2500
 

@@ -81,7 +81,7 @@
 /analysis/ntuple/setActivation 4 true
 /run/printProgress 1000
 
-/control/execute vis.mac
+##/control/execute vis.mac
 
 # 0.8 Bq/kg leads to 10 Hz. 10 * piE7 sec is ~31 E7. Let's run 1/10th of one year.
 # Note above 10 Hz is n capture rate. 
@@ -91,6 +91,6 @@
 # 1E-5*1E4*12*60*(4+12*12/(12*60))*3.14159E7 = 95.0E6
 
 # 95.0E6/31E6 = 3.064
-##/run/beamOn 31000000  # 10000
-/run/beamOn 10 # 10000
+/run/beamOn 31000000  # 10000
+##/run/beamOn 10 # 10000
 

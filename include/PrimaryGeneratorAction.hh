@@ -60,11 +60,14 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     virtual void GeneratePrimaries(G4Event*);
   //    G4ParticleGun* GetParticleGun() {return fParticleGun;};
     G4GeneralParticleSource* GetParticleGun() {return fParticleGun;};
+    PrimaryGenerator* GetPrimaryGenerator(){return fPrimaryGenerator;};
 
   private:
   //    G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
     G4GeneralParticleSource*  fParticleGun;        //pointer a to G4 service class
     PrimaryGenerator* fPrimaryGenerator;
+
+  
 
   marley::Generator marley_generator_;
   std::string config_file_name;

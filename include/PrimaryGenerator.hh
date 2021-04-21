@@ -52,6 +52,12 @@ class PrimaryGenerator : public G4VPrimaryGenerator
   public:
     virtual void GeneratePrimaryVertex(G4Event*);
     virtual void GeneratePrimaryVertexMarley(G4Event*, marley::Event);
+    bool GetFSNeutrino(){return fFSNeutrino;};
+    
+
+  private:
+    bool fFSNeutrino;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

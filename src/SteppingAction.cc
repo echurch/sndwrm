@@ -77,6 +77,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if (lVolume == fDetector->GetLogicTarget())   iVol = 1;
   if (lVolume == fDetector->GetLogicDetector()) iVol = 2;
 
+
   // count processes
   // 
   const G4StepPoint* endPoint = aStep->GetPostStepPoint();
@@ -89,7 +90,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4VPhysicalVolume* eVolume = touch->GetVolume();
   G4String eVname("null");
   if (eVolume)
-    eVname = eVolume->GetName();  
+    {
+      eVname = eVolume->GetName();  
+
+      if (lVolume == fDetector->GetLogicSiPM() or eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM())     iVol = 3;
+    }
+
   // energy deposit
   //
   G4double edepStep = aStep->GetTotalEnergyDeposit();
@@ -103,8 +109,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
   G4double weight = aStep->GetPreStepPoint()->GetWeight();   
 
-  fEventAction->AddEdep(iVol, edepStep, time, weight);
-  
+  if (iVol!=3)
+    fEventAction->AddEdep(iVol, edepStep, time, weight);
+  else
+    {
+      fEventAction->AddEdep(iVol, 1.0, time, weight);
+    }
   //fill ntuple id = 2
   G4int id = 4;   
   const G4double length = aStep->GetStepLength();
@@ -129,7 +139,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,9, tID);
 
   analysisManager->FillNtupleSColumn(id,10, track->GetVolume()->GetLogicalVolume()->GetName());
-  analysisManager->FillNtupleDColumn(id,11, eVolume->GetCopyNo());
+  if (eVolume)
+    analysisManager->FillNtupleDColumn(id,11, eVolume->GetCopyNo());
+  else
+    analysisManager->FillNtupleDColumn(id,11, 0);
   analysisManager->FillNtupleSColumn(id,12, track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName());
   analysisManager->FillNtupleDColumn(id,13, track->GetCurrentStepNumber());
   if (sprocess)
@@ -144,6 +157,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleSColumn(id,19,eVname);
 
   analysisManager->AddNtupleRow(id);      
+
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

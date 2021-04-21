@@ -82,6 +82,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4Material* GetTargetMaterial();       
     G4Material* GetShieldMaterial(); 
     G4LogicalVolume* GetLogicTarget();
+    G4LogicalVolume* GetLogicSiPM();
     
     G4double GetDetectorLength();
     G4double GetDetectorThickness();

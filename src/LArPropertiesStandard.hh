@@ -104,6 +104,8 @@ class LArPropertiesStandard { //: public LArProperties {
     double ElectronScintYieldRatio()                 const { return fElectronScintYieldRatio;                     }
     double AlphaScintYield(bool prescale = false)    const { return fAlphaScintYield * ScintPreScale(prescale);   }
     double AlphaScintYieldRatio()                    const { return fAlphaScintYieldRatio;                        }
+    double Ar40ScintYield(bool prescale = false)    const { return fAr40ScintYield * ScintPreScale(prescale);   }
+    double Ar40ScintYieldRatio()                    const { return fAr40ScintYieldRatio;                        }
     bool CerenkovLightEnabled()                      const { return fEnableCerenkovLight;                         }
 
 
@@ -148,6 +150,8 @@ class LArPropertiesStandard { //: public LArProperties {
     void SetElectronScintYieldRatio(double r)  { fElectronScintYieldRatio = r;}
     void SetAlphaScintYield(double y)          { fAlphaScintYield = y;}
     void SetAlphaScintYieldRatio(double r)     { fAlphaScintYieldRatio = r;}
+    void SetAr40ScintYield(double y)          { fAr40ScintYield = y;}
+    void SetAr40ScintYieldRatio(double r)     { fAr40ScintYieldRatio = r;}
 
     void SetScintYield(double y)               { fScintYield = y;}
     void SetScintPreScale(double s)            { fScintPreScale = s;}
@@ -221,6 +225,8 @@ class LArPropertiesStandard { //: public LArProperties {
     double fElectronScintYieldRatio;
     double fAlphaScintYield;
     double fAlphaScintYieldRatio;
+    double fAr40ScintYield;
+    double fAr40ScintYieldRatio;
 
     double fScintYield;
     double fScintPreScale;
