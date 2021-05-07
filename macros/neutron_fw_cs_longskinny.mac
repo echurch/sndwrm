@@ -61,7 +61,7 @@
 ###/gps/pos/halfx 6 m
 ###/gps/pos/halfy 29 m
 
-/gps/ang/type iso
+gps/ang/type iso
 #/gps/ang/maxtheta 90 deg
 
 #/analysis/setFileName neutron_shield

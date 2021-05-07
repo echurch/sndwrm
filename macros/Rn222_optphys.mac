@@ -20,7 +20,7 @@
 #/rdecay02/det/setDetectorLength 40. m
 # Detector"Radius" is set to TargetRadius-InsetRadius
 #/rdecay02/det/setInsetRadius 3.9 m
-# positive puts outside of foam this much outside cryostat, and inside boundary right at TargetRadius.
+# postive puts outside of foam this much outside cryostat, and inside boundary right at TargetRadius.
 # So it goes from outside in: G10,Wood,Foam,ColdSkin,Target
 #/rdecay02/det/setShieldThickness 40 cm
 
@@ -41,55 +41,23 @@
 #
 # rdm is applied only to the target volume
 /grdm/noVolumes
-#/grdm/selectVolume Target
-/grdm/selectVolume ColdSkin
+/grdm/selectVolume Target
 
-
-/gps/particle neutron
-##/gps/particle ion
-##/gps/ion 18 40 0 0
-##/gps/energy 0.1 MeV
-/gps/ene/type Arb
-/gps/hist/type arb
-/gps/hist/file ../ana/neutron_distn.txt
-/gps/hist/inter Lin
-
-
-##/gps/pos/type Volume
-##/gps/pos/shape Para
-##/gps/pos/halfx 0 #2 m
-##/gps/pos/halfy 0 #2 m
-##/gps/pos/halfz 0 #8 m
-##/gps/pos/centre 0. 0. 0. m
-#
-
-
-/gps/position 0 0 0 m
 /gps/pos/type Volume
 /gps/pos/shape Para
-/gps/pos/halfx 7 m
-/gps/pos/halfy 7 m
-/gps/pos/halfz 30 m
-# This is for emitting n's from outside the water shielding
-#/gps/pos/centre 0. 7.08 0. m
-# This is for emitting n's from inside the water shielding
-##/gps/pos/centre 0. 5.9 0. m
-##/gps/pos/type Plane
-#/gps/pos/shape Rectangle
-#/gps/pos/rot1 0 1 0 
-#/gps/pos/rot2 0 0 -1
-#/gps/pos/halfx 6 m
-#/gps/pos/halfy 29 m
+/gps/pos/halfx 3 m
+/gps/pos/halfy 4.5 m
+/gps/pos/halfz 20 m
 
-/gps/pos/confine ColdSkin
-
-
+/gps/energy 0 MeV
 /gps/ang/type iso
-#/gps/ang/maxtheta 90 deg
+/gps/particle ion
+/gps/ion 86 222 0 0 # 222Rn
+
 
 #/analysis/setFileName neutron_shield
 #/analysis/setFileName neutron_plastic20cm
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_0
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_0
 /analysis/h1/set 1 100 0. 320000.
 /analysis/h1/set 2 100 0. 320000.
 /analysis/h1/set 3 100 0. 320000.
@@ -115,12 +83,11 @@
 # 95.0E6/31E6 = 3.064
 ##/run/beamOn 31000000  # 10000
 
-
-/run/beamOn 20000
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_1
-/run/beamOn 20000
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_2
-/run/beamOn 20000
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_3
-/run/beamOn 20000
+/run/beamOn 10000
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_1
+/run/beamOn 10000
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_2
+/run/beamOn 10000
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_3
+/run/beamOn 10000
 

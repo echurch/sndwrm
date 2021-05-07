@@ -90,8 +90,22 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
 
   run->ParticleCount(name,energy,iVol);
   
-  if (abs(vtx[0])<3000 && abs(vtx[1])<6000 && abs(vtx[2])<20000)
-    fEventAction->SetFiducial(true);
+  std::vector<std::string> procOfInterest({"capt","beta","radioactive"}); // to catch ncapt, Rn222 chain, Ar39, Ar42 chain betas. And primaries with "null".
+  std::for_each(processName.begin(), processName.end(), [](char & c) {
+      c = ::tolower(c);
+    });
+
+  if (abs(vtx[0])<3000 && abs(vtx[1])<4500 && abs(vtx[2])<20000)
+    {
+      for (const auto& proc : procOfInterest) {
+	if (processName.find(proc) != std::string::npos) {
+	  fEventAction->SetProcVtx(vtx);
+	  //	  std::cout << "TrackingAction: Interesting Process is " << proc << std::endl;
+	  fEventAction->SetFiducial(true);
+	  break;
+	}
+      }
+    }
 
   //Radioactive decay products
   //G4int procaessType = track->GetCreatorProcess()->GetProcessSubType();

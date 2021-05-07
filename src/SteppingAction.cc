@@ -92,8 +92,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if (eVolume)
     {
       eVname = eVolume->GetName();  
-
-      if (lVolume == fDetector->GetLogicSiPM() or eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM())     iVol = 3;
+      
+      if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
+	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
     }
 
   // energy deposit
@@ -111,10 +112,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   if (iVol!=3)
     fEventAction->AddEdep(iVol, edepStep, time, weight);
-  else
-    {
-      fEventAction->AddEdep(iVol, 1.0, time, weight);
-    }
+
   //fill ntuple id = 2
   G4int id = 4;   
   const G4double length = aStep->GetStepLength();
@@ -156,6 +154,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,18, tpos[2]/mm);
   analysisManager->FillNtupleSColumn(id,19,eVname);
 
+  if (eVname=="SiPM") {
+	  fEventAction->AddEdep(3, 1.0, time, weight);	  
+  }
   analysisManager->AddNtupleRow(id);      
 
 

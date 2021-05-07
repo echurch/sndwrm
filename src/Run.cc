@@ -438,8 +438,12 @@ void Run::ReadPhotonsToMeV()
  std::vector<unsigned long> shape;
  std::vector<double> data;
  std::vector<double> bins;
- std::string file_pMeV("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-histxyz.npy");
- std::string file_pMeV_bins("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-binsxyz.npy");
+ // std::string file_pMeV("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-histxyz.npy");
+ // std::string file_pMeV_bins("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-binsxyz.npy");
+
+ std::string file_pMeV("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-3MeV-e-histxyz.npy");
+ std::string file_pMeV_bins("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-3MeV-e-binsxyz.npy");
+
 
  try {
 

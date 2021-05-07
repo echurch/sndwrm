@@ -56,6 +56,7 @@ class EventAction : public G4UserEventAction
     void AddEdep (G4int iVol, G4double Edep, G4double time, G4double weight);
     void SetFiducial(bool fid) {fFiducial = fid;};              
     bool GetFiducial() {return fFiducial;}; 
+    void SetProcVtx(const G4ThreeVector &vtx) { procVtx[0] = vtx[0];   procVtx[1] = vtx[1];   procVtx[2] = vtx[2];}
 
 
   private:
@@ -63,10 +64,11 @@ class EventAction : public G4UserEventAction
     G4double fEdep1,   fEdep2;
     G4double fWeight1, fWeight2;
     G4double fTime0;    
-    G4double fFiducial;
+    bool fFiducial;
   
     G4double EnergyCalc(G4double, Run*);
-
+    G4ThreeVector GetProcVtx() {return procVtx;};
+    G4ThreeVector procVtx;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

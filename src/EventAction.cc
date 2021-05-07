@@ -73,7 +73,8 @@ void EventAction::BeginOfEventAction(const G4Event*)
 {
   fEdep1 = fEdep2 = fWeight1 = fWeight2 = 0.;
   fTime0 = -1*s;
-  fFiducial = true;
+  fFiducial = false;
+  procVtx[0] = procVtx[1] = procVtx[2] = 0.0;
 
   G4LogicalVolumeStore * lvs =   G4LogicalVolumeStore::GetInstance();
 
@@ -114,10 +115,14 @@ void EventAction::AddEdep(G4int iVol, G4double edep,
   
   // out of time window ?
   const G4double TimeWindow (1*microsecond);
-  if (std::fabs(time - fTime0) > TimeWindow) return;
+  //  if (std::fabs(time - fTime0) > TimeWindow) return;
   
+  G4ThreeVector vtx(fPGA->GetPrimaryGenerator()->GetParticlePosition());
   if (iVol == 1) { fEdep1 += edep; fWeight1 += edep*weight;}
-  if (iVol == 3 and GetFiducial()) { fEdep2 += edep; fWeight2 += edep*weight;}  
+
+  // Use GetFiducial for the physics processes that follow in the particle/radioactive decay samples 
+  // If we ran Marley (vtx!=0) just assume they were run in the fiducial volume. EC, 6-May-2021.
+  if (iVol == 3 and (GetFiducial() || vtx[0]!=0.0)) { fEdep2 += edep; fWeight2 += edep*weight; }
 
 }
 
@@ -152,8 +157,6 @@ void EventAction::EndOfEventAction(const G4Event*)
  // Now get PhotonsToMeV data and fill calibrated-by-Primary-Launch-Location Histograms of Energy.
  Run* run = static_cast<Run*>(
             G4RunManager::GetRunManager()->GetNonConstCurrentRun());
-      
-
 
  if (fEdep2 > 0.) {
    // Fill 3 histograms according after converting to MeV
@@ -185,19 +188,29 @@ G4double EventAction::EnergyCalc(G4double E, Run* run)
 
  G4ThreeVector vtx(fPGA->GetPrimaryGenerator()->GetParticlePosition());
  std::cout << "EnergyCalc(): vtx is " << vtx[0] << "," << vtx[1] << "," << vtx[2] << std::endl;
-  
+
+ // If vtx=0, it's because this event was initiatiated by PrimaryGeneratorAction, not PrimaryGenerator. That means
+ // we want to use the vtx of the interesting  process we found and saved in TrackingAction::PreUserTrackingAction().
+ if (vtx[0]==0. && vtx[1]==0. && vtx[2]==0.) {
+   vtx = GetProcVtx();
+   std::cout << "EnergyCalc(): Interesting fiducial process's vtx is " << vtx[0] << "," << vtx[1] << "," << vtx[2] << std::endl;
+ }
+
+ int nbinedges(bins->size()/3);  
+ int nbins = nbinedges-1;
+
  // Below takes advantage of the x8 symmetry of our detector
- for (int ii=0; ii<int(bins->size()/3-1) ;ii++)
+ for (int ii=0; ii<int(nbinedges*3/nbins-1) ;ii++)
    {
      if (!(abs(vtx[0]/1000.) >= bins->at(ii) && abs(vtx[0]/1000.)< bins->at(ii+1))) continue;
-     for (int jj=bins->size()/3; jj<int(2*bins->size()/3-1) ;jj++)
+     for (int jj=nbinedges*3/nbins; jj<int(2*nbinedges*3/nbins-1) ;jj++)
        {
 	 if (!(abs(vtx[1]/1000.) >= bins->at(jj) && abs(vtx[1]/1000.)<bins->at(jj+1))) continue;
-	 for (int kk=2*bins->size()/3; kk<int(3*bins->size()/3-1) ;kk++)
+	 for (int kk=2*nbinedges*3/nbins; kk<int(3*nbinedges*3/nbins-1) ;kk++)
 	   {
 	     if (!(abs(vtx[2]/1000.) >= bins->at(kk) && abs(vtx[2]/1000.)<bins->at(kk+1))) continue;
-	     std::cout << "EnergyCalc using bins " << ii <<"," << jj << "," << kk << std::endl;
-	     int dataind (ii + jj + kk);
+	     std::cout << "EnergyCalc using nbins " << ii <<"," << jj << "," << kk << std::endl;
+	     int dataind (ii*9 + (jj-nbinedges)*3 + (kk-nbinedges*2)*1); 
 	     energyConv = data->at(dataind);
 	     std::cout << "EnergyCalc returning ph/MeV,MeV " << energyConv << ", " << E/energyConv << std::endl;
 	     break;
@@ -209,3 +222,4 @@ G4double EventAction::EnergyCalc(G4double E, Run* run)
   return E/energyConv;
 
 }
+

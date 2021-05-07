@@ -231,7 +231,7 @@
         PropertyPointer2 = MaterialTables[Material]->GetProperty("REFLECTANCE_Acrylic");
         if(PropertyPointer || PropertyPointer2 ) {
           std::cout<< "defining Acrylic optical boundary "<<std::endl;
-          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface Acrylic",glisur,ground,dielectric_dielectric); //dielectric_metal);
+          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface Acrylic",glisur,ground,dielectric_metal); //dielectric_dielectric);
           refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
           refl_opsurfs->SetPolish(0.5);
           new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
@@ -491,7 +491,7 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
   LarProp->SetReflectiveSurfaceEnergies(ReflectiveSurfaceEnergies);
   std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" , "SiPM"};
   LarProp->SetReflectiveSurfaceNames (ReflectiveSurfaceNames );
-  std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {0.25, 0.25, 0.25 }, {0., 0., 0.} };
+  std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {1., 1., 1. }, {0., 0., 0.} };
 
   LarProp->SetReflectiveSurfaceReflectances(ReflectiveSurfaceReflectances);
   std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  }, {0., 0., 0.} };

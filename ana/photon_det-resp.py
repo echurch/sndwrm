@@ -32,6 +32,7 @@ def rect_prismy(x_range, y_range, z_range,col):
     ax.plot_surface(xx, np.ones(xx.shape)*y_range[1], zz, color=col, alpha=0.1)
 
 arr = np.load("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-histxyz.npy")
+arr = np.load("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-3MeV-e-histxyz.npy")
 
 rect_prismz(np.linspace(-6,6,100), np.linspace(-6,6,100), np.array([-28, 28]),'r')
 rect_prismx(np.array([-6, 6]), np.linspace(-6,6,100), np.linspace(-28,28,100),'r')
@@ -48,6 +49,7 @@ zmin, zmax = ax.get_zlim()
 ax.text(0, 0, 40., "Beam axis")
 ax.text(0, 20, 0., "Up")
 
+pdb.set_trace()
 ax.text(2.5,1,0,str(round(arr[2,1,1],0)) + " Photons/MeV")
 #ax.text(2.5,12,0,str(round(arr[2,2,1],0)) )
 ax.text(1.,11,0,str(round(arr[1,2,1],0)) )
@@ -64,5 +66,5 @@ ax.view_init(20, 45)
 
 
 
-plt.savefig("PhotonCountMeV.png")
+plt.savefig("PhotonCountMeV-e3MeV.png")
 

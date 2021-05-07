@@ -9,7 +9,8 @@ import pdb
 
 
 files = ["../build/pbomb_optphys_40.root","../build/pbomb_optphys_60.root","../build/pbomb_optphys_80.root","../build/pbomb_optphys_40_nopc.root","../build/pbomb_optphys_60_nopc.root","../build/pbomb_optphys_80_nopc.root"]
-files = ["../build/pbomb_optphys.root"]  #~3100 evts 80%pcc
+files = ["/Volumes/EC2TB/G4/mod4/pbomb_optphys.root"]  #~3100 evts 80%pcc
+files = ["/Volumes/EC2TB/G4/mod4/electron_3MeV.root"]
 
 qe = 1.
 
@@ -28,11 +29,13 @@ for file in files:
 
     f = uproot.open(file)
     steps = f['Steps']
+    pdb.set_trace()
     steps = steps.arrays(namedecode='utf-8')
     Nsteps = len(steps['Time'])
     trks = f['Tracks']
     trks = trks.arrays(namedecode='utf-8')
     Nphot = 1250 # len(trks['Event'])
+    Nphot = 3 * 24000 * 0.75
     Nevts = trks['Event'].max()
 
     eventO = -12
@@ -102,14 +105,16 @@ for file in files:
 # The photon bombs we're using here are 1290 photons, as comes from 100 keV n.r. This is equivalent to x=0.0716 MeV ee.
 # 1290 photons = x . 24000 . 0.75  ... where the last factor is Birk's
 wt = 1.0/0.0716/((Nevts+1.)/27) # per MeV per event, presuming equal distribution of launched pbombs over 27 xyz boxes
+wt = 1.0/3./((Nevts+1.)/27)
 pperMeV = np.histogramdd(np.array([xf,yf,zf]).T,bins=(np.arange(0.,3.1,1.),np.arange(0.,6.1,2.),np.arange(0.,20.1,6.6)),weights=np.ones(np.array([xf,yf,zf]).T.shape[0])*wt)
 pdb.set_trace()
-np.save("Photons-per-MeV-histxyz",pperMeV[0])
-np.save("Photons-per-MeV-binsxyz",pperMeV[1])
-exit()
+np.save("Photons-per-MeV-3MeV-e-histxyz",pperMeV[0])
+np.save("Photons-per-MeV-3MeV-e-binsxyz",pperMeV[1])
+exit() # Get out if all I want to do is to make/write this histogramdd.
 
 
-binsz = 1250*qe/20.
+binsz = 1290*qe/20.
+binsz = 3*24000*0.75*qe/20.
 
 cts, be, er = skh_plt.hist(sumgvv,weights=weightsv,bins=np.arange(0,Nphot*qe,binsz),errorbars=False, histtype='step',label=labelv)#,stacked='true')
 hdict = dict()
@@ -118,8 +123,10 @@ hdict["binedges"]=be
 hdict["err"]=er
 
 fileout = "pbomb_ngamma"
+fileout = "e3MeV_ngamma"
 plt.legend()
-plt.title(fileout+ ' 40,60,80 fpcc ' + 'w/wo cathode SiPMs, 1250 photons/100keV')
+#plt.title(fileout+ ' 40,60,80 fpcc ' + 'w/wo cathode SiPMs, 1250 photons/100keV')
+plt.title(fileout)
 plt.xlabel('Counted photons - no q.e.')
 plt.ylabel('n gammas - normalized')
 #plt.yscale('log')
@@ -136,8 +143,10 @@ if  len(sumgvvf):
     hdict["err"]=er
 
     fileout = "pbomb_ngamma_fid"
+    fileout = "e3MeV_ngamma_fid"
     plt.legend()
-    plt.title(fileout+ ' 40,60,80 fpcc ' + 'w/wo cathode SiPMs, 1250 photons/100keV from fidv')
+#    plt.title(fileout+ ' 40,60,80 fpcc ' + 'w/wo cathode SiPMs, 1250 photons/100keV from fidv')
+    plt.title(fileout+ '  fpcc ' + 'w/wo cathode SiPMs, evts in  fidv')
     plt.xlabel('Counted photons - no q.e.')
     plt.ylabel('n gammas - normalized')
 #plt.yscale('log')
