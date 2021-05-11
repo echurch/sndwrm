@@ -280,9 +280,10 @@
           TheMaterial->SetMaterialPropertiesTable(j->second);
 	  std::cout << "MLP::UpdateGeometry(): Material/Pointer" << Material << "/" << TheMaterial << std::endl;
           //Birks Constant, for some reason, must be set separately
-          if(fBirksConstants[Material]!=0)
+          if(fBirksConstants[Material]!=0) {
 	    std::cout << "MLP::UpdateGeometry(): Setting Birks Constant: " << fBirksConstants[Material]  << std::endl;
             TheMaterial->GetIonisation()->SetBirksConstant(fBirksConstants[Material]);
+	  }
           volume->SetMaterial(TheMaterial);
         }
       }
