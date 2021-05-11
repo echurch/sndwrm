@@ -33,7 +33,6 @@
 /rdecay02/det/setDetectorSiPMThickness 0.1 cm
 /rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
 
-
 #
 /run/initialize
 #
@@ -55,7 +54,7 @@
 
 #/analysis/setFileName neutron_shield
 #/analysis/setFileName neutron_plastic20cm
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/electron_3MeV
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/electron_3MeV_shinyg10
 /analysis/h1/set 1 100 0. 320000.
 /analysis/h1/set 2 100 0. 320000.
 /analysis/h1/set 3 100 0. 320000.

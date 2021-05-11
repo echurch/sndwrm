@@ -11,6 +11,7 @@ import pdb
 files = ["../build/pbomb_optphys_40.root","../build/pbomb_optphys_60.root","../build/pbomb_optphys_80.root","../build/pbomb_optphys_40_nopc.root","../build/pbomb_optphys_60_nopc.root","../build/pbomb_optphys_80_nopc.root"]
 files = ["/Volumes/EC2TB/G4/mod4/pbomb_optphys.root"]  #~3100 evts 80%pcc
 files = ["/Volumes/EC2TB/G4/mod4/electron_3MeV.root"]
+files = ["/Volumes/EC2TB/G4/mod4/electron_3MeV_shinyg10.root"]
 
 qe = 1.
 
@@ -108,8 +109,8 @@ wt = 1.0/0.0716/((Nevts+1.)/27) # per MeV per event, presuming equal distributio
 wt = 1.0/3./((Nevts+1.)/27)
 pperMeV = np.histogramdd(np.array([xf,yf,zf]).T,bins=(np.arange(0.,3.1,1.),np.arange(0.,6.1,2.),np.arange(0.,20.1,6.6)),weights=np.ones(np.array([xf,yf,zf]).T.shape[0])*wt)
 pdb.set_trace()
-np.save("Photons-per-MeV-3MeV-e-histxyz",pperMeV[0])
-np.save("Photons-per-MeV-3MeV-e-binsxyz",pperMeV[1])
+np.save("Photons-per-MeV-3MeV-e-shinyg10-histxyz",pperMeV[0])
+np.save("Photons-per-MeV-3MeV-e-shinyg10-binsxyz",pperMeV[1])
 exit() # Get out if all I want to do is to make/write this histogramdd.
 
 
@@ -124,6 +125,7 @@ hdict["err"]=er
 
 fileout = "pbomb_ngamma"
 fileout = "e3MeV_ngamma"
+fileout = "e3MeV_ngamma_shinyg10"
 plt.legend()
 #plt.title(fileout+ ' 40,60,80 fpcc ' + 'w/wo cathode SiPMs, 1250 photons/100keV')
 plt.title(fileout)
@@ -143,7 +145,7 @@ if  len(sumgvvf):
     hdict["err"]=er
 
     fileout = "pbomb_ngamma_fid"
-    fileout = "e3MeV_ngamma_fid"
+    fileout = "e3MeV_ngamma_fid_shinyg10"
     plt.legend()
 #    plt.title(fileout+ ' 40,60,80 fpcc ' + 'w/wo cathode SiPMs, 1250 photons/100keV from fidv')
     plt.title(fileout+ '  fpcc ' + 'w/wo cathode SiPMs, evts in  fidv')

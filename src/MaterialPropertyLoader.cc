@@ -238,6 +238,20 @@
         }
         else
           std::cout<< "Warning: Acrylic surface in the geometry without REFLECTIVITY assigned"<<std::endl;
+      }      // EC: adding G10
+      if(Material=="G10"){
+        std::cout<< "G10 surface set "<<volume->GetName()<<std::endl;
+	G4MaterialPropertyVector* PropertyPointer2 = 0;
+        PropertyPointer2 = MaterialTables[Material]->GetProperty("REFLECTANCE_G10");
+        if(PropertyPointer || PropertyPointer2 ) {
+          std::cout<< "defining G10 optical boundary "<<std::endl;
+          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface G10",glisur,ground,dielectric_metal); //dielectric_dielectric);
+          refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
+          refl_opsurfs->SetPolish(0.5);
+          new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
+        }
+        else
+          std::cout<< "Warning: G10 surface in the geometry without REFLECTIVITY assigned"<<std::endl;
       }
       //-----------------------------------------------------------------------------
 
@@ -476,7 +490,7 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
  //absorption length as function of energy
   std::vector<double> AbsLengthEnergies { 4,     5,     6,     7,     8,     9,     10,    11   };
   LarProp->SetAbsLengthEnergies(AbsLengthEnergies);
-  std::vector<double> AbsLengthSpectrum { 2000., 2000., 2000., 2000., 2000., 2000., 2000., 2000.};  // EC, 22-Jan-2021. Change back to 2000!!!!
+  std::vector<double> AbsLengthSpectrum { 5000., 5000., 5000., 5000., 5000., 5000., 5000., 5000.};  // EC, 11-May-2021. Change back to 2000?!
   LarProp->SetAbsLengthSpectrum(AbsLengthSpectrum);
 
 //Rayleigh scattering length (cm) @ 90K as a function of energy (eV) from arXiv:1502.04213
@@ -489,9 +503,9 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
  //  surface type
   std::vector<double> ReflectiveSurfaceEnergies {  7, 9, 10 };
   LarProp->SetReflectiveSurfaceEnergies(ReflectiveSurfaceEnergies);
-  std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" , "SiPM"};
+  std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" , "G10", "SiPM"};
   LarProp->SetReflectiveSurfaceNames (ReflectiveSurfaceNames );
-  std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {1., 1., 1. }, {0., 0., 0.} };
+  std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {1., 1., 1. }, {1., 1., 1. }, {0., 0., 0.} };
 
   LarProp->SetReflectiveSurfaceReflectances(ReflectiveSurfaceReflectances);
   std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  }, {0., 0., 0.} };
@@ -537,6 +551,11 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
     SetMaterialProperty( "Acrylic", "ABSLENGTH",     LarProp->AbsLengthSpectrum(), CLHEP::cm );
     SetMaterialProperty( "Acrylic", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );
 
+    // Just use Argon optphoton properties for G10
+    SetMaterialProperty( "G10", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
+    SetMaterialProperty( "G10", "ABSLENGTH",     LarProp->AbsLengthSpectrum(), CLHEP::cm );
+    SetMaterialProperty( "G10", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );
+
     auto VShortAbsLength = LarProp->AbsLengthSpectrum();
     for (auto& kv : VShortAbsLength)
       {
@@ -546,7 +565,6 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
 
     // Just try to get all optphotons to enter SiPM and then die, so that the Termination Volume shows they entered. EC, 12-Feb-2021
     std::vector<double> VShortAbsLengthSpectrum { 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001};
-    // Just use Argon optphoton properties for Acrylic
     SetMaterialProperty( "SiPM", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
     SetMaterialProperty( "SiPM", "ABSLENGTH",     VShortAbsLength, CLHEP::cm );
     SetMaterialProperty( "SiPM", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );

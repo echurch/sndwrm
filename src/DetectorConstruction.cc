@@ -284,25 +284,14 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
 
-  // G10 outside Target, if I use a positive fShieldThickness.
+
   // And decay K40s from box this thick
   fG10Thickness = 3.0*mm;
-
+  /*  G10 outside Shield
   G4Box* sInG10 = new G4Box("InG10",fTargetRadius+fWoodThickness+fShieldThickness, fTargetRadius+fWoodThickness+fShieldThickness, fTargetLength/2+fWoodThickness+fShieldThickness);
   G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius+fG10Thickness+fWoodThickness+fShieldThickness, fTargetRadius+fG10Thickness+fWoodThickness+fShieldThickness, fTargetLength/2.+fG10Thickness+fWoodThickness+fShieldThickness);
   G4SubtractionSolid *sG10 = new G4SubtractionSolid("G10",sOutG10, sInG10);  
-
-  fLogicG10 = new G4LogicalVolume(sG10,       //shape
-                             fG10Mater,            //material
-                             "G10");               //name
-                               
-         new G4PVPlacement(0,                         //no rotation
-			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
-                           fLogicG10,              //logical volume
-                           "G10",                  //name
-			   lWorld,                      //mother  volume
-                           false,                       //no boolean operation
-                           0);                          //copy number
+  */
 
   //ColdSkin
   fColdSkinThickness = - 1.2 * cm;
@@ -350,6 +339,22 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
 
+  // G10 inside Shield, if I use a positive fShieldThickness.
+  G4Box* sInG10 = new G4Box("InG10",fTargetRadius-fG10Thickness, fTargetRadius-fG10Thickness, fTargetLength/2-fG10Thickness);
+  G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius, fTargetRadius, fTargetLength/2.);
+  G4SubtractionSolid *sG10 = new G4SubtractionSolid("G10",sOutG10, sInG10);  
+
+  fLogicG10 = new G4LogicalVolume(sG10,       //shape
+                             fG10Mater,            //material
+                             "G10");               //name
+                               
+         new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+                           fLogicG10,              //logical volume
+                           "G10",                  //name
+			   fLogicTarget,//lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0,1);                          //copy number
 
   
   std::cout << "fInsetRadius is " << fInsetRadius << std::endl;
