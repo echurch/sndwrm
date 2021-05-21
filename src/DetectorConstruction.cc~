@@ -175,7 +175,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   fWorldRadius = 2*fTubeRadius;
   fWorldLength = 2*fTubeLength;
 
-  G4Tubs* sWorld = new G4Tubs("World", 0.0, fWorldRadius, 0.0, fWorldLength/2., 0., twopi);
+  G4Tubs* sWorld = new G4Tubs("World", 0.0, fWorldRadius, fWorldLength/2., 0., twopi);
                
   G4LogicalVolume*
   lWorld = new G4LogicalVolume(sWorld,                  //shape
@@ -208,9 +208,38 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            false,                       //no boolean operation
                            0, true);                          //copy number
 
+  // Tube Endcaps
+  G4Tubs*  sTubeECN = new G4Tubs("TubeECN",                                   //name
+                  0.0, fTubeRadius+fTubeThickness, fTubeThickness/2., 0.,twopi); //dimensions
+    fLogicTubeECN = new G4LogicalVolume(sTubeECN,           //shape
+                             fTubeMater,              //material
+                             "TubeECN");                 //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,fTubeLength/2.+fTubeThickness/2.),             //at (0,0,0)
+                           fLogicTube,                //logical volume
+                           "TubeECN",                    //name
+                           lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0, true);                          //copy number
+
+  G4Tubs*  sTubeECS = new G4Tubs("TubeECS",                                   //name
+                  0.0, fTubeRadius+fTubeThickness, fTubeThickness/2., 0.,twopi); //dimensions
+    fLogicTubeECS = new G4LogicalVolume(sTubeECS,           //shape
+                             fTubeMater,              //material
+                             "TubeECS");                 //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,-fTubeLength/2.-fTubeThickness/2.),             //at (0,0,0)
+                           fLogicTube,                //logical volume
+                           "TubeECS",                    //name
+                           lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0, true);                          //copy number
+
   // Gap 
 	   //  fGapThickness = 2.0*cm;
-
+	   /*
   G4Tubs *sGap = new G4Tubs("Gap",fTubeRadius-fGapThickness, fTubeRadius, 0.5*fTubeLength, 0.,twopi);
   fLogicGap = new G4LogicalVolume(sGap,       //shape
                              fGapMater,            //material
@@ -224,10 +253,38 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            false,                       //no boolean operation
                            0, true);                          //copy number
 
+  // Gap Endcaps
+  G4Tubs*  sGapECN = new G4Tubs("GapECN",                                   //name
+                  0.0, fTubeRadius-fGapThickness, fGapThickness/2., 0.,twopi); //dimensions
+    fLogicGapECN = new G4LogicalVolume(sGapECN,           //shape
+                             fGapMater,              //material
+                             "GapECN");                 //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,fTubeLength/2.-fGapThickness/2.),             //at (0,0,0)
+                           fLogicGapECN,                //logical volume
+                           "GapECN",                    //name
+                           lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0, true);                          //copy number
 
+  G4Tubs*  sGapECS = new G4Tubs("GapECS",                                   //name
+                  0.0, fTubeRadius-fGapThickness, fGapThickness/2., 0.,twopi); //dimensions
+    fLogicGapECS = new G4LogicalVolume(sGapECS,           //shape
+                             fGapMater,              //material
+                             "GapECS");                 //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,-fTubeLength/2.+fGapThickness/2.),             //at (0,0,0)
+                           fLogicGapECS,                //logical volume
+                           "GapECS",                    //name
+                           lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0, true);                          //copy number
+	   */
   // Inner SS Shield
 
-  G4Tubs *sShield = new G4Tubs("Shield",fTubeRadius-fShieldThickness-fGapThickness, fTubeRadius-fGapThickness, 0.5*fTubeLength, 0.,twopi);  
+  G4Tubs *sShield = new G4Tubs("Shield",fTubeRadius-fShieldThickness-fGapThickness, fTubeRadius-fGapThickness, 0.5*fTubeLength-fGapThickness/2., 0.,twopi);  
   // Shield
   fLogicShield = new G4LogicalVolume(sShield,       //shape
                              fShieldMater,            //material
@@ -240,7 +297,37 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 			   lWorld,                      //mother  volume
                            false,                       //no boolean operation
                            0, true);                          //copy number
+	   /*
+  // shield Endcaps
+  G4Tubs*  sShieldECN = new G4Tubs("ShieldECN",                                   //name
+                  0.0, fTubeRadius-fGapThickness-fShieldThickness, 0.5*fTubeLength-fGapThickness/2.-fShieldThickness/2., 0.,twopi); //dimensions
+    fLogicShieldECN = new G4LogicalVolume(sShieldECN,           //shape
+                             fShieldMater,              //material
+                             "ShieldECN");                 //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,fTubeLength/2.-fGapThickness/2.-fShieldThickness/2.),             //at (0,0,0)
+                           fLogicShieldECN,                //logical volume
+                           "ShieldECN",                    //name
+                           lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0, true);                          //copy number
 
+  G4Tubs*  sShieldECS = new G4Tubs("ShieldECS",                                   //name
+                  0.0, fTubeRadius-fGapThickness-fShieldThickness, 0.5*fTubeLength-fGapThickness/2.-fShieldThickness/2., 0.,twopi); //dimensions
+    fLogicShieldECS = new G4LogicalVolume(sShieldECS,           //shape
+                             fGapMater,              //material
+                             "ShieldECS");                 //name
+
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,-fTubeLength/2.+fGapThickness/2.+fShieldThickness/2.),             //at (0,0,0)
+                           fLogicShieldECS,                //logical volume
+                           "ShieldECS",                    //name
+                           lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0, true);                          //copy number
+
+	   */                               
   // G10 
 	   /*
   fG10Thickness = 3.0*mm;

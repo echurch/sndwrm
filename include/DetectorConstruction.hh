@@ -112,8 +112,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume*   fLogicTarget;
     G4LogicalVolume*   fLogicDetector;
     G4LogicalVolume*   fLogicTube;
+    G4LogicalVolume*   fLogicTubeECN;
+    G4LogicalVolume*   fLogicTubeECS;
     G4LogicalVolume*   fLogicShield;
+    G4LogicalVolume*   fLogicShieldECN;
+    G4LogicalVolume*   fLogicShieldECS;
     G4LogicalVolume*   fLogicGap;
+    G4LogicalVolume*   fLogicGapECN;
+    G4LogicalVolume*   fLogicGapECS;
     G4LogicalVolume*   fLogicG10;
                  
                
