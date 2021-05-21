@@ -169,7 +169,7 @@ void DetectorConstruction::DefineMaterials()
   ss->AddElement(C, fractionmass=0.2/100.);
   
 
-  G4Material* g10 =  new G4Material("NemaG10", 1.700*g/cm3, ncomponents=4); // Nema Arkani-Hamed G10?
+  G4Material* g10 =  new G4Material("G10", 1.700*g/cm3, ncomponents=4); // NemaG10
   g10->AddElement(Si, number_of_atoms=1);
   g10->AddElement(O , number_of_atoms=2);
   g10->AddElement(C , number_of_atoms=3);
@@ -339,9 +339,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
 
-  // G10 inside Shield, if I use a positive fShieldThickness.
-  G4Box* sInG10 = new G4Box("InG10",fTargetRadius-fG10Thickness, fTargetRadius-fG10Thickness, fTargetLength/2-fG10Thickness);
-  G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius, fTargetRadius, fTargetLength/2.);
+  // G10 inside Shield, if I use a positive fShieldThickness. Remember fColdSkinThickness is negative.
+  G4Box* sInG10 = new G4Box("InG10",fTargetRadius-fG10Thickness+fColdSkinThickness, fTargetRadius-fG10Thickness+fColdSkinThickness, fTargetLength/2-fG10Thickness+fColdSkinThickness);
+  G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius+fColdSkinThickness, fTargetRadius+fColdSkinThickness, fTargetLength/2.+fColdSkinThickness);
   G4SubtractionSolid *sG10 = new G4SubtractionSolid("G10",sOutG10, sInG10);  
 
   fLogicG10 = new G4LogicalVolume(sG10,       //shape
@@ -352,7 +352,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
                            fLogicG10,              //logical volume
                            "G10",                  //name
-			   fLogicTarget,//lWorld,                      //mother  volume
+			   fLogicTarget,                      //mother  volume
                            false,                       //no boolean operation
                            0,1);                          //copy number
 

@@ -30,7 +30,7 @@ for file in files:
 
     f = uproot.open(file)
     steps = f['Steps']
-    pdb.set_trace()
+
     steps = steps.arrays(namedecode='utf-8')
     Nsteps = len(steps['Time'])
     trks = f['Tracks']
@@ -108,7 +108,7 @@ for file in files:
 wt = 1.0/0.0716/((Nevts+1.)/27) # per MeV per event, presuming equal distribution of launched pbombs over 27 xyz boxes
 wt = 1.0/3./((Nevts+1.)/27)
 pperMeV = np.histogramdd(np.array([xf,yf,zf]).T,bins=(np.arange(0.,3.1,1.),np.arange(0.,6.1,2.),np.arange(0.,20.1,6.6)),weights=np.ones(np.array([xf,yf,zf]).T.shape[0])*wt)
-pdb.set_trace()
+
 np.save("Photons-per-MeV-3MeV-e-shinyg10-histxyz",pperMeV[0])
 np.save("Photons-per-MeV-3MeV-e-shinyg10-binsxyz",pperMeV[1])
 exit() # Get out if all I want to do is to make/write this histogramdd.

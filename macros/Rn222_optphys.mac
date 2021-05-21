@@ -57,17 +57,17 @@
 
 #/analysis/setFileName neutron_shield
 #/analysis/setFileName neutron_plastic20cm
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_0
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_shinyg10_0
 /analysis/h1/set 1 100 0. 320000.
 /analysis/h1/set 2 100 0. 320000.
 /analysis/h1/set 3 100 0. 320000.
-/analysis/h1/set 4 100 0. 20. MeV
-/analysis/h1/set 5 100 0. 20. MeV
-/analysis/h1/set 6 100 0. 20. MeV
+/analysis/h1/set 4 120 0. 24. MeV
+/analysis/h1/set 5 120 0. 24. MeV
+/analysis/h1/set 6 120 0. 24. MeV
 /analysis/ntuple/setActivation 0 true
 /analysis/ntuple/setActivation 1 true
 /analysis/ntuple/setActivation 2 true
-/analysis/ntuple/setActivation 3 true  # Tracks
+#/analysis/ntuple/setActivation 3 true  # Tracks
 ##/analysis/ntuple/setActivation 4 true # Steps
 /run/printProgress 1000
 
@@ -84,10 +84,10 @@
 ##/run/beamOn 31000000  # 10000
 
 /run/beamOn 10000
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_1
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_shinyg10_1
 /run/beamOn 10000
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_2
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_shinyg10_2
 /run/beamOn 10000
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_3
+/analysis/setFileName /Volumes/EC2TB/G4/mod4/Rn222_fidv_shinyg10_3
 /run/beamOn 10000
 

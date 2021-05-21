@@ -6,14 +6,19 @@ from skhep.visual import MplPlotter as skh_plt
 import pdb
 
 #neutrons
-f0n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_0.root")
-f0n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_0.root")
-f0a39 = TFile("/Volumes/EC2TB/G4/mod4/Ar39_fidv_recal_0.root")
-f0a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_recal_0.root")
-f0r = TFile("/Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_0.root")
-f0h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_recal_0.root")
-f08 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_8B_recal_0.root")
-f0c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_recal_0.root")
+#f0n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_0.root")
+#f0n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_0.root")
+f0n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_shinyg10_0.root")
+#f0a39 = TFile("/Volumes/EC2TB/G4/mod4/Ar39_fidv_recal_0.root")
+f0a39 = TFile("/Volumes/EC2TB/G4/mod4/Ar39_fidv_shinyg10_0.root")
+#f0a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_recal_0.root")
+f0a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_shinyg10_0.root")
+f0r = TFile("/Volumes/EC2TB/G4/mod4/Rn222_fidv_shinyg10_0.root")
+#f0h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_recal_0.root")
+f0h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_shinyg10_0.root")
+f08 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_0.root")
+#f0c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_recal_0.root")
+f0c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_shinyg10_0.root")
 h0nCC = f0n.H23
 h0hES = f0h.H22
 h0hCC = f0h.H23
@@ -25,14 +30,19 @@ h0a39 = f0a39.H23
 h0a42 = f0a42.H23
 h0r = f0r.H23
 
-f1n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_1.root")
-f1n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_1.root")
-f1a39 = TFile("/Volumes/EC2TB/G4/mod4/Ar39_fidv_recal_1.root")
-f1a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_recal_1.root")
-f1r = TFile("/Volumes/EC2TB/G4/mod4/Rn222_fidv_recal_1.root")
+#f1n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_1.root")
+#f1n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_1.root")
+f1n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_shinyg10_1.root")
+#f1a39 = TFile("/Volumes/EC2TB/G4/mod4/Ar39_fidv_recal_1.root")
+f1a39 = TFile("/Volumes/EC2TB/G4/mod4/Ar39_fidv_shinyg10_1.root")
+#f1a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_recal_1.root")
+f1a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_shinyg10_1.root")
+f1r = TFile("/Volumes/EC2TB/G4/mod4/Rn222_fidv_shinyg10_1.root")
 f1h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_recal_1.root")
-f18 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_8B_recal_1.root")
-f1c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_recal_1.root")
+f1h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_shinyg10_1.root")
+f18 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_1.root")
+#f1c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_recal_1.root")
+f1c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_shinyg10_1.root")
 h1nCC = f1n.H23
 h1hES = f1h.H22
 h1hCC = f1h.H23
@@ -44,14 +54,17 @@ h1a39 = f1a39.H23
 h1a42 = f1a42.H23
 h1r = f1r.H23
 
-f2n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_2.root")
-f2n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_2.root")
+#f2n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_2.root")
+#f2n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_2.root")
+f2n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_shinyg10_2.root")
 #f2a39 = TFile("/Volumes/EC2TB/G4/mod4/Ar39_fidv_2.root")
-#f2a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_2.root")
-#f2r = TFile("/Volumes/EC2TB/G4/mod4/Rn222_fidv_2.root")
-f2h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_recal_2.root")
-f28 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_8B_recal_2.root")
-f2c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_recal_2.root")
+#f2a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_shinyg10_2.root")
+f2r = TFile("/Volumes/EC2TB/G4/mod4/Rn222_fidv_shinyg10_2.root")
+#f2h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_recal_2.root")
+f2h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_shinyg10_2.root")
+f28 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_2.root")
+#f2c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_recal_2.root")
+f2c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_shinyg10_2.root")
 h2nCC = f2n.H23
 h2hES = f2h.H22
 h2hCC = f2h.H23
@@ -61,26 +74,29 @@ h2cES = f2c.H22
 h2cCC = f2c.H23
 #h2a39 = f2a39.H23
 #h2a42 = f2a42.H23
-#h2r = f2r.H23
+h2r = f2r.H23
 
-f3n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_3.root")
-f3n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_3.root")
+#f3n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_3.root")
+#f3n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_recal_3.root")
+f3n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_shinyg10_3.root")
 #f3a39 = TFile("/Volumes/EC2TB/G4/mod4/Ar39_fidv_3.root")
 #f3a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_3.root")
-#f3r = TFile("/Volumes/EC2TB/G4/mod4/Rn222_fidv_3.root")
+f3r = TFile("/Volumes/EC2TB/G4/mod4/Rn222_fidv_shinyg10_3.root")
 #f3h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_3.root")
-f38 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_8B_recal_3.root")
-f3c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_recal_3.root")
+f3h = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_hep_shinyg10_3.root")
+f38 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_3.root")
+#f3c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_recal_3.root")
+f3c = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_CNO_shinyg10_3.root")
 h3nCC = f3n.H23
-#h3hES = f3h.H22
-#h3hCC = f3h.H23
+h3hES = f3h.H22
+h3hCC = f3h.H23
 h38ES = f38.H22
 h38CC = f38.H23
 h3cES = f3c.H22
 h3cCC = f3c.H23
 #h3a39 = f3a39.H23
 #h3a42 = f3a42.H23
-#h3r = f3r.H23
+h3r = f3r.H23
 
 # Calculate normalizaions, ala xs_flux-avgd * N_Ar * Flux_int
 
@@ -105,38 +121,38 @@ Fluxc = (5.71+5.03+0.0591)*1E8 * 0.5
 Nthrown = 1500*4
 tsim8 = Nthrown/(N_Ar*x8tot*Flux8 )
 wt8 = 3.14E7/tsim8
-Nthrown = 1500*3
+Nthrown = 1500*4
 tsimh = Nthrown/(N_Ar*xhtot*Fluxh )
 wth = 3.14E7/tsimh
 Nthrown = 1500*4
 tsimc = Nthrown/(N_Ar*xctot*Fluxc )
 wtc = 3.14E7/tsimc
 
-suppress = 1.0 # 1E-9
+
 # neutrons
 # SS has neutrons at level of ~1E-11 /cm3/sec from https://book
-Nthrown = 20000*2
+Nthrown = 20000*4
 actnSS = 1E-11
 VolSS = (12*12*0.02*2 + 12*58*0.02*4)*1E6 
-tsimn = Nthrown/(VolSS*actnSS  * suppress)
+tsimn = Nthrown/(VolSS*actnSS )
 wtn = 3.14E7/tsimn
 
 # Ar39
-# UAr has 1Bq/kg/1500 of Ar39, 10^-5 of that of Ar42
+# UAr has 1Bq/kg/1500 of Ar39
 Nthrown = 20000*2
-actAr39 = 1.0/1500  * suppress
+actAr39 = 1.0/1500
 tsimn = Nthrown/(kgAr*actAr39)
 wta39 = 3.14E7/tsimn
 # Ar42
 # UAr has 1Bq/kg/1500 of Ar39, 10^-5 of that of Ar42
 Nthrown = 20000*2
-actAr42 = 1.0*1E-5/1500  * suppress
+actAr42 = 9.2*1E-5/1500  # https://iopscience.iop.org/article/10.1088/1742-6596/718/6/062004/pdf
 tsimn = Nthrown/(kgAr*actAr42)
 wta42 = 3.14E7/tsimn
 # Rn222
 # 
-Nthrown = 10000*2
-actRn222 = 2.0E-6  * suppress # 10x worse than world-leading Darkside/kg
+Nthrown = 10000*4
+actRn222 = 2.0E-6   # 10x worse than world-leading Darkside/kg
 tsimn = Nthrown/(kgAr*actRn222)
 wtr = 3.14E7/tsimn
 
@@ -173,9 +189,10 @@ h0a42.Add(h1a42)
 #h0a42.Add(h2a42)
 #h0a42.Add(h3a42)
 
+
 h0r.Add(h1r)
-#h0r.Add(h2r)
-#h0r.Add(h3r)
+h0r.Add(h2r)
+h0r.Add(h3r)
 
 '''
 hsES = THStack("hsES","stackedES");
@@ -267,23 +284,32 @@ binsz = (h0hES.GetBinCenter(1) - h0hES.GetBinCenter(0)) ##* 5 # makes 20 bins in
 
 uedge = h0hES.GetBinLowEdge(Nb)+binsz
 uedge = h0hES.GetBinLowEdge(Nb)/2+binsz # just to 10 MeV
-#labelv = np.array(["neutrons","Ar42","Ar39","Rn","hepES","8BES","CNOES","hepCC","8BCC","CNOCC"])
-labelv = np.array(["neutrons " + str(actnSS) + "/cm3/s","Ar42 "+"Bq/L/1500/1E5","Ar39 " + "Bq/L/1500","Rn "+str(actRn222)+"Bq/kg","hepES","8BES","CNOES","hepCC","8BCC","CNOCC"])
+#labelv = np.array(["neutrons","Ar42","Ar39","Rn","hepES","B8ES","CNOES","hepCC","8BCC","CNOCC"])
+labelv = np.array(["neutrons " + str(actnSS) + "/cm3/s","Ar42 "+"Bq/L/1500/9E5","Ar39 " + "Bq/L/1500","Rn "+str(actRn222)+"Bq/kg","hepES","8BES","CNOES","hepCC","8BCC","CNOCC"])
 
-cts, be, er = skh_plt.hist(nESCCn,weights=wts,errorbars=False, histtype='step',label=labelv,bins=np.arange(0.,uedge,binsz)) #,stacked='true'
+# This little snippet swaps out the Rn for suppressed Ar42
+suppress42 =  "Ar42 Bq/L/1500/5E8"
+labelv[3] = suppress42
+wts[3] = wts[1]/500.
+nESCCn[3] = nESCCn[1]
+linewidth = 4*np.ones(10)
+linewidth[3] = 1
+color = np.array(["blue","orange","green","navajowhite","salmon","lightgray","black","red","gray","black"])
+cts, be, er = skh_plt.hist(nESCCn,weights=wts,errorbars=False, histtype='step',label=labelv,bins=np.arange(0.,uedge,binsz),color=color) #,stacked='true'
 hdict = dict()
 hdict["counts"]=cts
 hdict["binedges"]=be
 hdict["err"]=er
 
-fileout = "solar_neutrinos_9mhi_10MeVmax"
+#fileout = "solar_neutrinos_9mhi-shinyg10-50mattn_10MeVmax"
+fileout = "solar_neutrinos_9mhi-10MeVmax-shinyg10-50mattn"
 plt.legend()
 plt.title(fileout + ' Spectra in 6x9x20 m3')
 plt.xlabel('Energy [MeV]')
 plt.ylabel('Events / 1.6 kTonne-yr / ' + str(binsz) + ' MeV')
 plt.yscale('log')              
 #plt.show()
-#pdb.set_trace()
+
                                                                                                                                 
 plt.savefig(fileout+'.png')
 plt.close()
@@ -295,15 +321,18 @@ binsz = (h0hES.GetBinCenter(1) - h0hES.GetBinCenter(0)) * 5 # makes 20 bins in 2
 uedge = h0hES.GetBinLowEdge(Nb)+binsz
 uedge = h0hES.GetBinLowEdge(Nb)+binsz 
 #labelv = np.array(["neutrons","Ar42","Ar39","Rn","hepES","8BES","CNOES","hepCC","8BCC","CNOCC"])
-labelv = np.array(["neutrons " + str(actnSS) + "/cm3/s","Ar42 "+"Bq/L/1500/1E5","Ar39 " + "Bq/L/1500","Rn "+str(actRn222)+"Bq/kg","hepES","8BES","CNOES","hepCC","8BCC","CNOCC"])
+labelv = np.array(["neutrons " + str(actnSS) + "/cm3/s","Ar42 "+"Bq/L/1500/9.2E5","Ar39 " + "Bq/L/1500","Rn "+str(actRn222)+"Bq/kg","hepES","8BES","CNOES","hepCC","8BCC","CNOCC"])
+# snippet
+labelv[3] = suppress42
 
-cts, be, er = skh_plt.hist(nESCCn,weights=wts,errorbars=False, histtype='step',label=labelv,bins=np.arange(0.,uedge,binsz)) #,stacked='true'
+cts, be, er = skh_plt.hist(nESCCn,weights=wts,errorbars=False, histtype='step',label=labelv,bins=np.arange(0.,uedge,binsz),color=color) #,stacked='true'
 hdict = dict()
 hdict["counts"]=cts
 hdict["binedges"]=be
 hdict["err"]=er
 
-fileout = "solar_neutrinos_9mhi"
+#fileout = "solar_neutrinos_9mhi-shinyg10-50mattn"
+fileout = "solar_neutrinos_9mhi-shinyg10-50mattn"
 plt.legend()
 plt.title(fileout + ' Spectra in 6x9x20 m3')
 plt.xlabel('Energy [MeV]')

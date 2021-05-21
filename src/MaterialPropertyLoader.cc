@@ -173,6 +173,9 @@
           std::cout<< "Warning: Copper surface in the geometry without REFLECTIVITY assigned"<<std::endl;
       }
 
+
+      /* 
+	 Note that I have a G10 clause below. EC, 12-May-2021.
       if(Material=="G10"){
         std::cout<< "G10 surface set "<<volume->GetName()<<std::endl;
         if(PropertyPointer) {
@@ -185,6 +188,7 @@
         else
           std::cout<< "Warning: G10 surface in the geometry without REFLECTIVITY assigned"<<std::endl;
       }
+      */
 
       if(Material=="vm2000"){
         std::cout<< "vm2000 surface set "<<volume->GetName()<<std::endl;
@@ -233,12 +237,15 @@
           std::cout<< "defining Acrylic optical boundary "<<std::endl;
           G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface Acrylic",glisur,ground,dielectric_metal); //dielectric_dielectric);
           refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
-          refl_opsurfs->SetPolish(0.5);
+          refl_opsurfs->SetPolish(0.95);
           new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
         }
         else
           std::cout<< "Warning: Acrylic surface in the geometry without REFLECTIVITY assigned"<<std::endl;
       }      // EC: adding G10
+
+
+
       if(Material=="G10"){
         std::cout<< "G10 surface set "<<volume->GetName()<<std::endl;
 	G4MaterialPropertyVector* PropertyPointer2 = 0;
@@ -247,7 +254,7 @@
           std::cout<< "defining G10 optical boundary "<<std::endl;
           G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface G10",glisur,ground,dielectric_metal); //dielectric_dielectric);
           refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
-          refl_opsurfs->SetPolish(0.5);
+          refl_opsurfs->SetPolish(0.95);
           new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
         }
         else
@@ -509,7 +516,7 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
   std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {1., 1., 1. }, {1., 1., 1. }, {0., 0., 0.} };
 
   LarProp->SetReflectiveSurfaceReflectances(ReflectiveSurfaceReflectances);
-  std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  }, {0., 0., 0.} };
+  std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  }, { 0.5,  0.5,  0.5  }, {0., 0., 0.} };
   LarProp->SetReflectiveSurfaceDiffuseFractions(ReflectiveSurfaceDiffuseFractions);
 
 //Information related with the simulation of the Wavelength Shifter (TPB) 

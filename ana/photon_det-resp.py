@@ -31,8 +31,8 @@ def rect_prismy(x_range, y_range, z_range,col):
     ax.plot_wireframe(xx, np.ones(xx.shape)*y_range[1], zz, color="r", alpha=0.1)
     ax.plot_surface(xx, np.ones(xx.shape)*y_range[1], zz, color=col, alpha=0.1)
 
-arr = np.load("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-histxyz.npy")
-arr = np.load("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-3MeV-e-histxyz.npy")
+arr = np.load("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-3MeV-e-shinyg10-histxyz.npy")
+arr = np.load("/Users/chur558/geant4.10.05/examples/extended/radioactivedecay/rdecay02/ana/Photons-per-MeV-3MeV-e-shinyg10-histxyz.npy")
 
 rect_prismz(np.linspace(-6,6,100), np.linspace(-6,6,100), np.array([-28, 28]),'r')
 rect_prismx(np.array([-6, 6]), np.linspace(-6,6,100), np.linspace(-28,28,100),'r')
@@ -66,5 +66,5 @@ ax.view_init(20, 45)
 
 
 
-plt.savefig("PhotonCountMeV-e3MeV.png")
+plt.savefig("PhotonCountMeV-e3MeV-shinyg10.png")
 

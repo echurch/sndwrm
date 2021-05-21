@@ -58,9 +58,9 @@
 /analysis/h1/set 1 100 0. 320000.
 /analysis/h1/set 2 100 0. 320000.
 /analysis/h1/set 3 100 0. 320000.
-/analysis/h1/set 4 100 0. 20. MeV
-/analysis/h1/set 5 100 0. 20. MeV
-/analysis/h1/set 6 100 0. 20. MeV
+/analysis/h1/set 4 100 0. 24. MeV
+/analysis/h1/set 5 100 0. 24. MeV
+/analysis/h1/set 6 100 0. 24. MeV
 /analysis/ntuple/setActivation 0 true
 /analysis/ntuple/setActivation 1 true
 /analysis/ntuple/setActivation 2 true
@@ -80,5 +80,5 @@
 # 95.0E6/31E6 = 3.064
 ##/run/beamOn 31000000  # 10000
 
-/run/beamOn 1000
+/run/beamOn 800
 
