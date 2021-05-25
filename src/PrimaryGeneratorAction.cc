@@ -64,14 +64,23 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   // now if user specifies a Marley config file in mac file, use that instead of annotated.js.
   fMarleyMessenger = new MarleyMessenger(this); 
   marley::JSONConfig config(config_file_name);
-
   std::cout << "PrimaryGenAction: Marley config file is " << config_file_name << std::endl;
   std::cout << "PrimaryGenAction: Unused if nu_e is not specified "  << std::endl;
-
   marley_generator_= config.create_generator();
 
 }
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void PrimaryGeneratorAction::ReloadMarleyConfig()
+{
+  std::cout << "PrimaryGeneratorAction:ReloadMarleyConfig(): Loading new config " << config_file_name << std::endl;
+
+  marley::JSONConfig config(config_file_name);
+  std::cout << "PrimaryGenAction: Marley config file is " << config_file_name << std::endl;
+  std::cout << "PrimaryGenAction: Unused if nu_e is not specified "  << std::endl;
+  marley_generator_= config.create_generator();
+
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()

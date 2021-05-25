@@ -64,12 +64,15 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     G4GeneralParticleSource* GetParticleGun() {return fParticleGun;};
     PrimaryGenerator* GetPrimaryGenerator(){return fPrimaryGenerator;};
     void SetMarleyConfFile(G4String name) {config_file_name = name;};
+    G4String GetMarleyConfFile() {return config_file_name;};
+    void ReloadMarleyConfig();  
 
   private:
   //    G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
     G4GeneralParticleSource*  fParticleGun;        //pointer a to G4 service class
     PrimaryGenerator* fPrimaryGenerator;
     MarleyMessenger* fMarleyMessenger;
+
   
     marley::Generator marley_generator_;
     std::string config_file_name;

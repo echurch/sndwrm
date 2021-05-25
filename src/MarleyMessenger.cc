@@ -74,6 +74,9 @@ void MarleyMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 { 
   if (command == fMarleyConfFileCmd )
    { fPrimaryGeneratorAction->SetMarleyConfFile(newValue);
+     std::cout << "MarleyMessenger::SetNewValue() config file: " << fPrimaryGeneratorAction->GetMarleyConfFile() << std::endl;
+
+     fPrimaryGeneratorAction->ReloadMarleyConfig();
    }
 
 }
