@@ -23,59 +23,46 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file PrimaryGeneratorAction.hh
-/// \brief Definition of the PrimaryGeneratorAction class
+/// \file PrimaryGeneratorActionMessenger.hh
+/// \brief Definition of the PrimaryGeneratorActionMessenger class
 //
 //
-//
-// 
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef PrimaryGeneratorAction_h
-#define PrimaryGeneratorAction_h 
-#include "G4VUserPrimaryGeneratorAction.hh"
-#include "MarleyMessenger.hh"
-#include "PrimaryGenerator.hh"
-#include "G4ParticleGun.hh"
-#include "G4GeneralParticleSource.hh"
+#ifndef MarleyMessenger_h
+#define MarleyMessenger_h
+
+#include "PrimaryGeneratorAction.hh"
+#include "G4UImessenger.hh"
 #include "globals.hh"
 
-
-#include "marley/Event.hh"
-#include "marley/Particle.hh"
-#include "marley/JSONConfig.hh"
-
-class MarleyMessenger;
-class G4Event;
+class PrimaryGeneratorAction;
+class G4UIdirectory;
+class G4UIcmdWithAString;
+class G4UIcmdWithABool;
+class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithADouble;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+class MarleyMessenger: public G4UImessenger
 {
   public:
-    PrimaryGeneratorAction();    
-   ~PrimaryGeneratorAction();
-
-  public:
-    virtual void GeneratePrimaries(G4Event*);
-  //    G4ParticleGun* GetParticleGun() {return fParticleGun;};
-    G4GeneralParticleSource* GetParticleGun() {return fParticleGun;};
-    PrimaryGenerator* GetPrimaryGenerator(){return fPrimaryGenerator;};
-    void SetMarleyConfFile(G4String name) {config_file_name = name;};
-
+    MarleyMessenger();
+    MarleyMessenger(PrimaryGeneratorAction* );
+   ~MarleyMessenger();
+    
+    virtual void SetNewValue(G4UIcommand*, G4String);
+    
   private:
-  //    G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
-    G4GeneralParticleSource*  fParticleGun;        //pointer a to G4 service class
-    PrimaryGenerator* fPrimaryGenerator;
-    MarleyMessenger* fMarleyMessenger;
   
-    marley::Generator marley_generator_;
-    std::string config_file_name;
+    PrimaryGeneratorAction*      fPrimaryGeneratorAction;
+    
+    G4UIdirectory*             fRdecayDir;
+    G4UIdirectory*             fMarleyDir;
+    G4UIcmdWithAString*        fMarleyConfFileCmd;
 };
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-

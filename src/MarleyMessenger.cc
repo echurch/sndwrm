@@ -1,4 +1,4 @@
-//
+ //
 // ********************************************************************
 // * License and Disclaimer                                           *
 // *                                                                  *
@@ -23,59 +23,59 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file PrimaryGeneratorAction.hh
-/// \brief Definition of the PrimaryGeneratorAction class
+/// \file DetectorMessenger.cc
+/// \brief Implementation of the DetectorMessenger class
 //
 //
-//
-// 
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef PrimaryGeneratorAction_h
-#define PrimaryGeneratorAction_h 
-#include "G4VUserPrimaryGeneratorAction.hh"
 #include "MarleyMessenger.hh"
-#include "PrimaryGenerator.hh"
-#include "G4ParticleGun.hh"
-#include "G4GeneralParticleSource.hh"
-#include "globals.hh"
 
 
-#include "marley/Event.hh"
-#include "marley/Particle.hh"
-#include "marley/JSONConfig.hh"
-
-class MarleyMessenger;
-class G4Event;
+#include "G4UIdirectory.hh"
+#include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWithADouble.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+MarleyMessenger::MarleyMessenger(PrimaryGeneratorAction* PGA)
+:G4UImessenger(), 
+ fPrimaryGeneratorAction(PGA),
+ fMarleyConfFileCmd(0)
+{ 
+         
+  fRdecayDir = new G4UIdirectory("/rdecay02/");
+  fRdecayDir->SetGuidance("commands specific to this example");
+
+  G4bool broadcast = false;
+  fMarleyDir = new G4UIdirectory("/rdecay02/marley/",broadcast);
+  fMarleyDir->SetGuidance("detector construction commands");
+
+  fMarleyConfFileCmd = new G4UIcmdWithAString("/rdecay02/marley/setConfigFile",this);
+  fMarleyConfFileCmd->SetGuidance("Select Marley ConfigFile");
+  fMarleyConfFileCmd->SetParameterName("choice",false);
+  fMarleyConfFileCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+MarleyMessenger::~MarleyMessenger()
 {
-  public:
-    PrimaryGeneratorAction();    
-   ~PrimaryGeneratorAction();
+  delete fMarleyConfFileCmd;
+}
 
-  public:
-    virtual void GeneratePrimaries(G4Event*);
-  //    G4ParticleGun* GetParticleGun() {return fParticleGun;};
-    G4GeneralParticleSource* GetParticleGun() {return fParticleGun;};
-    PrimaryGenerator* GetPrimaryGenerator(){return fPrimaryGenerator;};
-    void SetMarleyConfFile(G4String name) {config_file_name = name;};
 
-  private:
-  //    G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
-    G4GeneralParticleSource*  fParticleGun;        //pointer a to G4 service class
-    PrimaryGenerator* fPrimaryGenerator;
-    MarleyMessenger* fMarleyMessenger;
-  
-    marley::Generator marley_generator_;
-    std::string config_file_name;
-};
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#endif
+void MarleyMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
+{ 
+  if (command == fMarleyConfFileCmd )
+   { fPrimaryGeneratorAction->SetMarleyConfFile(newValue);
+   }
 
+}
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

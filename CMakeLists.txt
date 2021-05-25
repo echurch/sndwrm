@@ -41,7 +41,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(rdecay02 rdecay02.cc ${sources} ${headers})
-target_link_libraries(rdecay02  ${Geant4_LIBRARIES} $ENV{MARLEY}/build/libmarley.dylib)
+target_link_libraries(rdecay02  ${Geant4_LIBRARIES} $ENV{MARLEY}/build/libMARLEY.so)
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we

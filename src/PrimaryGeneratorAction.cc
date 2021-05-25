@@ -61,7 +61,13 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   */
 
+  // now if user specifies a Marley config file in mac file, use that instead of annotated.js.
+  fMarleyMessenger = new MarleyMessenger(this); 
   marley::JSONConfig config(config_file_name);
+
+  std::cout << "PrimaryGenAction: Marley config file is " << config_file_name << std::endl;
+  std::cout << "PrimaryGenAction: Unused if nu_e is not specified "  << std::endl;
+
   marley_generator_= config.create_generator();
 
 }
@@ -118,4 +124,5 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 
