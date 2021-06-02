@@ -770,7 +770,7 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiMot
 	    new G4PVPlacement(0, 
 			      G4ThreeVector(+fAcrylicRadius-fAcrylicThickness-fTPBThickness-fSiPMThickness/2,(ii+offsetHeight)*(fSiPMSize+2*halfSpacing),(jj+offsetLength)*(fSiPMSize+2*halfSpacing)),  
 			      fLogicSiPM,              //logical volume                         
-			      "SiPM",                  //name                                                                                                                         
+			      "SiPM",                  //name                             
 			      logiMother,                      //mother  volume
 			      false,                       //no boolean operation
 			      nSiPM2++,0);                          //copy number

@@ -269,7 +269,7 @@
         PropertyPointer3 = MaterialTables[Material]->GetProperty("REFLECTANCE_SiPM");
         if(PropertyPointer || PropertyPointer3 ) {
           std::cout<< "defining SiPM optical boundary "<<std::endl;
-          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface SiPM",glisur,ground,dielectric_dielectric);  //dielectric_metal);
+          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface SiPM",glisur,ground,dielectric_dielectric);  
           refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
           refl_opsurfs->SetPolish(0.0); 
           new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
@@ -572,7 +572,7 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
       }
 
     // Just try to get all optphotons to enter SiPM and then die, so that the Termination Volume shows they entered. EC, 12-Feb-2021
-    std::vector<double> VShortAbsLengthSpectrum { 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001};
+    std::vector<double> VShortAbsLengthSpectrum { 0.00001, 0.00001, 0.00001, 0.00001, 0.000001, 0.00001, 0.00001, 0.00001};
     SetMaterialProperty( "SiPM", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
     SetMaterialProperty( "SiPM", "ABSLENGTH",     VShortAbsLength, CLHEP::cm );
     SetMaterialProperty( "SiPM", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );

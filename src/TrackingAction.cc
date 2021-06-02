@@ -100,7 +100,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
       for (const auto& proc : procOfInterest) {
 	if (processName.find(proc) != std::string::npos) {
 	  fEventAction->SetProcVtx(vtx);
-	  //	  std::cout << "TrackingAction: Interesting Process is " << proc << std::endl;
+	  //  	  std::cout << "TrackingAction: Interesting Process is " << proc << std::endl;
 	  fEventAction->SetFiducial(true);
 	  break;
 	}

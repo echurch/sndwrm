@@ -92,7 +92,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if (eVolume)
     {
       eVname = eVolume->GetName();  
-      
+      //            std::cout << "SteppingAction eVname: " << eVname << std::endl;
       if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
 	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
     }
@@ -106,7 +106,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   const G4ParticleDefinition* particle = track->GetParticleDefinition();  
   G4int pID       = particle->GetPDGEncoding();
 
-  if (edepStep <= 0. && pID!=0 ) return;
+  if (edepStep <= 0. && (pID!=0 && pID!=-22) ) return; // the deception version of G4 uses -22 for optical photons; my Mac's uses 0.
   G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
   G4double weight = aStep->GetPreStepPoint()->GetWeight();   
 

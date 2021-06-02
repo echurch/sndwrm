@@ -70,7 +70,7 @@
 /analysis/ntuple/setActivation 1 true
 /analysis/ntuple/setActivation 2 true
 ##/analysis/ntuple/setActivation 3 true  # Tracks
-##/analysis/ntuple/setActivation 4 true # Steps
+/analysis/ntuple/setActivation 4 true # Steps
 /run/printProgress 1000
 
 ##/control/execute vis.mac
@@ -86,7 +86,7 @@
 /run/beamOn 1
 
 /run/beamOn 20000
-/analysis/setFileName /Volumes/EC2TB/G4/mod4/Ar42_fidv_shinyg10_1
+#/analysis/setFileName /Volumes/EC2TB/G4/mod4/Ar42_fidv_shinyg10_1
 /run/beamOn 20000
 #/analysis/setFileName /Volumes/EC2TB/G4/mod4/Ar42_fidv_shinyg10_2
 #/run/beamOn 20000
