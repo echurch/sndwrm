@@ -217,7 +217,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                
            new G4PVPlacement(0,                         //no rotation
 			     G4ThreeVector(0.,0.,fTubeLength/2.+fTubeThickness/2.+fGapThickness+fShieldThickness),             //at (0,0,0)
-                           fLogicTube,                //logical volume
+                           fLogicTubeECN,                //logical volume
                            "TubeECN",                    //name
                            lWorld,                      //mother  volume
                            false,                       //no boolean operation
@@ -231,7 +231,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                                
            new G4PVPlacement(0,                         //no rotation
 			     G4ThreeVector(0.,0.,-fTubeLength/2.-fTubeThickness/2.-fGapThickness-fShieldThickness),             //at (0,0,0)
-                           fLogicTube,                //logical volume
+                           fLogicTubeECS,                //logical volume
                            "TubeECS",                    //name
                            lWorld,                      //mother  volume
                            false,                       //no boolean operation

@@ -195,7 +195,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   //
   
   G4Tubs*  sTube = new G4Tubs("Tube",                                   //name
-                  fTubeRadius, fTubeRadius+fTubeThickness, 0.5*fTubeLength+fTubeThickness/2., 0.,twopi); //dimensions
+                  fTubeRadius, fTubeRadius+fTubeThickness, 0.5*fTubeLength+fGapThickness/2., 0.,twopi); //dimensions
     fLogicTube = new G4LogicalVolume(sTube,           //shape
                              fTubeMater,              //material
                              "Tube");                 //name
@@ -240,7 +240,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   // Gap 
 	   //  fGapThickness = 2.0*cm;
 
-  G4Tubs *sGap = new G4Tubs("Gap",fTubeRadius-fGapThickness, fTubeRadius, 0.5*fTubeLength, 0.,twopi);
+	   G4Tubs *sGap = new G4Tubs("Gap",fTubeRadius-fGapThickness, fTubeRadius, 0.5*fTubeLength, 0.,twopi);
   fLogicGap = new G4LogicalVolume(sGap,       //shape
                              fGapMater,            //material
                              "Gap");               //name
