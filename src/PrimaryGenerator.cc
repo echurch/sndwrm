@@ -106,7 +106,7 @@ void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, marley::Event
   // Loop over each of the final particles in the MARLEY event
 
   const G4double xmax = 3.*m;
-  const G4double ymax = 6.*m;
+  const G4double ymax = 4.5*m;
   const G4double zmax = 20.*m;
   const G4double x = xmax*2*(G4UniformRand()-0.5);
   const G4double y = ymax*2*(G4UniformRand()-0.5);

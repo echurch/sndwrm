@@ -46,6 +46,7 @@
 /gps/particle nu_e
 
 
+
 /gps/position 0 0 0 m
 /gps/pos/type Volume
 /gps/pos/shape Para
@@ -57,8 +58,8 @@
 # This is for emitting e's from the 1.2cm thick coldskin OR the bulk Ar in detector
 
 
-#/analysis/setFileName  marley_optphys_SN-liv-CEvNS
-/analysis/setFileName  /Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_0
+/analysis/setFileName  marley_optphys_test
+##/analysis/setFileName  /Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_0
 #/analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 320000.
 /analysis/h1/set 2 100 0. 320000.
@@ -82,10 +83,10 @@
 
 
 ##/run/beamOn 4 # 10000
-/run/beamOn 1500
-/analysis/setFileName  /Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_1
-/run/beamOn 1500
-/analysis/setFileName  /Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_2
-/run/beamOn 1500
-/analysis/setFileName  /Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_3
-/run/beamOn 1500
+/run/beamOn 15
+##/analysis/setFileName  /Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_1
+##/run/beamOn 1500
+##/analysis/setFileName  /Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_2
+##/run/beamOn 1500
+##/analysis/setFileName  /Volumes/EC2TB/G4/mod4/marley_optphys_b8_shinyg10_3
+##/run/beamOn 1500
