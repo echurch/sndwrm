@@ -252,7 +252,7 @@
         PropertyPointer2 = MaterialTables[Material]->GetProperty("REFLECTANCE_G10");
         if(PropertyPointer || PropertyPointer2 ) {
           std::cout<< "defining G10 optical boundary "<<std::endl;
-          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface G10",glisur,ground,dielectric_metal); //dielectric_dielectric);
+          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface G10",glisur,ground,dielectric_metal); //dielectric_metal);
           refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
           refl_opsurfs->SetPolish(0.95);
           new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
@@ -513,10 +513,12 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
   LarProp->SetReflectiveSurfaceEnergies(ReflectiveSurfaceEnergies);
   std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" , "G10", "SiPM"};
   LarProp->SetReflectiveSurfaceNames (ReflectiveSurfaceNames );
-  std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {1., 1., 1. }, {1., 1., 1. }, {0., 0., 0.} };
+
+  // 44% is the fraction of G10 vs 56% holes in the VD PCB top layer.
+  std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {1., 1., 1. }, {1., 1., 1.0 }, {0., 0., 0.} }; // 0.44
 
   LarProp->SetReflectiveSurfaceReflectances(ReflectiveSurfaceReflectances);
-  std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  }, { 0.5,  0.5,  0.5  }, {0., 0., 0.} };
+  std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  }, { 0.,  0.,  0.  }, {0., 0., 0.} };
   LarProp->SetReflectiveSurfaceDiffuseFractions(ReflectiveSurfaceDiffuseFractions);
 
 //Information related with the simulation of the Wavelength Shifter (TPB) 

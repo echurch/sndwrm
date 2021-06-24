@@ -64,7 +64,7 @@ void PrimaryGenerator::GeneratePrimaryVertex(G4Event* event)
   const G4int n_particle = 1250; // from our DkMatter paper, via SCENE. 1250 photons per 100 keV n.r.
 
   const G4double xmax = 3.*m;
-  const G4double ymax = 6.*m;
+  const G4double ymax = 4.5*m;
   const G4double zmax = 20.*m;
   const G4double x = xmax*2*(G4UniformRand()-0.5);  
   const G4double y = ymax*2*(G4UniformRand()-0.5);  

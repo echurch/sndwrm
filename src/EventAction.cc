@@ -151,6 +151,7 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->FillH1(2, fEdep2, 1.0);
    else 
      analysisManager->FillH1(3, fEdep2, 1.0);
+
  }
    
 
@@ -162,13 +163,23 @@ void EventAction::EndOfEventAction(const G4Event*)
    // Fill 3 histograms according after converting to MeV
    double Energy = EnergyCalc(fEdep2,run);
 
-   std::cout << "EndofEvtAction: Total SipM hits: " << fEdep2 << std::endl;
+   std::cout << " EventAction::EndOfEventAction(): Total SipM hits: " << fEdep2 << std::endl;
 
    analysisManager->FillH1(4, Energy, 1.0);    //fWeight2);
    if (fPGA->GetPrimaryGenerator()->GetFSNeutrino())
      analysisManager->FillH1(5, Energy, 1.0);
    else 
      analysisManager->FillH1(6, Energy, 1.0);
+
+   G4ThreeVector vtx(fPGA->GetPrimaryGenerator()->GetParticlePosition());
+   // std::cout << "EventAction::EndOfEventAction(): primaryVtx: " << vtx[0]/m <<"," << vtx[1]/m << "," << vtx[2]/m  << std::endl;
+   analysisManager->FillP1(0, fabs(vtx[0]/m) , fEdep2); 
+   analysisManager->FillP1(1, fabs(vtx[1]/m) , fEdep2); 
+   analysisManager->FillP1(2, fabs(vtx[2]/m) , fEdep2); 
+   analysisManager->FillP2(0, fabs(vtx[0]/m), fabs(vtx[1]/m) , fEdep2); 
+   analysisManager->FillP2(1, fabs(vtx[0]/m), fabs(vtx[2]/m) , fEdep2); 
+   analysisManager->FillP2(2, fabs(vtx[1]/m), fabs(vtx[2]/m) , fEdep2); 
+
  }
 
 

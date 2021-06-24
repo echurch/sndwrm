@@ -100,7 +100,43 @@ void HistoManager::Book()
   id = analysis->CreateH1("H23"," total Energy in the SiPMs - non-ES",
 			  nbins, vmin, 0.8*24.); //12 MeV max
   analysis->SetH1Activation(id, false);  
+  std::cout << "HistoManager: H1 id: " << id << std::endl;
 
+  const int nbinsx(10);
+  const int nbinsy(10);
+  const int nbinsz(20);
+  double xmin, ymin, zmin, xmax, ymax, zmax;
+  xmin = ymin = zmin = 0.0;
+  xmax = 3.0;
+  ymax = 4.5;
+  zmax = 25.0;
+  const double maxphotons(1300.); // for photon bombs this is true
+
+  id = analysis->CreateP1("H31"," total deposits (hits) in the SiPMs in xbins",
+			  nbinsx, xmin, xmax, 0., maxphotons);
+  analysis->SetH1Activation(id, false);
+  std::cout << "HistoManager: P1 id: " << id << std::endl;
+  id = analysis->CreateP1("H32"," total deposits (hits) in the SiPMs in ybins",
+			  nbinsy, ymin, ymax, 0., maxphotons);
+  analysis->SetH1Activation(id, false);
+  std::cout << "HistoManager: P1 id: " << id << std::endl;
+  id = analysis->CreateP1("H33"," total deposits (hits) in the SiPMs in zbins",
+			  nbinsz, zmin, zmax, 0., maxphotons);
+  analysis->SetH1Activation(id, false);  
+  std::cout << "HistoManager: P1 id: " << id << std::endl;
+
+  id = analysis->CreateP2("H34"," total deposits (hits) in the SiPMs in x-y bins",
+			  nbinsx, xmin, xmax, nbinsy, ymin, ymax, 0., maxphotons);
+  analysis->SetH2Activation(id, false);
+  std::cout << "HistoManager: P2 id: " << id << std::endl;
+  id = analysis->CreateP2("H35"," total deposits (hits) in the SiPMs in x-z bins",
+			  nbinsx, xmin, xmax, nbinsz, zmin, zmax, 0., maxphotons);
+  analysis->SetH2Activation(id, false);
+  std::cout << "HistoManager: P2 id: " << id << std::endl;
+  id = analysis->CreateP2("H36"," total deposits (hits) in the SiPMs in y-z bins",
+			  nbinsy, ymin, ymax, nbinsz, zmin, zmax, 0., maxphotons);
+  analysis->SetH2Activation(id, false);
+  std::cout << "HistoManager: P2 id: " << id << std::endl;
 
   id = analysis->CreateH1("H14",
                 "Anti-coincidence spectrum (MeV) in the traget",
