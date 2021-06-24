@@ -97,6 +97,7 @@ DetectorConstruction::DetectorConstruction()
   DefineMaterials();
     
   fDetectorMessenger = new DetectorMessenger(this);
+  fMPL = new MaterialPropertyLoader();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -429,11 +430,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   // Now for the purpose of tracking optical photons we do the following to the Argon and TPB to endow them w optical physics properties.
   // Must wait till this late, cuz MLP works by looping over all Logical Volumes which are only just now established.
   // Get the logical volume store and assign material properties. MaterialPropLoader() is borrowed, heavily-edited from LArSoft.   
-  MaterialPropertyLoader* MPL = new MaterialPropertyLoader();
-  MPL->SetPropertiesFromServices();  // fills local LArprop class with hard-coded data cutnpasted from fcl file.
-  MPL->GetPropertiesFromServices();  // Shoves these into local MaterialTables
-  MPL->UpdateGeometry(G4LogicalVolumeStore::GetInstance()); // Finally, loads properties into G4MaterialProperties
 
+  fMPL->SetPropertiesFromServices();  // fills local LArprop class with hard-coded data cutnpasted from fcl file.
+  fMPL->GetPropertiesFromServices();  // Shoves these into local MaterialTables
+  fMPL->UpdateGeometry(G4LogicalVolumeStore::GetInstance()); // Finally, loads properties into G4MaterialProperties
 
 
 

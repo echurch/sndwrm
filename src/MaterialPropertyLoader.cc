@@ -22,6 +22,7 @@
 #include "G4LogicalSkinSurface.hh"
 #include "G4OpticalSurface.hh"
 
+
 //#include "messagefacility/MessageLogger/MessageLogger.h"
 
 
@@ -516,6 +517,12 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
 
   // 44% is the fraction of G10 vs 56% holes in the VD PCB top layer.
   std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {1., 1., 1. }, {1., 1., 1.0 }, {0., 0., 0.} }; // 0.44
+
+  std::cout << "Replacing default G10 ReflectiveSurfaceReflectances " << ReflectiveSurfaceReflectances.at(1).at(0) << " with " << GetMaterialG10SpecRef() << std::endl;
+  ReflectiveSurfaceReflectances.at(1).at(0) = GetMaterialG10SpecRef();
+  ReflectiveSurfaceReflectances.at(1).at(1) = GetMaterialG10SpecRef();
+  ReflectiveSurfaceReflectances.at(1).at(2) = GetMaterialG10SpecRef();
+  
 
   LarProp->SetReflectiveSurfaceReflectances(ReflectiveSurfaceReflectances);
   std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  }, { 0.,  0.,  0.  }, {0., 0., 0.} };

@@ -9,12 +9,14 @@
 //
 
 // TODO uniform the header guard format to LArSoft common
-#ifndef LArG4_MaterialPropertyLoader_h
-#define LArG4_MaterialPropertyLoader_h
+#ifndef MaterialPropertyLoader_h
+#define MaterialPropertyLoader_h
 
 #include <map>
 #include <string>
 #include "LArPropertiesStandard.hh"
+#include "MaterialMessenger.hh"
+
 
 class G4LogicalVolumeStore;
 
@@ -44,6 +46,7 @@ class G4LogicalVolumeStore;
    * boundary model.
    *
    */
+
   class MaterialPropertyLoader
   {
   public:
@@ -51,7 +54,7 @@ class G4LogicalVolumeStore;
     // TODO use type aliases
 
     // TODO remove default constructor
-  MaterialPropertyLoader() {}
+    MaterialPropertyLoader():fMatMess(0) {fMatMess = new MaterialMessenger(this); fG10SpecRef = 0.999;}
     // TODO remove default destructor
     ~MaterialPropertyLoader() {}
 
@@ -180,7 +183,8 @@ class G4LogicalVolumeStore;
     void GetPropertiesFromServices();
 
     void UpdateGeometry( G4LogicalVolumeStore* lvs );
-
+    void SetMaterialG10SpecRef(G4double val) {fG10SpecRef = val;};
+    G4double GetMaterialG10SpecRef() {return fG10SpecRef;};
 
 
   private:
@@ -194,7 +198,8 @@ class G4LogicalVolumeStore;
     std::map<std::string, double> fBirksConstants;
 
     LArPropertiesStandard* LarProp;
-
+    MaterialMessenger *fMatMess;
+    G4double fG10SpecRef;
 
   }; // class MaterialPropertyLoader
 
@@ -202,4 +207,4 @@ class G4LogicalVolumeStore;
 
 
 
-#endif // LArG4_MaterialPropertyLoader_h
+#endif // MaterialPropertyLoader_h

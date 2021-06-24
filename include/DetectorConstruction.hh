@@ -37,6 +37,8 @@
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
 
+#include "MaterialPropertyLoader.hh"
+
 class G4LogicalVolume;
 class G4Material;
 class DetectorMessenger;
@@ -143,6 +145,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void               DefineMaterials();
     G4VPhysicalVolume* ConstructVolumes();     
     void               DetSiPMs(G4String , G4LogicalVolume* );
+    MaterialPropertyLoader* fMPL;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
