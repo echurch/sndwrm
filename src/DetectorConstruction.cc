@@ -92,8 +92,6 @@ DetectorConstruction::DetectorConstruction()
   fSiPMThickness = 1. * cm;
   fSiPMPhotoCathodeCoverage = 0.8;
 
-
-
   DefineMaterials();
     
   fDetectorMessenger = new DetectorMessenger(this);
@@ -558,6 +556,21 @@ void DetectorConstruction::SetTargetRadius(G4double value)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+void DetectorConstruction::SetAcrylicRadius(G4double value)
+{
+  fAcrylicRadius = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void DetectorConstruction::SetAcrylicLength(G4double value)
+{
+  fAcrylicLength = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 void DetectorConstruction::SetInsetRadius(G4double value)
 {
   fInsetRadius = value;
@@ -602,6 +615,23 @@ void DetectorConstruction::SetDetectorRadius(G4double value)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+G4double DetectorConstruction::GetTargetRadius()
+{
+
+  return fTargetRadius;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4double DetectorConstruction::GetAcrylicRadius()
+{
+  // 5cm is for the G10 and/or coldcryoskin
+  assert((fTargetRadius-5*cm)>fAcrylicRadius && "fAcrylicLength shorter than fTargetRadius");
+  return fAcrylicRadius;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 G4double DetectorConstruction::GetTargetLength()
 {
   return fTargetLength;
@@ -609,10 +639,13 @@ G4double DetectorConstruction::GetTargetLength()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double DetectorConstruction::GetTargetRadius()
+G4double DetectorConstruction::GetAcrylicLength()
 {
-  return fTargetRadius;
+  // 5cm is for the G10 and/or coldcryoskin
+  assert((fTargetLength-5*cm)>fAcrylicLength && "fAcrylicLength shorter than fTargetLength");
+  return fAcrylicLength;
 }
+
 G4double DetectorConstruction::GetShieldThickness()
 {
   return fShieldThickness;

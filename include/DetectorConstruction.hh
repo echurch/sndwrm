@@ -58,6 +58,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     
     void SetTargetLength (G4double value);
     void SetTargetRadius (G4double value);
+    void SetAcrylicLength (G4double value);
+    void SetAcrylicRadius (G4double value);
     void SetShieldThickness (G4double value);
     void SetInsetRadius (G4double value);
     void SetTargetMaterial (G4String);
@@ -79,6 +81,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
       
     G4double GetTargetLength();
     G4double GetTargetRadius();
+    G4double GetAcrylicLength();
+    G4double GetAcrylicRadius();
     G4double GetShieldThickness();
     G4double SetInsetRadius();
     G4Material* GetTargetMaterial();       
@@ -96,14 +100,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   
     G4double           fTargetLength; 
     G4double           fTargetRadius;
+    G4double           fAcrylicLength; 
+    G4double           fAcrylicRadius;
     G4double           fShieldThickness;
     G4double           fG10Thickness;
     G4double           fWoodThickness;
     G4double           fAcrylicThickness;
     G4double           fTPBThickness; 
     G4double           fColdSkinThickness; 
-    G4double           fAcrylicLength; 
-    G4double           fAcrylicRadius;
     G4double           fInsetRadius;
     bool               fSiPMsOnAcrylic;
     bool               fSiPMsOnCathode;

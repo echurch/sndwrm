@@ -54,7 +54,7 @@ class G4LogicalVolumeStore;
     // TODO use type aliases
 
     // TODO remove default constructor
-    MaterialPropertyLoader():fMatMess(0) {fMatMess = new MaterialMessenger(this); fG10SpecRef = 0.999;}
+    MaterialPropertyLoader():fMatMess(0) {fMatMess = new MaterialMessenger(this); fG10SpecRef = 0.999; fAcrylicSpecRef = 0.999;}
     // TODO remove default destructor
     ~MaterialPropertyLoader() {}
 
@@ -185,6 +185,10 @@ class G4LogicalVolumeStore;
     void UpdateGeometry( G4LogicalVolumeStore* lvs );
     void SetMaterialG10SpecRef(G4double val) {fG10SpecRef = val;};
     G4double GetMaterialG10SpecRef() {return fG10SpecRef;};
+    void SetMaterialAcrylicSpecRef(G4double val) {fAcrylicSpecRef = val;};
+    G4double GetMaterialAcrylicSpecRef() {return fAcrylicSpecRef;};
+    void SetMaterialLArAbsLength(G4double val) {fLArAbsLength = val;};
+    G4double GetMaterialLArAbsLength() {return fLArAbsLength;};
 
 
   private:
@@ -200,6 +204,8 @@ class G4LogicalVolumeStore;
     LArPropertiesStandard* LarProp;
     MaterialMessenger *fMatMess;
     G4double fG10SpecRef;
+    G4double fAcrylicSpecRef;
+    G4double fLArAbsLength;
 
   }; // class MaterialPropertyLoader
 

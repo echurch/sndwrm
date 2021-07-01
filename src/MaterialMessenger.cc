@@ -44,7 +44,9 @@
 MaterialMessenger::MaterialMessenger(MaterialPropertyLoader* MPL)
 :G4UImessenger(), 
  fMaterialPropertyLoader(MPL),
- fMaterialG10SpecRefCmd(0)
+ fMaterialG10SpecRefCmd(0),
+ fMaterialAcrylicSpecRefCmd(0),
+ fMaterialLArAbsLengthCmd(0)
 { 
          
   fRdecayDir = new G4UIdirectory("/rdecay02/");
@@ -60,6 +62,16 @@ MaterialMessenger::MaterialMessenger(MaterialPropertyLoader* MPL)
   fMaterialG10SpecRefCmd->SetGuidance("Set G10 Spectral Reflection");
   fMaterialG10SpecRefCmd->SetParameterName("choice",false);
   fMaterialG10SpecRefCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fMaterialAcrylicSpecRefCmd = new G4UIcmdWithADouble("/rdecay02/material/setAcrylicSpecRef",this);
+  fMaterialAcrylicSpecRefCmd->SetGuidance("Set Acrylic Spectral Reflection");
+  fMaterialAcrylicSpecRefCmd->SetParameterName("choice",false);
+  fMaterialAcrylicSpecRefCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fMaterialLArAbsLengthCmd = new G4UIcmdWithADoubleAndUnit("/rdecay02/material/setLArAbsLength",this);
+  fMaterialLArAbsLengthCmd->SetGuidance("Set LAr Absorption Length");
+  fMaterialLArAbsLengthCmd->SetUnitCategory("Length");
+  fMaterialLArAbsLengthCmd->SetParameterName("choice",false);
+  fMaterialLArAbsLengthCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -67,6 +79,8 @@ MaterialMessenger::MaterialMessenger(MaterialPropertyLoader* MPL)
 MaterialMessenger::~MaterialMessenger()
 {
   delete fMaterialG10SpecRefCmd;
+  delete fMaterialAcrylicSpecRefCmd;
+  delete fMaterialLArAbsLengthCmd;
 }
 
 
@@ -78,6 +92,14 @@ void MaterialMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
   if (command == fMaterialG10SpecRefCmd )
     { fMaterialPropertyLoader->SetMaterialG10SpecRef(fMaterialG10SpecRefCmd->GetNewDoubleValue(newValue));
      std::cout << "MaterialMessenger::SetNewValue() config file: " << fMaterialPropertyLoader->GetMaterialG10SpecRef() << std::endl;
+   }
+  else if (command == fMaterialAcrylicSpecRefCmd )
+    { fMaterialPropertyLoader->SetMaterialAcrylicSpecRef(fMaterialAcrylicSpecRefCmd->GetNewDoubleValue(newValue));
+     std::cout << "MaterialMessenger::SetNewValue() config file: " << fMaterialPropertyLoader->GetMaterialAcrylicSpecRef() << std::endl;
+   }
+  else if (command == fMaterialLArAbsLengthCmd )
+    { fMaterialPropertyLoader->SetMaterialLArAbsLength(fMaterialLArAbsLengthCmd->GetNewDoubleValue(newValue));
+     std::cout << "MaterialMessenger::SetNewValue() config file: " << fMaterialPropertyLoader->GetMaterialLArAbsLength() << std::endl;
    }
 
 }

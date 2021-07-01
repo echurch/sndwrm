@@ -63,10 +63,12 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithAString*        fTargMatCmd;
     G4UIcmdWithAString*        fDetectMatCmd;
     G4UIcmdWithADoubleAndUnit* fTargRadiusCmd;
+    G4UIcmdWithADoubleAndUnit* fAcrylicRadiusCmd;
     G4UIcmdWithADoubleAndUnit* fShieldThicknessCmd;
     G4UIcmdWithADoubleAndUnit* fInsetRadiusCmd;
     G4UIcmdWithADoubleAndUnit* fDetectThicknessCmd;
     G4UIcmdWithADoubleAndUnit* fTargLengthCmd;
+    G4UIcmdWithADoubleAndUnit* fAcrylicLengthCmd;
     G4UIcmdWithADoubleAndUnit* fDetectLengthCmd;    
 
     G4UIcmdWithADouble* fSiPMPhotoCathodeCoverageCmd;    

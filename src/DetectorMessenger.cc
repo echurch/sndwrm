@@ -66,13 +66,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
   fShieldThicknessCmd->SetParameterName("choice",false);
   fShieldThicknessCmd->AvailableForStates(G4State_PreInit);  
 
-  fTargRadiusCmd =
-       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setTargetRadius", this);
-  fTargRadiusCmd->SetGuidance("Set the Target Radius.");
-  fTargRadiusCmd->SetUnitCategory("Length");
-  fTargRadiusCmd->SetParameterName("choice",false);
-  fTargRadiusCmd->AvailableForStates(G4State_PreInit);  
-
   fInsetRadiusCmd =
        new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setInsetRadius", this);
   fInsetRadiusCmd->SetGuidance("Set the Inset Radius.");
@@ -80,6 +73,12 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
   fInsetRadiusCmd->SetParameterName("choice",false);
   fInsetRadiusCmd->AvailableForStates(G4State_PreInit);  
 
+  fTargRadiusCmd =
+       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setTargetRadius", this);
+  fTargRadiusCmd->SetGuidance("Set the Target Radius.");
+  fTargRadiusCmd->SetUnitCategory("Length");
+  fTargRadiusCmd->SetParameterName("choice",false);
+  fTargRadiusCmd->AvailableForStates(G4State_PreInit);  
   
   fTargLengthCmd =
        new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setTargetLength", this);
@@ -87,6 +86,20 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
   fTargLengthCmd->SetUnitCategory("Length");
   fTargLengthCmd->SetParameterName("choice",false);
   fTargLengthCmd->AvailableForStates(G4State_PreInit);
+
+  fAcrylicRadiusCmd =
+       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setAcrylicRadius", this);
+  fAcrylicRadiusCmd->SetGuidance("Set the Acrylic Radius.");
+  fAcrylicRadiusCmd->SetUnitCategory("Length");
+  fAcrylicRadiusCmd->SetParameterName("choice",false);
+  fAcrylicRadiusCmd->AvailableForStates(G4State_PreInit);  
+  
+  fAcrylicLengthCmd =
+       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setAcrylicLength", this);
+  fAcrylicLengthCmd->SetGuidance("Set the Acrylic Length.");
+  fAcrylicLengthCmd->SetUnitCategory("Length");
+  fAcrylicLengthCmd->SetParameterName("choice",false);
+  fAcrylicLengthCmd->AvailableForStates(G4State_PreInit);
   
 
   fDetectMatCmd = new G4UIcmdWithAString("/rdecay02/det/setDetectorMate",this);
@@ -146,6 +159,8 @@ DetectorMessenger::~DetectorMessenger()
 {
   delete fTargMatCmd;
   delete fDetectMatCmd;
+  delete fAcrylicRadiusCmd;
+  delete fAcrylicLengthCmd;
   delete fTargRadiusCmd;
   delete fShieldThicknessCmd;
   delete fInsetRadiusCmd;
@@ -172,6 +187,12 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
     
   if (command == fTargRadiusCmd ) 
     {fDetector->SetTargetRadius(fTargLengthCmd->GetNewDoubleValue(newValue));}
+
+  if (command == fAcrylicLengthCmd ) 
+    { fDetector->SetAcrylicLength(fAcrylicLengthCmd->GetNewDoubleValue(newValue));}
+    
+  if (command == fAcrylicRadiusCmd ) 
+    {fDetector->SetAcrylicRadius(fAcrylicLengthCmd->GetNewDoubleValue(newValue));}
 
 
   if (command == fInsetRadiusCmd ) 

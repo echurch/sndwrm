@@ -60,6 +60,8 @@ class MaterialMessenger: public G4UImessenger
     G4UIdirectory*             fRdecayDir;
     G4UIdirectory*             fMaterialDir;
     G4UIcmdWithADouble* fMaterialG10SpecRefCmd;
+    G4UIcmdWithADouble* fMaterialAcrylicSpecRefCmd;
+    G4UIcmdWithADoubleAndUnit* fMaterialLArAbsLengthCmd;
 };
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

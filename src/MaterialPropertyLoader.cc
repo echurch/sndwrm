@@ -518,11 +518,25 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
   // 44% is the fraction of G10 vs 56% holes in the VD PCB top layer.
   std::vector<std::vector<double>> ReflectiveSurfaceReflectances   { {1., 1., 1. }, {1., 1., 1.0 }, {0., 0., 0.} }; // 0.44
 
+  std::cout << "Replacing default Acrylic ReflectiveSurfaceReflectances " << ReflectiveSurfaceReflectances.at(0).at(0) << " with " << GetMaterialAcrylicSpecRef() << std::endl;
+  ReflectiveSurfaceReflectances.at(0).at(0) = GetMaterialAcrylicSpecRef();
+  ReflectiveSurfaceReflectances.at(0).at(1) = GetMaterialAcrylicSpecRef();
+  ReflectiveSurfaceReflectances.at(0).at(2) = GetMaterialAcrylicSpecRef();
   std::cout << "Replacing default G10 ReflectiveSurfaceReflectances " << ReflectiveSurfaceReflectances.at(1).at(0) << " with " << GetMaterialG10SpecRef() << std::endl;
   ReflectiveSurfaceReflectances.at(1).at(0) = GetMaterialG10SpecRef();
   ReflectiveSurfaceReflectances.at(1).at(1) = GetMaterialG10SpecRef();
   ReflectiveSurfaceReflectances.at(1).at(2) = GetMaterialG10SpecRef();
-  
+  std::cout << "Replacing default LAr Absorption Length " << AbsLengthSpectrum.at(0) << " (0th element) with flat value " << GetMaterialLArAbsLength() << " [m]" << std::endl;  
+
+  for (auto &it : AbsLengthSpectrum) 
+    {it = GetMaterialLArAbsLength();}
+  std::cout << "New LArAbsLength vector" ;
+  for (auto &it : AbsLengthSpectrum) 
+    {std::cout << it << ", "; }
+  std::cout << std::endl;
+
+
+  LarProp->SetAbsLengthSpectrum(AbsLengthSpectrum);
 
   LarProp->SetReflectiveSurfaceReflectances(ReflectiveSurfaceReflectances);
   std::vector<std::vector<double>> ReflectiveSurfaceDiffuseFractions { { 0.5,  0.5,  0.5  }, { 0.,  0.,  0.  }, {0., 0., 0.} };
