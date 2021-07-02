@@ -24,6 +24,11 @@
 
 /rdecay02/det/setShieldThickness +77.6 cm
 
+/rdecay02/det/setAcrylicRadius 3. m
+/rdecay02/det/setAcrylicLength 40. m
+/rdecay02/material/setG10SpecRef 0.40
+/rdecay02/material/setAcrylicSpecRef 0.96
+/rdecay02/material/setLArAbsLength 50  m
 
 /rdecay02/det/setDetectorSiPMsOnAcrylic true
 /rdecay02/det/setDetectorSiPMsOnCathode true
@@ -55,7 +60,6 @@
 /gps/pos/centre 0. 0. 0. m
 #/gps/pos/confine Detector
 # This is for emitting e's from the 1.2cm thick coldskin OR the bulk Ar in detector
-
 
 
 /analysis/setFileName  /rcfs/projects/dunelb/chur558/data/marley_optphys_liv_shinyg10_0

@@ -25,13 +25,18 @@
 #/rdecay02/det/setShieldThickness 40 cm
 
 /rdecay02/det/setShieldThickness +77.6 cm
-
+/rdecay02/det/setAcrylicRadius 3. m
+/rdecay02/det/setAcrylicLength 40. m
 
 /rdecay02/det/setDetectorSiPMsOnAcrylic true
 /rdecay02/det/setDetectorSiPMsOnCathode true
 /rdecay02/det/setDetectorSiPMSize 24.0 cm
 /rdecay02/det/setDetectorSiPMThickness 0.1 cm
 /rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
+
+/rdecay02/material/setG10SpecRef 0.44
+/rdecay02/material/setAcrylicSpecRef 0.96
+/rdecay02/material/setLArAbsLength 50  m
 
 #
 /run/initialize

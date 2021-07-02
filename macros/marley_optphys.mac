@@ -25,6 +25,12 @@
 /rdecay02/det/setShieldThickness +77.6 cm
 
 
+/rdecay02/det/setAcrylicRadius 3. m
+/rdecay02/det/setAcrylicLength 40. m
+/rdecay02/material/setG10SpecRef 0.40
+/rdecay02/material/setAcrylicSpecRef 0.96
+/rdecay02/material/setLArAbsLength 50  m
+
 /rdecay02/det/setDetectorSiPMsOnAcrylic true
 /rdecay02/det/setDetectorSiPMsOnCathode true
 /rdecay02/det/setDetectorSiPMSize 24.0 cm
@@ -42,10 +48,7 @@
 /grdm/selectVolume Detector
 
 # When 'nu_e' is seen in PrimaryGenerator.cc it launches 1 Marley event
-# and it launches them inside the Acrylic volume, igoring below /gps/pos commands
 /gps/particle nu_e
-
-
 /gps/position 0 0 0 m
 /gps/pos/type Volume
 /gps/pos/shape Para

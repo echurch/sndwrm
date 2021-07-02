@@ -54,6 +54,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   //  G4int n_particle = 1;
   //  fParticleGun  = new G4ParticleGun(n_particle);
   fParticleGun  = new G4GeneralParticleSource();
+
   fPrimaryGenerator = new PrimaryGenerator();  
   /*
   fParticleGun->SetParticleEnergy(0*eV);
@@ -96,13 +97,17 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
   // if there's a geantino in .mac file create a "photon bomb"
+  std::vector<double> xyzbounds { 
+      fParticleGun->GetCurrentSource()->GetPosDist()->GetHalfX(),
+      fParticleGun->GetCurrentSource()->GetPosDist()->GetHalfY(),
+      fParticleGun->GetCurrentSource()->GetPosDist()->GetHalfZ()};
 
   std::cout << "GeneratePrimaries() particle requested is " << fParticleGun->GetParticleDefinition() << std::endl;
 
   if (fParticleGun->GetParticleDefinition() == G4Geantino::Geantino()) {  
     std::cout << "GeneratePrimaries: detect that a 'photon bomb' is to be created." << std::endl;
 
-    fPrimaryGenerator->GeneratePrimaryVertex(anEvent);
+    fPrimaryGenerator->GeneratePrimaryVertexOpt(anEvent,xyzbounds);
     return;
   }    
   //create vertex
@@ -113,7 +118,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
     // Generate a new MARLEY event using the owned marley::Generator object  
     marley::Event ev = marley_generator_.create_event();
-    fPrimaryGenerator->GeneratePrimaryVertexMarley(anEvent,ev);
+    fPrimaryGenerator->GeneratePrimaryVertexMarley(anEvent,xyzbounds,ev);
 
     return;
   }

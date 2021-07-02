@@ -50,8 +50,9 @@ class PrimaryGenerator : public G4VPrimaryGenerator
    ~PrimaryGenerator();
 
   public:
-    virtual void GeneratePrimaryVertex(G4Event*);
-    virtual void GeneratePrimaryVertexMarley(G4Event*, marley::Event);
+  virtual void GeneratePrimaryVertex(G4Event*) {};
+  virtual void GeneratePrimaryVertexOpt(G4Event*,std::vector<double> &);
+  virtual void GeneratePrimaryVertexMarley(G4Event*,std::vector<double> &, marley::Event);
     bool GetFSNeutrino(){return fFSNeutrino;};
     
 

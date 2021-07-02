@@ -56,19 +56,16 @@ PrimaryGenerator::~PrimaryGenerator()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void PrimaryGenerator::GeneratePrimaryVertex(G4Event* event)
+void PrimaryGenerator::GeneratePrimaryVertexOpt(G4Event* event, std::vector<double> &xyzb)
 {
   //vertex A uniform on a cylinder
   //
 
   const G4int n_particle = 1250; // from our DkMatter paper, via SCENE. 1250 photons per 100 keV n.r.
 
-  const G4double xmax = 3.*m;
-  const G4double ymax = 4.5*m;
-  const G4double zmax = 20.*m;
-  const G4double x = xmax*2*(G4UniformRand()-0.5);  
-  const G4double y = ymax*2*(G4UniformRand()-0.5);  
-  const G4double z = zmax*2*(G4UniformRand()-0.5);  
+  const G4double x = xyzb.at(0)*(G4UniformRand()-0.5) ;  
+  const G4double y = xyzb.at(1)*(G4UniformRand()-0.5) ;  
+  const G4double z = xyzb.at(2)*(G4UniformRand()-0.5) ; 
   //
   G4ThreeVector positionA(x,y,z);
 
@@ -101,16 +98,12 @@ void PrimaryGenerator::GeneratePrimaryVertex(G4Event* event)
   std::cout << "PrimaryGenerator: Added " << n_particle << " isotropic opticalphotons as primaries at " << x/1000. <<", " << y/1000. << ", " << z/1000. << " [m]. "  << std::endl;
 }
 
-void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, marley::Event marlev) 
+void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, std::vector<double> &xyzb, marley::Event marlev) 
 {
   // Loop over each of the final particles in the MARLEY event
-
-  const G4double xmax = 3.*m;
-  const G4double ymax = 4.5*m;
-  const G4double zmax = 20.*m;
-  const G4double x = xmax*2*(G4UniformRand()-0.5);
-  const G4double y = ymax*2*(G4UniformRand()-0.5);
-  const G4double z = zmax*2*(G4UniformRand()-0.5);
+  const G4double x = xyzb.at(0) *2*(G4UniformRand()-0.5) ;
+  const G4double y = xyzb.at(1) *2*(G4UniformRand()-0.5) ;
+  const G4double z = xyzb.at(2) *2*(G4UniformRand()-0.5) ;
 
   const G4int n_particle = 1250; // from our DkMatter paper, via SCENE. 1250 photons per 100 keV n.r.                                                           
 

@@ -32,9 +32,9 @@
 /rdecay02/det/setDetectorSiPMThickness 0.1 cm
 /rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
 
-/rdecay02/material/setG10SpecRef 0.40
-/rdecay02/material/setAcrylicSpecRef 0.2
-/rdecay02/material/setLArAbsLength 10  m
+/rdecay02/material/setG10SpecRef 0.44
+/rdecay02/material/setAcrylicSpecRef 0.96
+/rdecay02/material/setLArAbsLength 50  m
 
 #
 /run/initialize
