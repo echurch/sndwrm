@@ -23,18 +23,21 @@
 #/rdecay02/det/setShieldThickness 40 cm
 
 /rdecay02/det/setShieldThickness +77.6 cm
-/rdecay02/det/setAcrylicRadius 3. m
-/rdecay02/det/setAcrylicLength 40. m
 
+
+## SiPM SETTINGS ##
 /rdecay02/det/setDetectorSiPMsOnAcrylic true
 /rdecay02/det/setDetectorSiPMsOnCathode true
 /rdecay02/det/setDetectorSiPMSize 24.0 cm
 /rdecay02/det/setDetectorSiPMThickness 0.1 cm
-/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
 
-/rdecay02/material/setG10SpecRef 0.44
-/rdecay02/material/setAcrylicSpecRef 0.96
-/rdecay02/material/setLArAbsLength 50  m
+/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage .05 #SiPM Coverage
+/rdecay02/det/setAcrylicRadius 6. m #Acrylic width/heigth (not larger than 6)
+/rdecay02/det/setAcrylicLength 58. m #Acrylic length (not larger than 60)
+
+/rdecay02/material/setG10SpecRef .44 #Anode planes reflectivity
+/rdecay02/material/setAcrylicSpecRef .97 #Acrylic walls reflectivity
+/rdecay02/material/setLArAbsLength 50 m #Max length photon travel in Argon
 
 #
 /run/initialize
@@ -56,17 +59,20 @@
 /gps/position 0 0 0 m
 /gps/pos/type Volume
 /gps/pos/shape Para
-/gps/pos/halfx 1 m
-/gps/pos/halfy 2.0 m
-/gps/pos/halfz 10.1 m
+/gps/pos/halfx 3.0 m
+/gps/pos/halfy 4.5 m
+/gps/pos/halfz 20.0 m
 /gps/pos/centre 0. 0. 0. m
 #/gps/pos/confine Detector
 
 
 
 
+## FILE NAME ##
+/analysis/setFileName  /rcfs/projects/dunelb/chur558/data/pbomb_optphys_MAX10000beam_5sipm_44anode_97acrylic_02
 
-/analysis/setFileName  /rcfs/projects/dunelb/chur558/data/pbomb_optphys
+## HISTOGRAMS INCLUDED ##
+#/analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 1300.
 /analysis/h1/set 2 100 0. 1300.
 /analysis/h1/set 3 100 0. 1300.
@@ -74,14 +80,28 @@
 /analysis/h1/set 5 100 0. 2. MeV
 /analysis/h1/set 6 100 0. 2. MeV
 
-## no se funciona! Neither does it with p1->h1
-##/analysis/p1/set 7 100 -3. +3. 0. 1300.
+## Leave below at their hard-coded values, since these aren't working to over-ride! EC, 23-July-2021.
+#/analysis/p1/setX 0 10 0. 3. m
+#/analysis/p1/setY 0 0. 1300.
+#/analysis/p1/setX 1 10 0. 4.5 m
+#/analysis/p1/setY 1 0. 1300.
+#/analysis/p1/setX 2 20 0. 20. m
+#/analysis/p1/setY 2 0. 1300.
 
-##/analysis/ntuple/setActivation 0 true
-##/analysis/ntuple/setActivation 1 true
-##/analysis/ntuple/setActivation 2 true
-##/analysis/ntuple/setActivation 3 true
-##/analysis/ntuple/setActivation 4 true ## Steps
+#/analysis/p2/setX 0 10 0. 3.0 m
+#/analysis/p2/setY 0 10 0. 4.5 m
+#/analysis/p2/setX 1 10 0. 3.0 m
+#/analysis/p2/setY 1 20 0. 20. m
+#/analysis/p2/setX 2 10 0. 4.5 m
+#/analysis/p2/setY 2 20 0. 20. m
+
+
+## T TREES INCLUDED ##
+#/analysis/ntuple/setActivation 0 true
+#/analysis/ntuple/setActivation 1 true
+#/analysis/ntuple/setActivation 2 true
+#/analysis/ntuple/setActivation 3 true
+#/analysis/ntuple/setActivation 4 true ## Steps
 /run/printProgress 1000
 #/control/execute vis.mac
 
@@ -91,6 +111,8 @@
 # For 10cm Acrylic
 # So, our cryoskin has 2E-10*0.012*(4*12*60+2*12*12)*1E6 * 3.1415E7 /yr = 238854 evts/yr, so my run here has evtwt=238854/31000000 for a year.
 
-
+## NUMBER OF EVENTS EACH WITH 1250 PHOTONS ##
 ##/run/beamOn 4 # 10000
+#/run/beamOn 10
+#/run/beamOn 1000
 /run/beamOn 1000

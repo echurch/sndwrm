@@ -50,7 +50,7 @@ HistoManager::~HistoManager()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void HistoManager::Book()
+void HistoManager::Book( )
 {
   // Create or get analysis manager
   // The choice of analysis technology is done via selection of a namespace
@@ -107,9 +107,9 @@ void HistoManager::Book()
   const int nbinsz(20);
   double xmin, ymin, zmin, xmax, ymax, zmax;
   xmin = ymin = zmin = 0.0;
-  xmax = 3.0;
-  ymax = 4.5;
-  zmax = 25.0;
+  xmax =  3.0;
+  ymax =  4.5;
+  zmax =  20.0;
   const double maxphotons(1300.); // for photon bombs this is true
 
   id = analysis->CreateP1("H31"," total deposits (hits) in the SiPMs in xbins",
