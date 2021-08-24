@@ -40,6 +40,7 @@
 #include "G4IonTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Geantino.hh"
+#include "G4ChargedGeantino.hh"
 #include "G4NeutrinoE.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
@@ -119,6 +120,14 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     // Generate a new MARLEY event using the owned marley::Generator object  
     marley::Event ev = marley_generator_.create_event();
     fPrimaryGenerator->GeneratePrimaryVertexMarley(anEvent,xyzbounds,ev);
+
+    return;
+  }
+
+  else if (fParticleGun->GetParticleDefinition() == G4ChargedGeantino::ChargedGeantino()) {
+    std::cout << "GeneratePrimaries: detect that a 0nubb event is to be created." << std::endl;
+
+    fPrimaryGenerator->GeneratePrimaryVertex0Nu2Beta(anEvent,xyzbounds);
 
     return;
   }

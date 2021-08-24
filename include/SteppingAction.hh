@@ -48,6 +48,7 @@ class SteppingAction : public G4UserSteppingAction
    ~SteppingAction();
 
     virtual void UserSteppingAction(const G4Step*);
+    EventAction* GetEvtAct(){ return fEventAction;};
     
   private:
     DetectorConstruction* fDetector;  

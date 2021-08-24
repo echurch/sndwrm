@@ -50,7 +50,8 @@ class TrackingAction : public G4UserTrackingAction {
    
     virtual void  PreUserTrackingAction(const G4Track*);   
     virtual void PostUserTrackingAction(const G4Track*);
-    
+    EventAction* GetEvtAct(){ return fEventAction;};
+ 
   private:
     DetectorConstruction* fDetector;
     EventAction* fEventAction;

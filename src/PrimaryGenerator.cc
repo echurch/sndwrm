@@ -98,6 +98,51 @@ void PrimaryGenerator::GeneratePrimaryVertexOpt(G4Event* event, std::vector<doub
   std::cout << "PrimaryGenerator: Added " << n_particle << " isotropic opticalphotons as primaries at " << x/1000. <<", " << y/1000. << ", " << z/1000. << " [m]. "  << std::endl;
 }
 
+void PrimaryGenerator::GeneratePrimaryVertex0Nu2Beta(G4Event* event, std::vector<double> &xyzb) 
+{
+ const G4int n_particle = 2; // from our DkMatter paper, via SCENE. 1250 photons per 100 keV n.r.
+
+  const G4double x = xyzb.at(0)*(G4UniformRand()-0.5)*2. ;  
+  const G4double y = xyzb.at(1)*(G4UniformRand()-0.5)*2. ;  
+  const G4double z = xyzb.at(2)*(G4UniformRand()-0.5)*2. ; 
+  //
+  G4ThreeVector positionA(x,y,z);
+  G4double alpha = pi*2.*(G4UniformRand()-0.5);     //alpha uniform in (-pi, pi)
+  G4double beta = pi*G4UniformRand();     //alpha uniform in (0, pi)
+
+  for (int ii =0; ii< n_particle; ii++) 
+    {
+      if (ii==n_particle)
+	{
+	  alpha =  -alpha; 
+	  beta = pi - beta;
+	}
+      G4double ux = std::cos(alpha)*std::sin(beta);
+      G4double uy = std::sin(alpha)*std::sin(beta);
+      G4double uz = std::cos(beta);
+
+      G4double timeA = 0*s;
+  // 
+      G4PrimaryVertex* vertexA = new G4PrimaryVertex(positionA, timeA);
+  
+  //particle 1 at vertex A
+  //
+      G4ParticleDefinition* particleDefinition
+	= G4ParticleTable::GetParticleTable()->FindParticle("e-");
+      G4PrimaryParticle* particle1 = new G4PrimaryParticle(particleDefinition);
+      particle1->SetMomentumDirection(G4ThreeVector(ux,uy,uz));    
+      particle1->SetKineticEnergy(2.4858/2. * MeV); // half endpoint KE
+      vertexA->SetPrimary(particle1);
+
+      std::cout << "PrimaryGenerator: Added " << ii << "th particle " << particle1->GetParticleDefinition()->GetParticleName() << " w ux,uy,uz " << ux <<", " << uy << ", " << uz << "." << "And KE " << particle1->GetKineticEnergy() << "."  << std::endl;
+
+      event->AddPrimaryVertex(vertexA);
+    }
+
+  SetParticlePosition(positionA);
+  std::cout << "PrimaryGenerator: Added " << n_particle << " isotropic 0nubbs as primaries at " << x/1000. <<", " << y/1000. << ", " << z/1000. << " [m]. "  << std::endl;
+}
+
 void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, std::vector<double> &xyzb, marley::Event marlev) 
 {
   // Loop over each of the final particles in the MARLEY event
@@ -105,7 +150,7 @@ void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, std::vector<d
   const G4double y = xyzb.at(1) *2*(G4UniformRand()-0.5) ;
   const G4double z = xyzb.at(2) *2*(G4UniformRand()-0.5) ;
 
-  const G4int n_particle = 1250; // from our DkMatter paper, via SCENE. 1250 photons per 100 keV n.r.                                                           
+  const G4int n_particle = 1250; 
 
   G4ThreeVector positionA(x,y,z);
   G4double timeA = 0*s;

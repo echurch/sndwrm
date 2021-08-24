@@ -35,6 +35,7 @@
 #define EventAction_h 1
 
 #include "G4UserEventAction.hh"
+#include "G4ThreeVector.hh"
 #include "Run.hh"
 #include "PrimaryGeneratorAction.hh"
 
@@ -57,7 +58,8 @@ class EventAction : public G4UserEventAction
     void SetFiducial(bool fid) {fFiducial = fid;};              
     bool GetFiducial() {return fFiducial;}; 
     void SetProcVtx(const G4ThreeVector &vtx) { procVtx[0] = vtx[0];   procVtx[1] = vtx[1];   procVtx[2] = vtx[2];}
-
+  
+    PrimaryGeneratorAction* GetPrimGenAct() {return fPGA;};
 
   private:
     PrimaryGeneratorAction* fPGA;
@@ -66,7 +68,7 @@ class EventAction : public G4UserEventAction
     G4double fTime0;    
     bool fFiducial;
   
-    G4double EnergyCalc(G4double, Run*);
+  G4double EnergyCalc(G4double, Run*, G4ThreeVector*  );
     G4ThreeVector GetProcVtx() {return procVtx;};
     G4ThreeVector procVtx;
 };
