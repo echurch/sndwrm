@@ -33,8 +33,8 @@
 /vis/drawVolume
 #
 # Specify view angle:
-#/vis/viewer/set/viewpointThetaPhi 90. 0.
-/vis/viewer/set/viewpointThetaPhi 30. 30.
+/vis/viewer/set/viewpointThetaPhi 90. 0.
+#/vis/viewer/set/viewpointThetaPhi 30. 30.
 #
 # Specify zoom value:
 /vis/viewer/zoom 1
@@ -43,19 +43,32 @@
 /vis/viewer/set/style wireframe
 # To get nice view
 /vis/geometry/set/visibility World 0 false
-/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility Shield 1 true
-/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility Gap 1 true
-/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility Tube 1 true
-/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility Target 1 true
+#/vis/viewer/set/style surface
+/vis/geometry/set/visibility ShieldECN 1 false
+/vis/geometry/set/visibility ShieldECS 1 false
+##/vis/viewer/set/style wireframe
+/vis/geometry/set/visibility FlangeECN 1 false
+/vis/geometry/set/visibility FlangeECS 1 false
+##/vis/viewer/set/style wireframe
+/vis/geometry/set/visibility Tube 1 false
+/vis/geometry/set/visibility TubeECN 1 false
+/vis/geometry/set/visibility TubeECS 1 false
 
-#/vis/geometry/set/visibility G10 1 true
+/vis/viewer/set/style wireframe
+/vis/geometry/set/visibility Target 1 false
+/vis/viewer/set/style surface
+/vis/geometry/set/visibility EC 1 true
+/vis/geometry/set/visibility ELP 1 true
+/vis/geometry/set/visibility ELPP 1 true
+##/vis/viewer/set/style wireframe
+/vis/geometry/set/visibility Buffer 1 true
+/vis/geometry/set/visibility Baffle 1 true
+#/vis/viewer/set/style wireframe
+/vis/geometry/set/visibility BaffleFlange 1 false
+/vis/geometry/set/visibility FieldCage 1 true
 #
 # Draw coordinate axes:
-#/vis/scene/add/axes 0 0 0 1 m
+/vis/scene/add/axes 0 100 100 20 mm
 #
 # Draw smooth trajectories at end of event, showing trajectory points
 # as markers 2 pixels wide:

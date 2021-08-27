@@ -59,11 +59,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetTubeRadius (G4double value);
     void SetShieldThickness (G4double value);
     void SetShieldRadius (G4double value);
-    void SetGapThickness (G4double value);
+    void SetFlangeThickness (G4double value);
     void SetInsetRadius (G4double value);
     void SetTargetPressure (G4double value);
     void SetTargetMaterial (G4String);
-    void SetGapMaterial (G4String);
+    void SetFlangeMaterial (G4String);
     
     void SetDetectorLength(G4double value);           
     void SetDetectorThickness(G4double value);  
@@ -98,8 +98,24 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double           fShieldRadius;
     G4double           fTubeThickness;
     G4double           fTubeRadius;
+    G4double           fLensRadius;
     G4double           fTubeLength;
-    G4double           fGapThickness;
+    G4double           fFlangeThickness;
+    G4double           fBufferThickness;
+    G4double           fBufferInnerRadius;
+    G4double           fBufferOuterRadius;
+    G4double           fBufferLength;
+    G4double           fFieldCageThickness;
+    G4double           fFieldCageInnerRadius;
+    G4double           fFieldCageOuterRadius;
+    G4double           fFieldCageLength;
+    G4double           fElectrodeThickness;
+    G4double           fElectrodeInnerRadius;
+    G4double           fElectrodeOuterRadius;
+    G4double           fBaffleThickness;
+    G4double           fBaffleEndGap;
+    G4double           fBaffleInnerRadius;
+    G4double           fBaffleOuterRadius;
   
 
     G4double           fG10Thickness;
@@ -107,7 +123,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4Material*        fTubeMater;
     G4Material*        fTargetMater;
     G4Material*        fShieldMater;
-    G4Material*        fGapMater;
+    G4Material*        fFlangeMater;
+    G4Material*        fBufferMater;
+    G4Material*        fELPMater;
+    G4Material*        fELPPMater;
+    G4Material*        fECMater;
+    G4Material*        fFieldCageMater;
+    G4Material*        fBaffleMater;
+    G4Material*        fBaffleFlangeMater;
     G4Material*        fG10Mater;
     G4LogicalVolume*   fLogicTarget;
     G4LogicalVolume*   fLogicDetector;
@@ -117,9 +140,16 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume*   fLogicShield;
     G4LogicalVolume*   fLogicShieldECN;
     G4LogicalVolume*   fLogicShieldECS;
-    G4LogicalVolume*   fLogicGap;
-    G4LogicalVolume*   fLogicGapECN;
-    G4LogicalVolume*   fLogicGapECS;
+    G4LogicalVolume*   fLogicFlange;
+    G4LogicalVolume*   fLogicFlangeECN;
+    G4LogicalVolume*   fLogicFlangeECS;
+    G4LogicalVolume*   fLogicBuffer;
+    G4LogicalVolume*   fLogicFieldCage;
+    G4LogicalVolume*   fLogicBaffle;
+    G4LogicalVolume*   fLogicBaffleFlange;
+    G4LogicalVolume*   fLogicELP;
+    G4LogicalVolume*   fLogicELPP;
+    G4LogicalVolume*   fLogicEC;
     G4LogicalVolume*   fLogicG10;
                  
                

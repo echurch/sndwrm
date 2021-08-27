@@ -42,7 +42,7 @@
 DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
 :G4UImessenger(), 
  fDetector(Det), fRdecayDir(0), fDetDir(0),
- fTargMatCmd(0), fTargetPressureCmd(0),  fGapMatCmd(0), fGapThicknessCmd(0), fShieldRadiusCmd(0),
+ fTargMatCmd(0), fTargetPressureCmd(0),  fFlangeMatCmd(0), fFlangeThicknessCmd(0), fShieldRadiusCmd(0),
  fShieldThicknessCmd(0), fTubeThicknessCmd(0), fTubeLengthCmd(0), fTubeRadiusCmd(0)
 { 
   fRdecayDir = new G4UIdirectory("/rdecay02/");
@@ -93,17 +93,17 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
   fTubeLengthCmd->AvailableForStates(G4State_PreInit);
   
 
-  fGapMatCmd = new G4UIcmdWithAString("/rdecay02/det/setGapMate",this);
-  fGapMatCmd->SetGuidance("Select Material of the Gap.");
-  fGapMatCmd->SetParameterName("choice",false);
-  fGapMatCmd->AvailableForStates(G4State_PreInit,G4State_Idle);  
+  fFlangeMatCmd = new G4UIcmdWithAString("/rdecay02/det/setFlangeMate",this);
+  fFlangeMatCmd->SetGuidance("Select Material of the Flange.");
+  fFlangeMatCmd->SetParameterName("choice",false);
+  fFlangeMatCmd->AvailableForStates(G4State_PreInit,G4State_Idle);  
 
-  fGapThicknessCmd =
-       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setGapThickness",this);
-  fGapThicknessCmd->SetGuidance("Set the Gap Thickness.");
-  fGapThicknessCmd->SetUnitCategory("Length");
-  fGapThicknessCmd->SetParameterName("choice",false);
-  fGapThicknessCmd->AvailableForStates(G4State_PreInit);
+  fFlangeThicknessCmd =
+       new G4UIcmdWithADoubleAndUnit("/rdecay02/det/setFlangeThickness",this);
+  fFlangeThicknessCmd->SetGuidance("Set the Flange Thickness.");
+  fFlangeThicknessCmd->SetUnitCategory("Length");
+  fFlangeThicknessCmd->SetParameterName("choice",false);
+  fFlangeThicknessCmd->AvailableForStates(G4State_PreInit);
 
 }
 
@@ -114,8 +114,8 @@ DetectorMessenger::~DetectorMessenger()
   delete fTargMatCmd;
   delete fTargetPressureCmd;
   delete fTubeRadiusCmd;
-  delete fGapMatCmd;
-  delete fGapThicknessCmd;
+  delete fFlangeMatCmd;
+  delete fFlangeThicknessCmd;
   delete fShieldThicknessCmd;
   delete fShieldRadiusCmd;
   delete fTubeLengthCmd;
@@ -147,10 +147,10 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
   if (command == fShieldRadiusCmd ) 
     {fDetector->SetShieldRadius(fShieldRadiusCmd->GetNewDoubleValue(newValue));}
     
-  if (command == fGapMatCmd )
-    { fDetector->SetGapMaterial(newValue);}
-  if (command == fGapThicknessCmd )
-    { fDetector->SetGapThickness(fGapThicknessCmd->GetNewDoubleValue(newValue));}
+  if (command == fFlangeMatCmd )
+    { fDetector->SetFlangeMaterial(newValue);}
+  if (command == fFlangeThicknessCmd )
+    { fDetector->SetFlangeThickness(fFlangeThicknessCmd->GetNewDoubleValue(newValue));}
 
 }
 
