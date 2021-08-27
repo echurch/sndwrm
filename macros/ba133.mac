@@ -39,7 +39,7 @@
 #/gps/ene/mono 2.448 MeV
 #/gps/ang/type iso
 
-/gps/pos/centre 50. 50. 0. mm
+/gps/pos/centre 60. 60. 0. mm
 /gps/pos/type Volume
 /gps/pos/shape Para
 /gps/pos/halfx 6 mm

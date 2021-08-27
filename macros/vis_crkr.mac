@@ -37,23 +37,22 @@
 #/vis/viewer/set/viewpointThetaPhi 30. 30.
 #
 # Specify zoom value:
-/vis/viewer/zoom 1
+/vis/viewer/zoom 1.0
 #
 # Specify style (surface or wireframe):
 /vis/viewer/set/style wireframe
 # To get nice view
 /vis/geometry/set/visibility World 0 false
 #/vis/viewer/set/style surface
-/vis/geometry/set/visibility ShieldECN 1 false
-/vis/geometry/set/visibility ShieldECS 1 false
+/vis/geometry/set/visibility ShieldECN 1 true
+/vis/geometry/set/visibility ShieldECS 1 true
 ##/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility FlangeECN 1 false
-/vis/geometry/set/visibility FlangeECS 1 false
+/vis/geometry/set/visibility FlangeECN 1 true
+/vis/geometry/set/visibility FlangeECS 1 true
 ##/vis/viewer/set/style wireframe
 /vis/geometry/set/visibility Tube 1 false
-/vis/geometry/set/visibility TubeECN 1 false
-/vis/geometry/set/visibility TubeECS 1 false
-
+/vis/geometry/set/visibility TubeECN 1 true
+/vis/geometry/set/visibility TubeECS 1 true
 /vis/viewer/set/style wireframe
 /vis/geometry/set/visibility Target 1 false
 /vis/viewer/set/style surface
@@ -64,7 +63,7 @@
 /vis/geometry/set/visibility Buffer 1 true
 /vis/geometry/set/visibility Baffle 1 true
 #/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility BaffleFlange 1 false
+/vis/geometry/set/visibility BaffleFlange 1 true
 /vis/geometry/set/visibility FieldCage 1 true
 #
 # Draw coordinate axes:

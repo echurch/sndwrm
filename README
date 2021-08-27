@@ -50,7 +50,7 @@ Then, in python, do something like the following
 > f.Tracks.Draw("KE","PID==22&&sqrt(StartX**2+Starty**2)>50") # for example to see the initial gamma energies from the Ba133 decay.
 
 
-To run a multi-event job with no graphics, comment out with a '#' the line that says vis.mac in electron.mac, and edit
+To run a multi-event job with no graphics, comment out with a '#' the line that says vis.mac in ba133.mac, and edit
 the line  /run/beamOn 10 to increase number of primary ba133 decayed. Then at your command line, say
 nohup ./rdecay02 ../macros/ba133.mac >& noh.out &
 

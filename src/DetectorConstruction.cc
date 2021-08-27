@@ -71,7 +71,7 @@ DetectorConstruction::DetectorConstruction()
 
   fShieldThickness = (455.5-431.8)*mm;
 
-  fFlangeThickness = 22.9*mm;
+
   fFieldCageInnerRadius = 86.1/2.*mm;
   fFieldCageOuterRadius = fFieldCageInnerRadius+5.0*fTubeThickness;
   fFieldCageLength = (290.2-129.9)*mm;
@@ -262,7 +262,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                              "TubeECS");                 //name
                                
            new G4PVPlacement(0,                         //no rotation
-			     G4ThreeVector(0.,0.,-fTubeLength/2.+fTubeThickness),             //at (0,0,0)
+			     G4ThreeVector(0.,0.,-fTubeLength/2.+fBaffleEndGap+fTubeThickness),             //at (0,0,0)
                            fLogicTubeECS,                //logical volume
                            "TubeECS",                    //name
                            lWorld,                      //mother  volume
@@ -355,7 +355,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 				     "Buffer");                 //name
                                
           new G4PVPlacement(0,                         //no rotation
-			     G4ThreeVector(0.,0.,fTubeLength/2.-fBufferLength/2.),             //at (0,0,0)
+			     G4ThreeVector(0.,0.,366.0+fBufferLength/2.-fTubeLength/2.),             //at (0,0,0)
                            fLogicBuffer,                //logical volume
                            "Buffer",                    //name
                            fLogicTarget,                      //mother  volume
@@ -370,7 +370,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
   G4double zMidELP = 326.1*mm;
   G4double zMidELPP = 331.8*mm;
-  G4double zMidFC = fTubeLength/2.-fFieldCageLength/2.-(zMidELPP-zMidELP)-fElectrodeThickness/2.; // z coord of center of Xenon volume: could be a negative number
+  G4double zMidFC = 290.2-fTubeLength/2.-fFieldCageLength/2.; // z coord of center of Xenon volume: could be a negative number
           new G4PVPlacement(0,                         //no rotation
 			     G4ThreeVector(0.,0.,zMidFC),             //at (0,0,0)
                            fLogicFieldCage,                //logical volume
@@ -422,14 +422,14 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            0, true);                          //copy number
 
 
-  G4double zMidBaffle = (109.0/2.*mm-fBaffleEndGap)/2.+fBaffleEndGap;
+  G4double zMidBaffle = (109.0*mm-fBaffleEndGap)/2.+fBaffleEndGap;
   G4Tubs* sBaffle = new G4Tubs("Baffle", fBaffleInnerRadius, fBaffleOuterRadius, zMidBaffle,0.0,twopi);
          fLogicBaffle = new G4LogicalVolume(sBaffle,           //shape
 				     fBaffleMater,              //material
 				     "Baffle");  
 
           new G4PVPlacement(0,                         //no rotation
-			     G4ThreeVector(0.,0.,fTubeLength/2.-zMidBaffle),   
+			     G4ThreeVector(0.,0.,-fTubeLength/2.+zMidBaffle+fBaffleEndGap),   
                            fLogicBaffle,                //logical volume
                            "Baffle",                    //name
                            fLogicTarget,                      //mother  volume
@@ -443,7 +443,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 				     "BaffleFlange");  
 
           new G4PVPlacement(0,                         //no rotation
-			     G4ThreeVector(0.,0.,fBaffleEndGap+fTubeThickness/2./2.),
+			     G4ThreeVector(0.,0.,fBaffleEndGap+fTubeThickness/2./2.-fTubeLength/2.),
                            fLogicBaffleFlange,                //logical volume
                            "BaffleFlange",                    //name
                            fLogicTarget,                      //mother  volume
@@ -469,7 +469,6 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   std::cout << "fTubeRadius is " << fTubeRadius << std::endl;
   std::cout << "fTubeThickness is " << fTubeThickness << std::endl;
   std::cout << "fTubeLength is " << fTubeLength << std::endl;
-  std::cout << "fFlangeThickness is " << fFlangeThickness << std::endl; // Gap -> Flange
   std::cout << "fShieldThickness is " << fShieldThickness << std::endl;
 
 
