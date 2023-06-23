@@ -7,7 +7,7 @@
                               --------
 
 
-This simulation began as the G4 example sndwrm, which has the physics lists and starter code to decay radioactive isotopes. It has since evolved to have correct neutron 
+This simulation began as the G4 example rdecay02, which has the physics lists and starter code to decay radioactive isotopes. It has since evolved to have correct neutron 
 physics lists, a simple C++-coded DUNE FD-like geometry (no gdml), and now optical physics. The geometry is basically a big box of LAr with tall vertical acrylic walls inside. 
 On the interior of those walls are SiPMs covering at a settable photocathode coverage fraction, viewing the interior. There is a plane of such SiPMs at the 
 central "would-be" cathode plane (ala the VD design) also.
