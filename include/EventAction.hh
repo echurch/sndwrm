@@ -38,6 +38,8 @@
 #include "G4ThreeVector.hh"
 #include "Run.hh"
 #include "PrimaryGeneratorAction.hh"
+#include <chrono>
+#include <random>
 
 #include "globals.hh"
 
@@ -67,6 +69,7 @@ class EventAction : public G4UserEventAction
     G4double fWeight1, fWeight2;
     G4double fTime0;    
     bool fFiducial;
+    std::default_random_engine generator;
   
   G4double EnergyCalc(G4double, Run*, G4ThreeVector*  );
     G4ThreeVector GetProcVtx() {return procVtx;};

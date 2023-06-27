@@ -131,7 +131,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   // Above does not work when launching n's, gammas from outside the fidV. G'arr! Hard code it for now. EC, 4-Aug-2021.
 
-  const std::vector<double> fidv {3000,3000,20000};
+  const std::vector<double> fidv {3000,4500,20000};
   if (sprocess)
       startp = sprocess->GetProcessName();
 

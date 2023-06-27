@@ -107,7 +107,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   */
 
   // no worky when launching n's, gammas from outside the fidv. Hard code it. EC, 4-Aug-2021.
-  const std::vector<double> fidv {3000,3000,20000};
+  const std::vector<double> fidv {3000,4500,20000};
 
   if (abs(vtx[0])<fidv.at(0) && abs(vtx[1])<fidv.at(1) && abs(vtx[2])<fidv.at(2) && !fEventAction->GetFiducial())
     {

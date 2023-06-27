@@ -54,13 +54,20 @@ EventAction::EventAction()
 :G4UserEventAction(),
  fEdep1(0.), fEdep2(0.), fWeight1(0.), fWeight2(0.),
  fTime0(-1*s)
-{ } 
+{ 
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  generator.seed(seed);
+} 
 
 EventAction::EventAction(PrimaryGeneratorAction* prim)
  :G4UserEventAction(), fPGA(prim), 
  fEdep1(0.), fEdep2(0.), fWeight1(0.), fWeight2(0.),
  fTime0(-1*s)
-{ } 
+{ 
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  generator.seed(seed);
+
+} 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -137,8 +144,14 @@ void EventAction::EndOfEventAction(const G4Event*)
  if (fEdep1 > 0.) {
    fWeight1 /= fEdep1;
 
+   double res(0.02); // we pretend we can achieve 2% energy resolution!, EC, 10-Feb-2022.
+   std::normal_distribution<double> distribution (1,res);
+   double smear =  distribution(generator) ;
+   fEdep1 *= smear;
+   if (fEdep1 < 0) fEdep1 = 0;
+
    //   std::cout << "fEdep1:: " << fEdep1  << std::endl;
-   analysisManager->FillH1(0, fEdep1, fWeight1);   
+   analysisManager->FillH1(0, fEdep1, 1.0 ); // fWeight1);   
  }
  
  // pulse height in SiPM
@@ -146,6 +159,7 @@ void EventAction::EndOfEventAction(const G4Event*)
  if (fEdep2 > 0.) {
    fWeight2 /= fEdep2;
    std::cout << "EndofEvtAction: Total SipM hits: " << fEdep2 << std::endl;
+
    analysisManager->FillH1(1, fEdep2, 1.0);    //fWeight2);
    if (fPGA->GetPrimaryGenerator()->GetFSNeutrino())
      analysisManager->FillH1(2, fEdep2, 1.0);
