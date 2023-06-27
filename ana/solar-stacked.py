@@ -1,6 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from ROOT import TFile, TH1, THStack
+
+## must have done: pip install scikit_hep==3.1. Later versions don't understand skhep.visual. ECm, 6-Oct-2021
 from skhep.visual import MplPlotter as skh_plt
 
 import pdb
@@ -295,11 +297,18 @@ nESCCn[3] = nESCCn[1]
 linewidth = 4*np.ones(10)
 linewidth[3] = 1
 color = np.array(["blue","orange","green","navajowhite","salmon","lightgray","black","red","gray","black"])
+
+color = np.delete(color,1)
+labelv = np.delete(labelv,1)
+nESCCn.remove(nESCCn[1])
+wts.remove(wts[1])
+
 cts, be, er = skh_plt.hist(nESCCn,weights=wts,errorbars=False, histtype='step',label=labelv,bins=np.arange(0.,uedge,binsz),color=color) #,stacked='true'
 hdict = dict()
 hdict["counts"]=cts
 hdict["binedges"]=be
 hdict["err"]=er
+plt.axvspan(0.7, 1.7, color='y', alpha=0.5, lw=0)
 
 #fileout = "solar_neutrinos_9mhi-shinyg10-50mattn_10MeVmax"
 fileout = "solar_neutrinos_9mhi-10MeVmax-shinyg10-50mattn"
@@ -314,7 +323,8 @@ plt.yscale('log')
 plt.savefig(fileout+'.png')
 plt.close()
 
-
+print("Bailing out before making second figure, which will barf, because of above remove()s/delete()...")
+exit()
 
 # full 20 MeV
 binsz = (h0hES.GetBinCenter(1) - h0hES.GetBinCenter(0)) * 5 # makes 20 bins in 20 MeV, down from 100 bins in original histos.

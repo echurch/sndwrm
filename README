@@ -3,7 +3,7 @@
     Geant4 - an Object-Oriented Toolkit for Simulation in HEP
     =========================================================
 
-                              rdecay02
+                              sndwrm
                               --------
 
 
@@ -25,13 +25,13 @@ export MARLEY=/Users/chur558/marley
 export DYLD_LIBRARY_PATH=/usr/local/lib:/Users/chur558/marley/build
 source ~/venvs/bin/activate
 
-To build your rdecay02 after downloading, make a build directory parallel to /src and /macro called /build. Go to it and do 
+To build sndwrm after downloading, make a build directory parallel to /src and /macro called /build. Go to it and do 
 
 cmake ../
 make
 
 Run from the build directory, as
-./rdecay02
+./sndwrm
 
 You should now be at an interactive geant4 prompt. Say the following to launch neutrons
 g4> /control/execute ../macros/n_optphys.mac
@@ -51,17 +51,17 @@ Then, in python, do something like the following
 
 To run a multi-event job with no graphics, comment out with a '#' the line that says vis.mac in n_optphys.mac, and comment back in at the end a 
 line like /run/beamOn 200. Then at your command line, say
-nohup ./rdecay02 ../macros/n_optphys.mac >& noh.out &
+nohup ./sndwrm ../macros/n_optphys.mac >& noh.out &
 
 
 I have a trick to run "photon bombs," employed in ../macros/pbomb_optphys.mac. If you specify to launch a "geantino," the code in ~/src/PrimaryGenerator*
 will reinterpret that to launch a fixed number of isotropic opticalphotons inside a hard-coded box (inside the Acrylic volume, for now). Try it as:
 
-./rdecay02 ../macros/pbomb_optphys.mac
+./sndwrm ../macros/pbomb_optphys.mac
 
 The similar trick to run MARLEY events is employed in ../macros/marley_optphys.mac. It specifies to launch "nu_e"s, which tells PrimaryGenerator* to interpret
 that to launch one MARLEY event. Running 10 events in marley_optphys.mac causes 10 MARLEY events to run inside the Acrylic volume -- one per G4 event. Try it as
-./rdecay02 ../macros/marley_optphys.mac
+./sndwrm ../macros/marley_optphys.mac
 
 # Ask eric.church@pnnl.gov for help, as needed.
 
