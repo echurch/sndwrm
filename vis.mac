@@ -1,6 +1,5 @@
 #
-# Macro file for the initialization phase of "TestEm6.cc"
-#
+# Macro file for the initialization phase of "TestEm6.cc"#
 # Sets some default verbose
 # and initializes the graphic.
 #
@@ -54,6 +53,8 @@
 /vis/geometry/set/visibility G10 1 true
 /vis/viewer/set/style wireframe
 /vis/geometry/set/visibility SiPM 0 true
+/vis/viewer/set/style wireframe
+/vis/geometry/set/visibility Arapuca 1 true
 
 
 
@@ -94,8 +95,9 @@
 /vis/scene/endOfEventAction accumulate
 #
 # Re-establish auto refreshing and verbosity:
-/vis/viewer/set/autoRefresh true
+#/vis/viewer/set/autoRefresh true
 /vis/verbose warnings
 #
 # For file-based drivers, use this to create an empty detector view:
-#/vis/viewer/flush
+/vis/ogl/set/displayListLimit 5000000
+/vis/viewer/flush

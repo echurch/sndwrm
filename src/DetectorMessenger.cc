@@ -150,6 +150,12 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
   fSiPMPhotoCathodeCoverageCmd->SetParameterName("choice",false);
   fSiPMPhotoCathodeCoverageCmd->AvailableForStates(G4State_PreInit);
 
+  fArapucasInCageCmd =
+       new G4UIcmdWithABool("/rdecay02/det/setArapucasInCage",this);
+  fArapucasInCageCmd->SetGuidance("Put xArapucasInCage");
+  fArapucasInCageCmd->SetParameterName("choice",false);
+  fArapucasInCageCmd->AvailableForStates(G4State_PreInit);
+
 
 }
 
@@ -227,6 +233,9 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
     {fDetector->SetSiPMPhotoCathodeCoverage(
                      fSiPMPhotoCathodeCoverageCmd->GetNewDoubleValue(newValue));}      
 
+  if (command == fArapucasInCageCmd ) 
+    {fDetector->SetArapucasInCage(
+                     fArapucasInCageCmd->GetNewBoolValue(newValue));}      
 
 }
 

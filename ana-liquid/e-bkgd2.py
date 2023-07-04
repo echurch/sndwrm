@@ -16,7 +16,7 @@ thresh = 0.075 # MeV
 #sep = 50 # mm
 sepfed = 1000 # mm
 
-fname="../build/tl208_liquid.root"
+fname="../build/tl208_G10.root"
 f = TFile(fname)
 #f = TFile("../build/k40_liquid.root")
 fout = fname.split("/")[-1].split("_")[0]
@@ -63,7 +63,7 @@ def allvertices (x,y,z,t,ID,trkin):
 
 Nent = f.Tracks.GetEntries()
 event = 0
-#Nent = 500000
+#Nent = 50000
 
 
 trkke0 = []

@@ -24,6 +24,13 @@
 # a negative value puts shield inside cryostat
 /rdecay02/det/setShieldThickness 77.6 cm
 
+# next 3 lines need to be: true,false,true or false,true,true
+/rdecay02/det/setArapucasInCage true
+/rdecay02/det/setDetectorSiPMsOnAcrylic false # this also controls the Acrylic itself, as of 21-June-2023.
+/rdecay02/det/setDetectorSiPMsOnCathode true
+/rdecay02/det/setDetectorSiPMSize 20.0 cm
+/rdecay02/det/setDetectorSiPMThickness 0.1 cm
+/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage .20
 
 #
 /run/initialize
@@ -32,7 +39,7 @@
 #
 # rdm is applied only to the target volume
 
-#/gps/particle gamma
+/gps/particle gamma
 
 #/gps/ene/type Gauss
 #/gps/ene/mono 1.5 MeV
@@ -42,58 +49,51 @@
 
 #
 # This is for emitting gammas from outside the 3m TargetRadius of Ar
-/gps/energy 0 MeV
-/gps/particle ion
-/gps/ion 81 208 0 0 # Tl208
-/grdm/noVolumes
-/grdm/selectVolume Acrylic
+##/gps/energy 0 MeV
+##/gps/particle ion
+##/gps/ion 81 208 0 0 # Tl208
+##/grdm/noVolumes
+##/grdm/selectVolume G10
 
-##/gps/pos/centre 0. 3.0127 0. m
+
 
 /gps/pos/type Volume
 /gps/pos/shape Para
-/gps/pos/halfx 6.3 m
-/gps/pos/halfy 6.3 m
-/gps/pos/halfz 32. m
-/gps/pos/centre 0. 0. 0. m
-/gps/pos/confine Acrylic
+/gps/pos/halfx 0.1 cm
+/gps/pos/halfy 6. m 
+/gps/pos/halfz 30. m
+/gps/pos/centre -5.98 0 0. m
+/gps/pos/confine Target
 #/gps/pos/rot1 0 1 0 
 ##/gps/pos/rot2 0 0 -1
 
-#/gps/ang/type iso
+/gps/particle gamma
+/gps/ene/type Arb
+/gps/hist/type arb
+/gps/hist/file ../ana/cavgamLAr.txt
+#/gps/hist/file ../ana/neutron_distn.txt
+/gps/hist/inter Lin
+
+/gps/ang/type iso
 #/gps/ang/maxtheta 90 deg
 
-#/analysis/setFileName neutron_shield
-#/analysis/setFileName neutron_plastic20cm
-/analysis/setFileName /Volumes/Transcend2TB/G4/data/liquid/tl208_Acrylic
+/analysis/setFileName cavgam_xwall
 /analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 2. MeV
 /analysis/h1/set 6 100 0. 2. MeV
 /analysis/ntuple/setActivation 0 true
 /analysis/ntuple/setActivation 1 true
 /analysis/ntuple/setActivation 2 true
-/analysis/ntuple/setActivation 3 true
+# tracks
+/analysis/ntuple/setActivation 3 false
+# stepping -- only capatures Arapuca hits if fAPEX=true
 /analysis/ntuple/setActivation 4 true
 /run/printProgress 1000
 
 /control/execute /Users/chur558/rdecay02/macros/vis.mac
-
-# 0.8 Bq/kg leads to 10 Hz. 10 * piE7 sec is ~31 E7. Let's run 1/10th of one year.
-#/run/beamOn 31000000  # 10000
-
 # scale  Tl208 as 36% of Th232 at 50 mBq/kq
-# 0.050 Bq/kg *0.36* 6*60*0.003*1E6*1.65 *1E-3*piE7 is 1.007E9 decays. Let's run 27E6, 0.02 of a year.
+# 0.050 Bq/kg *0.36* 6*60*0.003*1E6*1.65 *1E-3*piE7 is 1.007E9 decays. Let's run 27E6, 0.027 of a year.
 # This presumes G10 covers full top of cryostat.
 
-# for Acrylic https://link.springer.com/content/pdf/10.1007/BF02219853.pdf 3 pgm/gm.
-# 3E-12gm/gm *0.36 / (232gm/mol* 1mol/6.022E23 atoms)* 0.693 / (14.1 E9*3.14E7) sec =  4.39 uBq/kg
-
-
-# 4.39E-6* 5.08*1.19E-3*(42*12.*2 + 6.2*12*2)*1E4*3.14E7 is 9.64E6 decays/year. (2 side walls, 2 end walls). Let's run 270000, 0.028 years.
-
-
-
-##/run/beamOn 27000000
-#/run/beamOn 270000
-/run/beamOn 20
+/run/beamOn 1000
 

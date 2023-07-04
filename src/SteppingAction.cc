@@ -85,7 +85,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   const G4VProcess* sprocess   = aStep->GetPreStepPoint()->GetProcessDefinedStep();
   run->CountProcesses(tprocess, iVol);
 
-
+  const G4ParticleDefinition* particle = track->GetParticleDefinition();  
+  G4int pID       = particle->GetPDGEncoding();
   G4TouchableHandle touch = endPoint->GetTouchableHandle();
   G4VPhysicalVolume* eVolume = touch->GetVolume();
   G4String eVname("null");
@@ -95,16 +96,21 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       //            std::cout << "SteppingAction eVname: " << eVname << std::endl;
       if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
 	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
+
+      if (( eVname.find("Arapuca")!=std::string::npos || (lVolume->GetName()).find("Arapuca")!=std::string::npos ) and (pID==0 || pID==-22))
+	iVol = 4;
     }
 
+
+  
   // energy deposit
   //
   G4double edepStep = aStep->GetTotalEnergyDeposit();
 
   tprocess = aStep->GetPostStepPoint()->GetProcessDefinedStep();
 
-  const G4ParticleDefinition* particle = track->GetParticleDefinition();  
-  G4int pID       = particle->GetPDGEncoding();
+
+
 
   if (edepStep <= 0. && (pID!=0 && pID!=-22) ) return; // the deception version of G4 uses -22 for optical photons; my Mac's uses 0.
 
@@ -140,7 +146,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if ((pID == 0 or pID == -22 ) and
       ( ( abs(pos[0]) > fidv.at(0) ) or ( abs(pos[1]) > fidv.at(1) ) or ( abs(pos[2]) > fidv.at(2) ) ) 
       //      and track->GetCurrentStepNumber() <= 1  // seems ok looking at steps, but concerned it's biasing. EC, 5-Aug-2021.
-      and track->GetCurrentStepNumber() == 0
+      and track->GetCurrentStepNumber() == 0 and iVol!=4 // don't do this for Arapuca hit counting mode
       )
     {
       //      std::cout << "SteppingAction(): Killing optical photon Track at pos " << pos[0] << ", " << pos[1]  << ", " << pos[2] << std::endl;
@@ -152,10 +158,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if (iVol!=3)
     fEventAction->AddEdep(iVol, edepStep, time, weight);
 
+  if (eVname=="SiPM") {
+	  fEventAction->AddEdep(3, 1.0, time, weight);	  
+  }
 
-
-
-
+  if (iVol!=4 and fDetector->GetAPEX()) return; // do not fill the steps TTree if we haven't stepped into an Arapuca
+  
   analysisManager->FillNtupleDColumn(id,0, edepStep);
   analysisManager->FillNtupleDColumn(id,1, time/s);
   analysisManager->FillNtupleDColumn(id,2, weight);
@@ -185,9 +193,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   analysisManager->FillNtupleDColumn(id,18, tpos[2]/mm);
   analysisManager->FillNtupleSColumn(id,19,eVname);
 
-  if (eVname=="SiPM") {
-	  fEventAction->AddEdep(3, 1.0, time, weight);	  
-  }
   analysisManager->AddNtupleRow(id);      
 
 

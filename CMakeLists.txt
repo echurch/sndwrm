@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-project(rdecay02)
+project(sndwrm)
 
 # Required by MARLEY
 set(CMAKE_CXX_STANDARD 14)
@@ -40,8 +40,8 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(rdecay02 rdecay02.cc ${sources} ${headers})
-target_link_libraries(rdecay02  ${Geant4_LIBRARIES} $ENV{MARLEY}/build/libMARLEY.dylib)
+add_executable(sndwrm rdecay02.cc ${sources} ${headers})
+target_link_libraries(sndwrm  ${Geant4_LIBRARIES} $ENV{MARLEY}/build/libMARLEY.dylib)
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
@@ -67,5 +67,5 @@ target_link_libraries(rdecay02  ${Geant4_LIBRARIES} $ENV{MARLEY}/build/libMARLEY
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS rdecay02 DESTINATION bin)
+install(TARGETS sndwrm DESTINATION bin)
 

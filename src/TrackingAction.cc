@@ -147,13 +147,13 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
     analysisManager->FillNtupleSColumn(id,14, processName);
     analysisManager->AddNtupleRow(id);
 
-    if (charge < 3.) {   
+    if (tID == 1) {   // primaries
       //fill ntuple id = 0
       id = 0;
       analysisManager->FillNtupleDColumn(id,0, double(pid));
       analysisManager->FillNtupleDColumn(id,1, energy);
       analysisManager->FillNtupleDColumn(id,2, time/s);
-      analysisManager->FillNtupleDColumn(id,3, weight);
+      analysisManager->FillNtupleDColumn(id,3, event);
       analysisManager->AddNtupleRow(id);
     
       analysisManager->FillH1(7, energy, weight);
