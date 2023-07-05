@@ -15,7 +15,7 @@ sep = 20 # mm
 
 thresh = 0.075 # MeV 
 thresh = 0.010 # MeV 
-#thresh = 0.100 # MeV 
+thresh = 0.100 # MeV 
 
 #sep = 50 # mm
 sepfed = 1000 # mm
@@ -27,13 +27,9 @@ sepfed = 1000 # mm
 ##f = TFile("../build/neutron_outsideshield_dunedistn_liquid.root")
 ##f = TFile("../build/neutron_outsideshield25cm_dunedistn_liquid.root")
 
-fname = "../build/neutron_outsidefoamwoodss_dunedistn_liquid.root"
+fname = "/Volumes/EC2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny.root"
 normtoktyr = 3.064 # See macros/neutron_fw.mac with 0-water shield assumption. With 40 cm H20 I get #1000 reduction
 normtoktyr = 3.064/80.*2  # With 20cm water shield I get ~80. The extra 2 is because I generated n's isotropically, whereas they come out of walls at 1E-5.
-
-####fname = "../build/neutron_outsidefoamwoodss_cs_10cm_dunedistn_liquid.root"
-##fname = "../build/neutron_outsidefoamwoodss_cs_5cm_dunedistn_22x8acryl_liquid.root"
-##normtoktyr = 238854/15500000. *10. # For cryoskin. See the macros/neutrons_fw_cs.mac ### MY *10 to get it to 1E-9 n/cm3/sec 4-Feb-2020
 
 f = TFile(fname)
 
@@ -87,7 +83,7 @@ def allvertices (x,y,z,t,ID,trkin):
 
 
 Nent = f.Tracks.GetEntries()
-Nent = 1000000
+#Nent = 1000000
 
 event = 0
 
@@ -255,6 +251,7 @@ plt.imshow(h2a[0][::-1,:],aspect='auto',extent=[-6200,6200,-6200,6200])
 #plt.ylim(-6200.,6200.)
 plt.title('Primary neutron xy')
 plt.savefig('NeutronKE_xy_'+str(thresh)+'_'+str(sep)+fout+'.png')
+
 
 
 fig = plt.figure()

@@ -26,13 +26,13 @@
 
 
 ## SiPM SETTINGS ##
-/rdecay02/det/setDetectorSiPMsOnAcrylic true
+/rdecay02/det/setDetectorSiPMsOnAcrylic false ## to look only at APEX-like Arapucas. This shuts off Acrylic AND its SiPMs.
 /rdecay02/det/setDetectorSiPMsOnCathode true
 /rdecay02/det/setDetectorSiPMSize 20.0 cm
 /rdecay02/det/setDetectorSiPMThickness 0.1 cm
 
-/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.10 #SiPM Coverage
-/rdecay02/det/setAcrylicRadius 4.5 m #Acrylic width/heigth (not larger than 6)
+/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage .20 #SiPM Coverage
+/rdecay02/det/setAcrylicRadius 6. m #Acrylic width/heigth (not larger than 6)
 /rdecay02/det/setAcrylicLength 40. m #Acrylic length (not larger than 60)
 
 /rdecay02/material/setG10SpecRef .44 #Anode planes reflectivity
@@ -69,7 +69,7 @@
 
 
 ## FILE NAME ## /rcfs/projects/dunelb/chur558/data/pbomb_optphys_MAX10000beam_5sipm_44anode_97acrylic_02
-/analysis/setFileName  pbomb_optphys_10sipm_44anode_97acrylic_SLoMo
+/analysis/setFileName  pbomb_optphys_20sipm_44anode_97acrylic_APEX
 
 ## HISTOGRAMS INCLUDED ##
 #/analysis/h1/set 0 100 0. 2. MeV
@@ -114,5 +114,5 @@
 ## NUMBER OF EVENTS EACH WITH 1250 PHOTONS ##
 ##/run/beamOn 4 # 10000
 #/run/beamOn 10
-/run/beamOn 10000
+/run/beamOn 1000
 

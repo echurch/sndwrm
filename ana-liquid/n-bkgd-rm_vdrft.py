@@ -27,7 +27,8 @@ sepfed = 1000 # mm
 ##f = TFile("../build/neutron_outsideshield_dunedistn_liquid.root")
 ##f = TFile("../build/neutron_outsideshield25cm_dunedistn_liquid.root")
 
-fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_dunedistn_liquid.root"
+fname = "/Volumes/EC2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny.root"
+fname = "/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_0.root"
 normtoktyr = 99.5E8/31.E6 # See macros/neutron_fw.mac with 0-water shield assumption. 
 normtoktyr /= 8000.  # With 20cm water shield I get ~80. With 40 cm H20 I get #8000 reduction. Fig 12 of https://arxiv.org/pdf/1811.07912.pdf.
 normtoktyr *= 2.   # The extra 2 is because I generated n's isotropically, whereas they come out of walls at 1E-5.
@@ -37,9 +38,9 @@ normtoktyr *= 2.   # The extra 2 is because I generated n's isotropically, where
 ##fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny_TMP.root"
 ##fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_dunedistn_42x3acryl_liquid_longskinny.root"
 
-fname = "/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny.root"
 
-##fname = "/Volumes/Transcend2TB/G4/data/liquid/Rn_alpha_neutron_outsidefoamwoodss_cs_5cm_cjdistn_liquid_longskinny.root"
+
+fname = "/Volumes/Transcend2TB/G4/data/liquid/Rn_alpha_neutron_outsidefoamwoodss_cs_5cm_cjdistn_liquid_longskinny.root"
 normtoktyr = 238854/31000000. *10. # For cryoskin. See the macros/neutrons_fw_cs.mac ### MY *10 to get it to 2E-9 n/cm3/sec 4-Feb-2020
 ##normtoktyr = 6.4E4/3/1000000. # For Rn per Saldanha's 6.4E4/3 kt-yrs
 
@@ -48,6 +49,7 @@ fidy = 1600 # 0.9 m buffer top/bottom, 0.50 m buffer on each side around central
 sepy = 500
 fidz = 27000 # 2.0m buffer of LAr on each end
 
+fname = "./nscoldcryo/xy_440k.root"
 f = TFile(fname)
 
 def fdist (x,y,z,tke):
@@ -134,8 +136,8 @@ for trk in range(Nent):
     if not f.Tracks.Event == event:  # We are onto a new event, so let's do our checks, then reinitialize for next evt.
         event = f.Tracks.Event
 
-        if not f.Tracks.Event%100000:
-            print ("Event " + str(f.Tracks.Event))
+        if not f.Tracks.Event%100:
+            print ("Event " + str(f.Tracks.Event) + ". Track " + str(trk) + " of " + str(Nent) + " events.")
 
         
 
@@ -234,6 +236,13 @@ lliner = TLine(fidx,-sepy,fidx,-fidy-sepy)
 llineup.Draw("p,same"); llinelo.Draw("p,same"); llinel.Draw("p,same"); lliner.Draw("p,same")
 
 c1.SaveAs('xy_'+str(thresh)+fout+'.png')
+
+print("Saved out the xy plot. Now pausing ...")
+rtfile = TFile(fout+'_out.root','RECREATE')
+hist2dxy.Write()
+rtfile.Close()
+
+pdb.set_trace()
 
 
 fig = plt.figure()

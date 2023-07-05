@@ -97,31 +97,31 @@ def spec2nbb(hin):
 
 
     
-f0n = TFile("/Users/chur558/lbgd/data_smallfidv/neutron_coldcryoskin_0.root")
-#f0a42 = TFile("/Users/chur558/lbgd/data/Ar42_fidv_2.root")
-f08 = TFile("/Users/chur558/lbgd/data/marley_optphys_8b_shinyg10_0.root")
-f0g = TFile("/Users/chur558/lbgd/data/tl208_G10_0.root")
-#f0r = TFile("/Users/chur558/lbgd/data/Rn222_fidv_shinyg10_0.root")
+f0n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_0.root")
+#f0a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_2.root")
+f08 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_8b_shinyg10_0.root")
+f0g = TFile("/Volumes/EC2TB/G4/mod4/tl208_G10_0.root")
+#f0r = TFile("/Volumes/EC2TB/G4/mod4/Rn222_fidv_shinyg10_0.root")
 
-f1n = TFile("/Users/chur558/lbgd/data_smallfidv/neutron_coldcryoskin_1.root")
-f1a42 = TFile("/Users/chur558/lbgd/data/Ar42_fidv_1.root")
-f18 = TFile("/Users/chur558/lbgd/data/marley_optphys_8b_shinyg10_1.root")
-f1g = TFile("/Users/chur558/lbgd/data/tl208_G10_1.root")
+f1n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_1.root")
+f1a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_1.root")
+f18 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_8b_shinyg10_1.root")
+f1g = TFile("/Volumes/EC2TB/G4/mod4/tl208_G10_1.root")
 
-f2n = TFile("/Users/chur558/lbgd/data_smallfidv/neutron_coldcryoskin_2.root")
-f2a42 = TFile("/Users/chur558/lbgd/data/Ar42_fidv_2.root")
-f28 = TFile("/Users/chur558/lbgd/data/marley_optphys_8b_shinyg10_2.root")
-f2g = TFile("/Users/chur558/lbgd/data/tl208_G10_2.root")
+f2n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_2.root")
+f2a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_2.root")
+f28 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_8b_shinyg10_2.root")
+f2g = TFile("/Volumes/EC2TB/G4/mod4/tl208_G10_2.root")
 
-f3n = TFile("/Users/chur558/lbgd/data_smallfidv/neutron_coldcryoskin_3.root")
-f3a42 = TFile("/Users/chur558/lbgd/data/Ar42_fidv_3.root")
-f38 = TFile("/Users/chur558/lbgd/data/marley_optphys_8b_shinyg10_3.root")
-f3g = TFile("/Users/chur558/lbgd/data/tl208_G10_3.root")
+f3n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_3.root")
+f3a42 = TFile("/Volumes/EC2TB/G4/mod4/Ar42_fidv_3.root")
+f38 = TFile("/Volumes/EC2TB/G4/mod4/marley_optphys_8b_shinyg10_3.root")
+f3g = TFile("/Volumes/EC2TB/G4/mod4/tl208_G10_3.root")
 
-f4n = TFile("/Users/chur558/lbgd/data_smallfidv/neutron_coldcryoskin_4.root")
-f5n = TFile("/Users/chur558/lbgd/data_smallfidv/neutron_coldcryoskin_5.root")
-f6n = TFile("/Users/chur558/lbgd/data_smallfidv/neutron_coldcryoskin_6.root")
-f7n = TFile("/Users/chur558/lbgd/data_smallfidv/neutron_coldcryoskin_7.root")
+f4n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_4.root")
+f5n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_5.root")
+f6n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_6.root")
+f7n = TFile("/Volumes/EC2TB/G4/mod4/neutron_coldcryoskin_7.root")
 
 # call a function to create with ~8% res, say.
 h08ES = f08.H22
@@ -369,7 +369,7 @@ plt.plot(np.arange(0,4.000,0.001),h208,label='Tl208 50 mBq/kg',color='green')
 
 fileout = "Xe1360nubb_res"+str(100*ResConst)+"_"+str(height)+"m"+"_0nbbtau_"+str(Nlife)
 
-plt.title(fileout + ' Spectra in 6x'+str(2*height)+'x40 m3')
+#plt.title(fileout + ' Spectra in 6x'+str(2*height)+'x40 m3')
 plt.xlabel('Energy [MeV]')
 if height==4.5:
     plt.ylabel('Events / 0.284 kTonneXe136-'+str(Nyr)+'yr / ' + str(binsz) + ' MeV')
@@ -442,7 +442,7 @@ if height==3.0:
 plt.legend()#loc='lower left')    
 # Now pick random #s from each histogram.
 
-plt.savefig(fileout+'.png')
+plt.savefig(fileout+'-notitle.png')
 
 plt.close()
 
@@ -467,7 +467,7 @@ plt.plot(np.arange(0,4.000,0.001),h208/2.,label='Tl208 50 mBq/kg',color='green')
     
 fileout += "_20keVbins"
 
-plt.title(fileout + ' Spectra in 6x'+str(2*height)+'x40 m3')
+#plt.title(fileout + ' Spectra in 6x'+str(2*height)+'x40 m3')
 plt.xlabel('Energy [MeV]')
 if height==4.5:
     plt.ylabel('Events / 0.284 kTonneXe136-'+str(Nyr)+'yr / ' + str(binsz/2.) + ' MeV')
@@ -537,6 +537,6 @@ if height==3.0:
 
 plt.legend()#loc='lower left')    
 
-plt.savefig(fileout+'.png')
+plt.savefig(fileout+'-notitle.png')
 
 plt.close()

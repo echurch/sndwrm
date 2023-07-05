@@ -36,7 +36,8 @@
 /gps/particle neutron 
 /gps/ene/type Arb
 /gps/hist/type arb
-/gps/hist/file ../ana/neutron_distn_vk.txt
+#/gps/hist/file ../ana/neutron_distn_vk.txt
+/gps/hist/file ../ana/neutron_distn.txt
 /gps/hist/inter Lin
 
 
@@ -61,12 +62,12 @@
 ###/gps/pos/halfx 6 m
 ###/gps/pos/halfy 29 m
 
-gps/ang/type iso
+/gps/ang/type iso
 #/gps/ang/maxtheta 90 deg
 
 #/analysis/setFileName neutron_shield
 #/analysis/setFileName neutron_plastic20cm
-/analysis/setFileName  /Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny
+/analysis/setFileName /Volumes/EC2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny #/Volumes/Transcend2TB/G4/data/liquid/neutron_outsidefoamwoodss_cs_5cm_vkdistn_liquid_longskinny_1pctyr
 /analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 2. MeV
 /analysis/h1/set 6 100 0. 2. MeV
@@ -84,6 +85,6 @@ gps/ang/type iso
 # For 10cm Acrylic
 # So, our cryoskin has 2E-10*0.012*(4*12*60+2*12*12)*1E6 * 3.1415E7 /yr = 238854 evts/yr, so my run here has evtwt=238854/31000000 for a year.
 
-/run/beamOn 31000000 # 10x fewer evts after first 10cm Acrylic run
-##/run/beamOn 4 # 10000
-##/run/beamOn 10000
+/run/beamOn 310000 # 10x fewer evts after first 10cm Acrylic run
+##/run/beamOn 10 # 10000
+

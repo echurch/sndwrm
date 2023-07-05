@@ -74,7 +74,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   void SetSiPMSize(G4double);
   void SetSiPMThickness(G4double);
   void SetSiPMPhotoCathodeCoverage(G4double);
-          
+  void SetArapucasInCage(G4bool);
+  
     void PrintParameters();
     
   public:
@@ -89,7 +90,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4Material* GetShieldMaterial(); 
     G4LogicalVolume* GetLogicTarget();
     G4LogicalVolume* GetLogicSiPM();
-    
+    bool GetAPEX() {return fAPEX;};
     G4double GetDetectorLength();
     G4double GetDetectorThickness();
     G4double GetDetectorRadius();
@@ -111,6 +112,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double           fInsetRadius;
     bool               fSiPMsOnAcrylic;
     bool               fSiPMsOnCathode;
+    bool               fAPEX;
     G4double           fSiPMSize;
     G4double           fSiPMThickness;
     G4double           fSiPMPhotoCathodeCoverage;
@@ -122,6 +124,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4Material*        fAcrylicMater;
     G4Material*        fSiPMMater;
     G4Material*        fTPBMater;
+    G4Material*        fArapucaMater;
+    G4Material*        fAluminumMater;
     G4LogicalVolume*   fLogicTarget;
     G4LogicalVolume*   fLogicShield;
     G4LogicalVolume*   fLogicG10;
@@ -130,6 +134,15 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume*   fLogicAcrylic;
     G4LogicalVolume*   fLogicTPB;
     G4LogicalVolume*   fLogicSiPM;
+    G4LogicalVolume*   fLogicArapuca;
+    G4LogicalVolume*   fLogicArapuca2; // shorter
+  
+    G4LogicalVolume*   fLogicHBack;
+    G4LogicalVolume*   fLogicHIbar;
+    G4LogicalVolume*   fLogicHFront;
+    G4LogicalVolume*   fLogicHBackEnd;
+    G4LogicalVolume*   fLogicHIbarEnd;
+    G4LogicalVolume*   fLogicHFrontEnd;
                  
     G4double           fDetectorLength;
     G4double           fDetectorThickness;
@@ -149,6 +162,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void               DefineMaterials();
     G4VPhysicalVolume* ConstructVolumes();     
     void               DetSiPMs(G4String , G4LogicalVolume* );
+    void               DetAPEX (G4String , G4LogicalVolume* );
     MaterialPropertyLoader* fMPL;
 
 };

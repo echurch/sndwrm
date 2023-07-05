@@ -37,6 +37,7 @@
 /rdecay02/det/setDetectorSiPMThickness 0.1 cm
 /rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
 
+/rdecay02/marley/setConfigFile /rcfs/projects/dunelb/marley/marley/examples/config/annotated_7be.js
 
 #
 /run/initialize

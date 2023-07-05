@@ -169,7 +169,7 @@ void HistoManager::Book( )
   analysis->CreateNtupleDColumn("PID");       //column 0
   analysis->CreateNtupleDColumn("KEnergy");    //column 1
   analysis->CreateNtupleDColumn("Time");      //column 2
-  analysis->CreateNtupleDColumn("Weight");    //column 3
+  analysis->CreateNtupleDColumn("Event");    //column 3
   analysis->FinishNtuple();
   
   analysis->CreateNtuple("T2", "RadioIsotopes");

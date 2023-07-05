@@ -1,8 +1,9 @@
+
 import numpy as np
 from matplotlib import pyplot as plt
 from ROOT import TFile, TH1, THStack
 
-## must have done: pip install scikit_hep==3.1. Later versions don't understand skhep.visual. ECm, 6-Oct-2021
+## must have done: pip install scikit_hep==3.1. Later versions don't understand skhep.visual. EC, 6-Oct-2021
 from skhep.visual import MplPlotter as skh_plt
 
 import pdb
@@ -114,10 +115,11 @@ x8tot = 0.0406549 * 1E-40
 xhtot = 0.111884  * 1E-40
 
 # From https://arxiv.org/pdf/astro-ph/0402114.pdf, Bahcall/Pinsonneault
-# Tacking on rough oscillation factors as from Fig 5 of https://www.sciencedirect.com/science/article/pii/S2212686414000211
+# Tacking on rough oscillation survival factors as from Fig 5 of https://www.sciencedirect.com/science/article/pii/S2212686414000211
 Fluxh = 7.88E3 * 0.3 # /cm2/sec/atom
 Flux8 = 5.79E6 * 0.3
-Fluxc = (5.71+5.03+0.0591)*1E8 * 0.5
+Fluxc = (2.78+2.05+0.0529)*1E8  *0.5   #(5.71+5.03+0.0591)*1E8 * 0.5
+Fluxchi = (2.04+1.44+0.0326)*1E8  *0.5
 
 #Normalize to 1 year. I threw 1500*4 evts for each solar run, 20k*4 for coldcryo neutrons.
 Nthrown = 1500*4
@@ -128,7 +130,9 @@ tsimh = Nthrown/(N_Ar*xhtot*Fluxh )
 wth = 3.14E7/tsimh
 Nthrown = 1500*4
 tsimc = Nthrown/(N_Ar*xctot*Fluxc )
+tsimchi = Nthrown/(N_Ar*xctot*Fluxchi )
 wtc = 3.14E7/tsimc
+wtchi = 3.14E7/tsimchi
 
 
 # neutrons
@@ -262,10 +266,10 @@ wts.append( np.ones((len(na39)))*wta39)
 wts.append( np.ones((len(nr)))*wtr)
 wts.append( np.ones((len(n0ES)))*wth)
 wts.append( np.ones((len(n1ES)))*wt8)
-wts.append( np.ones((len(n2ES)))*wtc)
+wts.append( np.ones((len(n2ES)))*wtc) # low metalicity CNO ES
 wts.append( np.ones((len(n0CC)))*wth)
 wts.append( np.ones((len(n1CC)))*wt8)
-wts.append( np.ones((len(n2CC)))*wtc)
+wts.append( np.ones((len(n2ES)))*wtchi) # Note the swap out of the empty CNO CC histo (which is empty) with hi metalicity CNO ES
 
 
 nESCCn = []
@@ -278,7 +282,7 @@ nESCCn.append(n1ES)
 nESCCn.append(n2ES)
 nESCCn.append(n0CC)
 nESCCn.append(n1CC)
-nESCCn.append(n2CC)
+nESCCn.append(n2ES)
 
 
 # Just up to 10 MeV
@@ -287,7 +291,7 @@ binsz = (h0hES.GetBinCenter(1) - h0hES.GetBinCenter(0)) ##* 5 # makes 20 bins in
 uedge = h0hES.GetBinLowEdge(Nb)+binsz
 uedge = h0hES.GetBinLowEdge(Nb)/2+binsz # just to 10 MeV
 #labelv = np.array(["neutrons","Ar42","Ar39","Rn","hepES","B8ES","CNOES","hepCC","8BCC","CNOCC"])
-labelv = np.array(["neutrons " + str(actnSS) + "/cm3/s","Ar42 "+"Bq/L/1500/9E5","Ar39 " + "Bq/L/1500","Rn "+str(actRn222)+"Bq/kg","hepES","8BES","CNOES","hepCC","8BCC","CNOCC"])
+labelv = np.array(["neutrons " + str(actnSS) + "/cm3/s","Ar42 "+"Bq/L/1500/9E5","Ar39 " + "Bq/L/1500","Rn "+str(actRn222)+"Bq/kg","hepES","8BES","CNOESlof","hepCC","8BCC","CNOEShif"])
 
 # This little snippet swaps out the Rn for suppressed Ar42
 suppress42 =  "Ar42 Bq/L/1500/5E8"
@@ -303,6 +307,10 @@ labelv = np.delete(labelv,1)
 nESCCn.remove(nESCCn[1])
 wts.remove(wts[1])
 
+
+fig, ax1 = plt.subplots()
+# These are in unitless percentages of the figure size. (0,0 is bottom left)
+left, bottom, width, height = [0.35, 0.6, 0.2, 0.2]
 cts, be, er = skh_plt.hist(nESCCn,weights=wts,errorbars=False, histtype='step',label=labelv,bins=np.arange(0.,uedge,binsz),color=color) #,stacked='true'
 hdict = dict()
 hdict["counts"]=cts
@@ -310,14 +318,30 @@ hdict["binedges"]=be
 hdict["err"]=er
 plt.axvspan(0.7, 1.7, color='y', alpha=0.5, lw=0)
 
+indices = [1,5,7,8]
+nESCCsub = [nESCCn[index] for index in indices]
+wtssub = [wts[index] for index in indices]
+labelvsub = [labelv[index] for index in indices]
+colorsub = ['green','black','gray','black']
 #fileout = "solar_neutrinos_9mhi-shinyg10-50mattn_10MeVmax"
 fileout = "solar_neutrinos_9mhi-10MeVmax-shinyg10-50mattn"
 plt.legend()
 plt.title(fileout + ' Spectra in 6x9x20 m3')
 plt.xlabel('Energy [MeV]')
-plt.ylabel('Events / 1.6 kTonne-yr / ' + str(binsz) + ' MeV')
+plt.ylabel('Events / 3.0 kTonne-yr / ' + str(binsz) + ' MeV')
 plt.yscale('log')              
 #plt.show()
+ax2 = fig.add_axes([left, bottom, width, height])
+ax2.axvspan(0.7, 1.7, color='y', alpha=0.5, lw=0)
+ax2.set_ylim(0,2000)
+ax2.set_xlim(0.6,1.8)
+ax2.xaxis.set_tick_params(labelsize=6)
+ax2.yaxis.set_tick_params(labelsize=6)
+cts, be, er = skh_plt.hist(nESCCsub,weights=wtssub,errorbars=True, histtype='step',bins=np.arange(0.6,1.8,binsz),color=colorsub)
+plt.title('0.7-1.7 MeV region',fontsize=6)
+plt.yscale('linear')
+plt.xlabel('Energy [MeV]',fontsize=6)
+plt.ylabel('Events / 3.0 kTonne-yr / ' + str(binsz) + ' MeV',fontsize=6)
 
                                                                                                                                 
 plt.savefig(fileout+'.png')
@@ -346,7 +370,7 @@ fileout = "solar_neutrinos_9mhi-shinyg10-50mattn"
 plt.legend()
 plt.title(fileout + ' Spectra in 6x9x20 m3')
 plt.xlabel('Energy [MeV]')
-plt.ylabel('Events / 1.6 kTonne-yr / ' + str(binsz) + ' MeV')
+plt.ylabel('Events / 3.0 kTonne-yr / ' + str(binsz) + ' MeV')
 plt.yscale('log')              
 #plt.show()
 #pdb.set_trace()

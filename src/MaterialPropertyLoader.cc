@@ -274,9 +274,26 @@
           refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
           refl_opsurfs->SetPolish(0.0); 
           new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
-        }
-        else
+	}
+	else
           std::cout<< "Warning: SiPM surface in the geometry without REFLECTIVITY assigned"<<std::endl;
+
+      }
+
+      // EC: adding Arapuca
+      if(Material=="Arapuca"){
+        std::cout<< "Arapuca surface set "<<volume->GetName()<<std::endl;
+	G4MaterialPropertyVector* PropertyPointer4 = 0;
+        PropertyPointer4 = MaterialTables[Material]->GetProperty("REFLECTANCE_Arapuca");
+        if(PropertyPointer || PropertyPointer4 ) {
+          std::cout<< "defining Arapuca optical boundary "<<std::endl;
+          G4OpticalSurface* refl_opsurfs = new G4OpticalSurface("Surface Arapuca",glisur,ground,dielectric_dielectric);  
+          refl_opsurfs->SetMaterialPropertiesTable(MaterialTables[Material]);
+          refl_opsurfs->SetPolish(0.0); 
+          new G4LogicalSkinSurface("refl_surfaces",volume, refl_opsurfs);
+        }
+	else
+          std::cout<< "Warning: Arapuca surface in the geometry without REFLECTIVITY assigned"<<std::endl;
       }
       //-----------------------------------------------------------------------------
 
@@ -512,7 +529,7 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
  //  surface type
   std::vector<double> ReflectiveSurfaceEnergies {  7, 9, 10 };
   LarProp->SetReflectiveSurfaceEnergies(ReflectiveSurfaceEnergies);
-  std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" , "G10", "SiPM"};
+  std::vector<std::string> ReflectiveSurfaceNames {  "Acrylic" , "G10", "SiPM"  /*, "Arapuca"*/};
   LarProp->SetReflectiveSurfaceNames (ReflectiveSurfaceNames );
 
   // 44% is the fraction of G10 vs 56% holes in the VD PCB top layer.
@@ -594,11 +611,15 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
 	kv.second = 0.01 ;
       }
 
-    // Just try to get all optphotons to enter SiPM and then die, so that the Termination Volume shows they entered. EC, 12-Feb-2021
+    // Just try to get all optphotons to enter SiPM/Arapuca and then die, so that the Termination Volume shows they entered. EC, 12-Feb-2021
     std::vector<double> VShortAbsLengthSpectrum { 0.00001, 0.00001, 0.00001, 0.00001, 0.000001, 0.00001, 0.00001, 0.00001};
     SetMaterialProperty( "SiPM", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
     SetMaterialProperty( "SiPM", "ABSLENGTH",     VShortAbsLength, CLHEP::cm );
     SetMaterialProperty( "SiPM", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );
+
+    SetMaterialProperty( "Arapuca", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
+    SetMaterialProperty( "Arapuca", "ABSLENGTH",     VShortAbsLength, CLHEP::cm );
+    SetMaterialProperty( "Arapuca", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );
 
 
     // scalar properties

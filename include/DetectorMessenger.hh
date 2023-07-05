@@ -75,7 +75,8 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fSiPMSizeCmd;    
     G4UIcmdWithADoubleAndUnit* fSiPMThicknessCmd;    
     G4UIcmdWithABool* fSiPMsOnAcrylicCmd;    
-    G4UIcmdWithABool* fSiPMsOnCathodeCmd;    
+    G4UIcmdWithABool* fSiPMsOnCathodeCmd;
+    G4UIcmdWithABool* fArapucasInCageCmd;    
 
 };
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

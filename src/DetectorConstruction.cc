@@ -92,6 +92,7 @@ DetectorConstruction::DetectorConstruction()
   fSiPMThickness = 1. * cm;
   fSiPMPhotoCathodeCoverage = 0.8;
 
+  fAPEX = true;
   DefineMaterials();
     
   fDetectorMessenger = new DetectorMessenger(this);
@@ -193,7 +194,15 @@ void DetectorConstruction::DefineMaterials()
 
   G4Material* SiPM = new G4Material("SiPM", 14, 28.086*g/mole, 2.331 *g/cm3, kStateSolid,  300.*kelvin, 1.*atmosphere);
 
+  // quartz (SiO2, crystalline)
+  G4Material* Arapuca = new G4Material("Arapuca", 2.64 *g/cm3, ncomponents=2);
+  Arapuca-> AddElement(Si, number_of_atoms=1);
+  Arapuca-> AddElement(O,  number_of_atoms=2);
 
+  // Aluminium
+  G4Material* Aluminium = new G4Material("Aluminium", 13.,26.98*g/mole, 2.7*g/cm3);
+
+  
   //  fShieldMater = H2O;
   fShieldMater =  foam /*plastic*/ ;
   fWoodMater =  wood ;
@@ -202,6 +211,8 @@ void DetectorConstruction::DefineMaterials()
   fAcrylicMater = Acrylic;
   fTPBMater = TPB;
   fSiPMMater = SiPM;
+  fArapucaMater = Arapuca;
+  fAluminumMater = Aluminium;
   /*
 
     Target is a Box nested inside World box. Detector is a Box inset from Target walls, nested Target, as tall (Length) as Target.
@@ -339,21 +350,27 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
   // G10 inside Shield, if I use a positive fShieldThickness. Remember fColdSkinThickness is negative.
+	   /*
   G4Box* sInG10 = new G4Box("InG10",fTargetRadius-fG10Thickness+fColdSkinThickness, fTargetRadius-fG10Thickness+fColdSkinThickness, fTargetLength/2-fG10Thickness+fColdSkinThickness);
   G4Box* sOutG10 = new G4Box("OutG10", fTargetRadius+fColdSkinThickness, fTargetRadius+fColdSkinThickness, fTargetLength/2.+fColdSkinThickness);
-  G4SubtractionSolid *sG10 = new G4SubtractionSolid("G10",sOutG10, sInG10);  
+  G4SubtractionSolid *sG10 = new G4SubtractionSolid("G10",sOutG10, sInG10);
+	   */
+	   // simple G10 rectangle hung from top, EC, 30-Jun-2023,
+  G4Box* sG10 = new G4Box("G10",(fTargetRadius-fG10Thickness+fColdSkinThickness)/2.,fG10Thickness/2.,fTargetLength/2-fG10Thickness+fColdSkinThickne\
+ss);
 
   fLogicG10 = new G4LogicalVolume(sG10,       //shape
                              fG10Mater,            //material
                              "G10");               //name
                                
          new G4PVPlacement(0,                         //no rotation
-			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+			   //			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+			   G4ThreeVector(0.,fTargetRadius-fG10Thickness+fColdSkinThickness,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
                            fLogicG10,              //logical volume
                            "G10",                  //name
 			   fLogicTarget,                      //mother  volume
                            false,                       //no boolean operation
-                           0,1);                          //copy number
+                           0,0);                          //copy number
 
   
   std::cout << "fInsetRadius is " << fInsetRadius << std::endl;
@@ -393,14 +410,14 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   fLogicAcrylic = new G4LogicalVolume(sAcrylic,       //shape
                              fAcrylicMater,            //material
                              "Acrylic");               //name
-                               
+  if (fSiPMsOnAcrylic)
          new G4PVPlacement(0,                         //no rotation
 			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
                            fLogicAcrylic,              //logical volume
                            "Acrylic",                  //name
 			   fLogicTarget, //lWorld,                      //mother  volume
                            false,                       //no boolean operation
-                           0,1);                          //copy number
+                           0,0);                          //copy number
 
   G4Box* sInTPB = new G4Box("InTPB",fAcrylicRadius-fAcrylicThickness, fTargetRadius , fAcrylicLength/2-fAcrylicThickness);
   // 13-Feb-2020 make the top/bottom 0 thickness.
@@ -425,6 +442,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   if (fSiPMsOnCathode)
     DetSiPMs("Cathode",fLogicTarget);
 
+  if (fAPEX)
+    DetAPEX("Perimeter",fLogicTarget);
+
+  
   // Now for the purpose of tracking optical photons we do the following to the Argon and TPB to endow them w optical physics properties.
   // Must wait till this late, cuz MLP works by looping over all Logical Volumes which are only just now established.
   // Get the logical volume store and assign material properties. MaterialPropLoader() is borrowed, heavily-edited from LArSoft.   
@@ -464,6 +485,8 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   fAcrylicMater->GetMaterialPropertiesTable()->DumpTable();
   std::cout << "Dumping SiPM MaterialPropertiesTable:" << std::endl;
   fSiPMMater->GetMaterialPropertiesTable()->DumpTable();
+  std::cout << "Dumping Arapuca MaterialPropertiesTable:" << std::endl;
+  fArapucaMater->GetMaterialPropertiesTable()->DumpTable();
   
 
 
@@ -738,6 +761,12 @@ void DetectorConstruction::SetSiPMPhotoCathodeCoverage(G4double value)
   G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void DetectorConstruction::SetArapucasInCage(G4bool value)
+{
+  fAPEX = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
 
 
 
@@ -892,3 +921,294 @@ void DetectorConstruction::DetSiPMs(G4String component, G4LogicalVolume* logiMot
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+
+void DetectorConstruction::DetAPEX(G4String component, G4LogicalVolume* logiMother)
+{
+  
+  // eventually, need to be grabbed by detectorMessenger
+  const double fArapucaWallgap = 40.0*cm ; 
+  const double fArapucaHeight =  8.0*cm ; 
+  const double fArapucaThickness = 0.6*cm;
+  const double fArapucaSpacing = 4.0*cm ; 
+  const double fArapucaLength  = 200.0*cm;
+  const double fArapucaLengthShort  = 40.0*cm;
+
+  const double fHbarFrontHeight = 6*cm;
+  const double fHbarBackHeight = fArapucaHeight+fArapucaSpacing; // This is too high, but it will enforce light-tightness for light behind Arapucas.
+  const double fHbarThickness  = 0.5*cm;
+  //  std::cout << "fTargetRadius, fAcrylicLength, fAcrylicRadius, halfSpacing, SiPMSize+2*halfSpacing" << fTargetRadius << ", " << fAcrylicLength << ", " << fAcrylicRadius << ", "<< halfSpacing <<  ", " << fSiPMSize+2*halfSpacing<< std::endl;
+
+  int numHeight = int ((2*(fTargetRadius-fArapucaWallgap)/(fArapucaHeight+fArapucaSpacing) ));
+  int numLength = int ((2*(fTargetLength/2.-fArapucaWallgap)/(fArapucaLength+fArapucaSpacing) ));
+  int numLengthShortwall = int ((2*(fTargetRadius-fArapucaWallgap)/(fArapucaLengthShort+fArapucaSpacing) )); // allow the shortwall to use 40cm length bars
+
+  // force an even number of arapucas about center, for symmetry. -- EC
+  if (numHeight%2) // odd
+    {numHeight--;}
+  if (numLength%2) // odd
+    {numLength--;}
+  if (numLengthShortwall%2) // odd
+    {numLengthShortwall--;}
+
+
+  G4Box* sArapuca = new G4Box("Arapuca", fArapucaThickness/2, fArapucaHeight/2, fArapucaLength/2);
+  fLogicArapuca = new G4LogicalVolume(sArapuca,       //shape  
+				   fArapucaMater,    //material  
+				   "Arapuca");      //name                                                                                                                             
+  G4Box* sArapuca2 = new G4Box("Arapuca", fArapucaThickness/2, fArapucaHeight/2, fArapucaLengthShort/2);
+  fLogicArapuca2 = new G4LogicalVolume(sArapuca2,       //shape  
+				   fArapucaMater,    //material  
+				   "Arapuca");      //name
+
+  G4Box* sHBack = new G4Box("Aluminium", fHbarThickness/2, fHbarBackHeight/2, fArapucaLength/2);
+  G4Box* sHIbar = new G4Box("Aluminium", fArapucaThickness*1.5/2, fHbarThickness/2, fArapucaLength/2);
+  G4Box* sHFront = new G4Box("Aluminium", fHbarThickness/2, fHbarFrontHeight/2, fArapucaLength/2);
+  G4Box* sHBackEnd = new G4Box("Aluminium", fHbarThickness/2, fHbarBackHeight/2, fArapucaLengthShort/2);
+  G4Box* sHIbarEnd = new G4Box("Aluminium", fArapucaThickness*1.5/2, fHbarThickness/2, fArapucaLengthShort/2);
+  G4Box* sHFrontEnd = new G4Box("Aluminium", fHbarThickness/2, fHbarFrontHeight/2, fArapucaLengthShort/2);
+  fLogicHBack = new G4LogicalVolume(sHBack,       //shape  
+				   fAluminumMater,    //material  
+				   "Hbar");      //name                                                                                                                        
+  fLogicHIbar = new G4LogicalVolume(sHIbar,       //shape  
+				   fAluminumMater,    //material  
+				   "Hbar");      //name                                                                                                                        
+  fLogicHFront = new G4LogicalVolume(sHFront,       //shape  
+				   fAluminumMater,    //material  
+				   "Hbar");      //name                                                                                                                        
+  fLogicHBackEnd = new G4LogicalVolume(sHBackEnd,       //shape  
+				   fAluminumMater,    //material  
+				   "Hbar");      //name                                                                                                                        
+  fLogicHIbarEnd = new G4LogicalVolume(sHIbarEnd,       //shape  
+				   fAluminumMater,    //material  
+				   "Hbar");      //name                                                                                                                        
+  fLogicHFrontEnd = new G4LogicalVolume(sHFrontEnd,       //shape  
+				   fAluminumMater,    //material  
+				   "Hbar");      //name                                                                                                                        
+  
+  
+  int nArapuca(0);
+  int nArapuca2((numHeight-1)*(numLength-1));
+  int nArapuca3(2*((numHeight-1)*(numLength-1)));
+  int nArapuca4(2*(numHeight-1)*(numLength-1)+(numHeight-1)*(numLengthShortwall-1));
+  int nArapucaC(0);
+  int nhbar(0);
+  
+  G4RotationMatrix* rotationMatrix = new G4RotationMatrix();
+
+  
+  if (component=="Perimeter") 
+    {
+      std::cout << "DetectorConstruction::DetAPEX: Placing " << numHeight*numLength << " Arapucas and H-bars just inside each x cryostat wall of VD detector." << std::endl;
+
+
+      for (int ii=-numHeight/2; ii<=numHeight/2; ii++)	
+      {
+	if (ii==0) continue;
+	for (int jj=-numLength/2; jj<=numLength/2; jj++)	
+	  {
+	    if (jj == 0) continue;
+	    if (!(numHeight%2) && ii==int(numHeight/2)) // if numLateral is even we need to stagger placement by 0.5 integer and skip the last one.
+	      continue;
+
+	    // neg x Target (inside cryo) wall
+	    int signi = (ii<0) ? -1 : (ii>0) ;
+	    int signj = (jj<0) ? -1 : (jj>0) ;
+	    // neg x Target (inside cryo) wall
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(-fTargetRadius+fArapucaWallgap,ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLength),   //cm
+			      fLogicArapuca,              //logical volume                         
+			      "Arapuca",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nArapuca++,0);                          //copy number   
+	    // HIbar, HFront, HBack
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(-fTargetRadius+fArapucaWallgap,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLength),   //cm
+			      fLogicHIbar,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(-1.5*fArapucaThickness/2.-fHbarThickness/2. -fTargetRadius+fArapucaWallgap,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLength),   //cm
+			      fLogicHBack,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(+1.5*fArapucaThickness/2.+fHbarThickness/2. -fTargetRadius+fArapucaWallgap,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLength),   //cm
+			      fLogicHFront,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+
+
+
+	    
+            // pos x Target (inside cryo) wall
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(fTargetRadius-fArapucaWallgap,ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLength),   //cm
+			      fLogicArapuca,              //logical volume                         
+			      "Arapuca",                  //name                             
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nArapuca2++,0);                          //copy number
+
+	    // HIbar, HFront, HBack
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(fTargetRadius-fArapucaWallgap,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLength),   //cm
+			      fLogicHIbar,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(+1.5*fArapucaThickness/2.+fHbarThickness/2. +fTargetRadius-fArapucaWallgap,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLength),   //cm
+			      fLogicHBack,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+	    new G4PVPlacement(0, 
+			      G4ThreeVector(-1.5*fArapucaThickness/2.-fHbarThickness/2. +fTargetRadius-fArapucaWallgap,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLength),   //cm
+			      fLogicHFront,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+	    
+	  }
+      }
+
+      std::cout << "DetectorConstruction::DetAPEX: Placing " << numLengthShortwall*numHeight << " Arapucas  -- with 1/5th the 200cm length -- just inside each z cryostat wall of VD detector." << std::endl;
+      *rotationMatrix = G4RotationMatrix();
+      rotationMatrix->rotateY(90.*deg);
+      for (int ii=-numHeight/2; ii<=numHeight/2; ii++)
+      {
+	if (ii == 0) continue;
+	for (int jj=-numLengthShortwall/2; jj<=numLengthShortwall/2; jj++)
+	  {
+	    if (jj == 0) continue;
+ 	    // neg z Target (inside cryo) wall
+	    int signi = (ii<0) ? -1 : (ii>0) ;
+	    int signj = (jj<0) ? -1 : (jj>0) ;
+	    // neg z Target (inside cryo) wall	    
+	    new G4PVPlacement(rotationMatrix,                         
+			      G4ThreeVector(jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLengthShort,ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,-fTargetLength/2+fArapucaWallgap),
+			      fLogicArapuca2,              //logical volume                         
+			      "Arapuca",                  //name             
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nArapuca3++,0);                          //copy number   
+
+	    // HIbar, HFront, HBack
+	    new G4PVPlacement(rotationMatrix, 
+			      G4ThreeVector(jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLengthShort,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,-fTargetLength/2+fArapucaWallgap), //cm
+			      fLogicHIbar,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+	    new G4PVPlacement(rotationMatrix, 
+			      G4ThreeVector(jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLengthShort,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,-1.5*fArapucaThickness/2.-fHbarThickness/2.-fTargetLength/2+fArapucaWallgap), //cm
+			      fLogicHBack,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+	    new G4PVPlacement(rotationMatrix, 
+			      G4ThreeVector(jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLengthShort,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,+1.5*fArapucaThickness/2.+fHbarThickness/2.-fTargetLength/2+fArapucaWallgap), //cm
+			      fLogicHFront,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+
+
+
+	    // pos z Target (inside cryo) wall	    
+	    new G4PVPlacement(rotationMatrix,                         
+			      G4ThreeVector(jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLengthShort,ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,fTargetLength/2-fArapucaWallgap),  
+			      fLogicArapuca2,              //logical volume                         
+			      "Arapuca",                  //name                     
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nArapuca4++,0);                          //copy number
+
+	    // HIbar, HFront, HBack
+	    new G4PVPlacement(rotationMatrix, 
+			      G4ThreeVector(jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLengthShort,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,fTargetLength/2-fArapucaWallgap), //cm
+			      fLogicHIbar,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+	    new G4PVPlacement(rotationMatrix, 
+			      G4ThreeVector(jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLengthShort,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,+1.5*fArapucaThickness/2.+fHbarThickness/2.+fTargetLength/2-fArapucaWallgap), //cm
+			      fLogicHBack,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+	    new G4PVPlacement(rotationMatrix, 
+			      G4ThreeVector(jj*fArapucaSpacing+signj*(fabs(jj)-0.5)*fArapucaLengthShort,fArapucaHeight/2.+fArapucaSpacing/2. +ii*fArapucaSpacing+signi*(fabs(ii)-0.5)*fArapucaHeight,-1.5*fArapucaThickness/2.-fHbarThickness/2.+fTargetLength/2-fArapucaWallgap), //cm
+			      fLogicHFront,              //logical volume                         
+			      "Hbar",                  //name                         
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nhbar++,0);                          //copy number
+
+	  }
+      }
+
+
+
+      *rotationMatrix = G4RotationMatrix();
+      rotationMatrix->rotateY(90.*deg);
+
+    }
+
+  else if (component=="Cathode") 
+    {
+      std::cout << "DetectorConstruction::DetAPEX: Placing  Arapucas in central VD cathode. Code Not built: QUITTING." << std::endl;
+      exit(0);
+      *rotationMatrix = G4RotationMatrix();
+      rotationMatrix->rotateZ(90.*deg);
+
+      /*
+      if (nSiPM4 > (2*numHeight*numLength+numHeight*numLength)) // if this is true its cuz we've already placed a bunch of SiPMs and should start our Cathode count at this value.
+	nSiPMC = nSiPM4;
+
+      for (int ii=-numLateral/2; ii<=numLateral/2; ii++)
+      {
+	for (int jj=-numLength/2; jj<=numLength/2; jj++)
+	  {
+
+	    if (!(numLateral%2) && ii==int(numLateral/2)) // if numLateral is even we need to stagger placement by 0.5 integer and skip the last one.
+	      continue;
+	    if (!(numLength%2) && jj==int(numLength/2)) // if numLength is even we need to stagger placement by 0.5 integer and skip the last one.
+	      continue;
+
+	    new G4PVPlacement(rotationMatrix, 
+			      G4ThreeVector((ii+offsetLat)*(fSiPMSize+2*halfSpacing),0.0,(jj+offsetLength)*(fSiPMSize+2*halfSpacing)),   //cm
+			      fLogicSiPM,              //logical volume                         
+			      "SiPM",                  //name                           
+			      logiMother,                      //mother  volume
+			      false,                       //no boolean operation
+			      nSiPMC++,0);                          //copy number   
+
+	  }
+      }
+      */
+    }
+
+  else
+    {
+      std::cout << "DetAPEX: No entiendo where to poner los bars/arapucas."  << std::endl;
+    }
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........OAoooOO0OOooo......
