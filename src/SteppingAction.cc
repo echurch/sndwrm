@@ -97,7 +97,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
 	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
 
-      if (( eVname.find("Arapuca")!=std::string::npos || (lVolume->GetName()).find("Arapuca")!=std::string::npos ) and (pID==0 || pID==-22))
+      //      if (( eVname.find("Arapuca")!=std::string::npos || (lVolume->GetName()).find("Arapuca")!=std::string::npos ) and (pID==0 || pID==-22))
+      if ( (eVname.find("Arapuca")!=std::string::npos)  and (pID==0 || pID==-22))
 	iVol = 4;
     }
 
@@ -164,12 +165,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   if (iVol!=4 and fDetector->GetAPEX()) return; // do not fill the steps TTree if we haven't stepped into an Arapuca
   
+  const G4ThreeVector tspos(track->GetVertexPosition()); // Let's grab the opt photon's point of origin, not the step's, which may not be the same thing. EC, 16-Aug-2023.
   analysisManager->FillNtupleDColumn(id,0, edepStep);
   analysisManager->FillNtupleDColumn(id,1, time/s);
   analysisManager->FillNtupleDColumn(id,2, weight);
-  analysisManager->FillNtupleDColumn(id,3, pos[0]/mm);
-  analysisManager->FillNtupleDColumn(id,4, pos[1]/mm);
-  analysisManager->FillNtupleDColumn(id,5, pos[2]/mm);
+  analysisManager->FillNtupleDColumn(id,3, tspos[0]/mm);
+  analysisManager->FillNtupleDColumn(id,4, tspos[1]/mm);
+  analysisManager->FillNtupleDColumn(id,5, tspos[2]/mm);
   analysisManager->FillNtupleDColumn(id,6, length/mm);
   analysisManager->FillNtupleDColumn(id,7, event);
   analysisManager->FillNtupleDColumn(id,8, pID);
