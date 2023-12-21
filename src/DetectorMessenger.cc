@@ -181,61 +181,61 @@ DetectorMessenger::~DetectorMessenger()
 
 void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 { 
-  if (command == fTargMatCmd )
-   { fDetector->SetTargetMaterial(newValue);}
+  //if (command == fTargMatCmd )
+  // { fDetector->SetTargetMaterial(newValue);}
 
     // I believe to get desired nesting of volumes, I must go in this order.
-  if (command == fShieldThicknessCmd ) 
-    {fDetector->SetShieldThickness(fShieldThicknessCmd->GetNewDoubleValue(newValue));}
+  //if (command == fShieldThicknessCmd ) 
+    //{fDetector->SetShieldThickness(fShieldThicknessCmd->GetNewDoubleValue(newValue));}
    
-  if (command == fTargLengthCmd ) 
-    { fDetector->SetTargetLength(fTargLengthCmd->GetNewDoubleValue(newValue));}
+ // if (command == fTargLengthCmd ) 
+  //  { fDetector->SetTargetLength(fTargLengthCmd->GetNewDoubleValue(newValue));}
     
-  if (command == fTargRadiusCmd ) 
-    {fDetector->SetTargetRadius(fTargLengthCmd->GetNewDoubleValue(newValue));}
+ // if (command == fTargRadiusCmd ) 
+ //   {fDetector->SetTargetRadius(fTargLengthCmd->GetNewDoubleValue(newValue));}
 
-  if (command == fAcrylicLengthCmd ) 
-    { fDetector->SetAcrylicLength(fAcrylicLengthCmd->GetNewDoubleValue(newValue));}
+ // if (command == fAcrylicLengthCmd ) 
+   // { fDetector->SetAcrylicLength(fAcrylicLengthCmd->GetNewDoubleValue(newValue));}
     
-  if (command == fAcrylicRadiusCmd ) 
-    {fDetector->SetAcrylicRadius(fAcrylicLengthCmd->GetNewDoubleValue(newValue));}
+ // if (command == fAcrylicRadiusCmd ) 
+  //  {fDetector->SetAcrylicRadius(fAcrylicLengthCmd->GetNewDoubleValue(newValue));}
 
 
-  if (command == fInsetRadiusCmd ) 
-    {fDetector->SetInsetRadius(fInsetRadiusCmd->GetNewDoubleValue(newValue));}
+//  if (command == fInsetRadiusCmd ) 
+  //  {fDetector->SetInsetRadius(fInsetRadiusCmd->GetNewDoubleValue(newValue));}
     
-  if (command == fDetectMatCmd )
-    { fDetector->SetDetectorMaterial(newValue);}
+ // if (command == fDetectMatCmd )
+   // { fDetector->SetDetectorMaterial(newValue);}
     
-  if (command == fDetectLengthCmd ) 
-    {fDetector->SetDetectorLength(
-                     fDetectLengthCmd->GetNewDoubleValue(newValue));}
+ // if (command == fDetectLengthCmd ) 
+   // {fDetector->SetDetectorLength(
+       //              fDetectLengthCmd->GetNewDoubleValue(newValue));}
 
-  if (command == fDetectThicknessCmd ) 
-    {fDetector->SetDetectorThickness(
-                     fDetectThicknessCmd->GetNewDoubleValue(newValue));}      
+ // if (command == fDetectThicknessCmd ) 
+   // {fDetector->SetDetectorThickness(
+     //                fDetectThicknessCmd->GetNewDoubleValue(newValue));}      
 
 
 
-  if (command == fSiPMsOnAcrylicCmd ) 
-    {fDetector->SetSiPMsOnAcrylic(
-                     fSiPMsOnAcrylicCmd->GetNewBoolValue(newValue));}      
-  if (command == fSiPMsOnCathodeCmd ) 
-    {fDetector->SetSiPMsOnCathode(
-                     fSiPMsOnCathodeCmd->GetNewBoolValue(newValue));}      
-  if (command == fSiPMSizeCmd ) 
-    {fDetector->SetSiPMSize(
-                     fSiPMSizeCmd->GetNewDoubleValue(newValue));}      
-  if (command == fSiPMThicknessCmd ) 
-    {fDetector->SetSiPMThickness(
-                     fSiPMThicknessCmd->GetNewDoubleValue(newValue));}      
-  if (command == fSiPMPhotoCathodeCoverageCmd ) 
-    {fDetector->SetSiPMPhotoCathodeCoverage(
-                     fSiPMPhotoCathodeCoverageCmd->GetNewDoubleValue(newValue));}      
+ // if (command == fSiPMsOnAcrylicCmd ) 
+   // {fDetector->SetSiPMsOnAcrylic(
+     //                fSiPMsOnAcrylicCmd->GetNewBoolValue(newValue));}      
+ // if (command == fSiPMsOnCathodeCmd ) 
+  //  {fDetector->SetSiPMsOnCathode(
+    //                 fSiPMsOnCathodeCmd->GetNewBoolValue(newValue));}      
+ // if (command == fSiPMSizeCmd ) 
+  //  {fDetector->SetSiPMSize(
+   //                  fSiPMSizeCmd->GetNewDoubleValue(newValue));}      
+ // if (command == fSiPMThicknessCmd ) 
+  //  {fDetector->SetSiPMThickness(
+    //                 fSiPMThicknessCmd->GetNewDoubleValue(newValue));}      
+ // if (command == fSiPMPhotoCathodeCoverageCmd ) 
+  //  {fDetector->SetSiPMPhotoCathodeCoverage(
+   //                  fSiPMPhotoCathodeCoverageCmd->GetNewDoubleValue(newValue));}      
 
-  if (command == fArapucasInCageCmd ) 
-    {fDetector->SetArapucasInCage(
-                     fArapucasInCageCmd->GetNewBoolValue(newValue));}      
+ // if (command == fArapucasInCageCmd ) 
+   // {fDetector->SetArapucasInCage(
+     //                fArapucasInCageCmd->GetNewBoolValue(newValue));}      
 
 }
 

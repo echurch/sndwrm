@@ -32,16 +32,21 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #ifndef DetectorConstruction_h
-#define DetectorConstruction_h 1
-
+#define DetectorConstruction_h 
+#include "G4Material.hh"
+#include "G4Box.hh"
+#include "G4LogicalVolume.hh"
+#include "DetectorMessenger.hh"
+#include "G4PVPlacement.hh"
+#include "G4SubtractionSolid.hh"
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
-
-#include "MaterialPropertyLoader.hh"
-
-class G4LogicalVolume;
-class G4Material;
-class DetectorMessenger;
+#include "G4OpticalSurface.hh"
+#include "G4LogicalSkinSurface.hh"
+//class G4LogicalVolume;
+//class G4Material;
+//class DetectorMessenger;
+//class G4Box;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -58,8 +63,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     
     void SetTargetLength (G4double value);
     void SetTargetRadius (G4double value);
-    void SetAcrylicLength (G4double value);
-    void SetAcrylicRadius (G4double value);
     void SetShieldThickness (G4double value);
     void SetInsetRadius (G4double value);
     void SetTargetMaterial (G4String);
@@ -68,29 +71,19 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetDetectorThickness(G4double value);  
     void SetDetectorRadius(G4double value);  
     void SetDetectorMaterial(G4String);               
-         
-  void SetSiPMsOnAcrylic(G4bool);
-  void SetSiPMsOnCathode(G4bool);
-  void SetSiPMSize(G4double);
-  void SetSiPMThickness(G4double);
-  void SetSiPMPhotoCathodeCoverage(G4double);
-  void SetArapucasInCage(G4bool);
-  
+                   
     void PrintParameters();
     
   public:
-      
+    
     G4double GetTargetLength();
     G4double GetTargetRadius();
-    G4double GetAcrylicLength();
-    G4double GetAcrylicRadius();
     G4double GetShieldThickness();
     G4double SetInsetRadius();
     G4Material* GetTargetMaterial();       
     G4Material* GetShieldMaterial(); 
     G4LogicalVolume* GetLogicTarget();
-    G4LogicalVolume* GetLogicSiPM();
-    bool GetAPEX() {return fAPEX;};
+    
     G4double GetDetectorLength();
     G4double GetDetectorThickness();
     G4double GetDetectorRadius();
@@ -101,51 +94,15 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   
     G4double           fTargetLength; 
     G4double           fTargetRadius;
-    G4double           fAcrylicLength; 
-    G4double           fAcrylicRadius;
     G4double           fShieldThickness;
-    G4double           fG10Thickness;
-    G4double           fWoodThickness;
-    G4double           fAcrylicThickness;
-    G4double           fTPBThickness; 
-    G4double           fColdSkinThickness; 
     G4double           fInsetRadius;
-    bool               fSiPMsOnAcrylic;
-    bool               fSiPMsOnCathode;
-    bool               fAPEX;
-    G4double           fSiPMSize;
-    G4double           fSiPMThickness;
-    G4double           fSiPMPhotoCathodeCoverage;
     G4Material*        fTargetMater;
     G4Material*        fShieldMater;
-    G4Material*        fG10Mater;
-    G4Material*        fWoodMater;
-    G4Material*        fColdSkinMater;
-    G4Material*        fAcrylicMater;
-    G4Material*        fSiPMMater;
-    G4Material*        fTPBMater;
-    G4Material*        fArapucaMater;
-    G4Material*        fAluminumMater;
     G4LogicalVolume*   fLogicTarget;
     G4LogicalVolume*   fLogicShield;
-    G4LogicalVolume*   fLogicG10;
-    G4LogicalVolume*   fLogicWood;
-    G4LogicalVolume*   fLogicColdSkin;
-    G4LogicalVolume*   fLogicAcrylic;
-    G4LogicalVolume*   fLogicTPB;
-    G4LogicalVolume*   fLogicSiPM;
-    G4LogicalVolume*   fLogicArapuca;
-    G4LogicalVolume*   fLogicArapuca2; // shorter
-  
-    G4LogicalVolume*   fLogicHBack;
-    G4LogicalVolume*   fLogicHIbar;
-    G4LogicalVolume*   fLogicHFront;
-    G4LogicalVolume*   fLogicHBackEnd;
-    G4LogicalVolume*   fLogicHIbarEnd;
-    G4LogicalVolume*   fLogicHFrontEnd;
                  
     G4double           fDetectorLength;
-    G4double           fDetectorThickness;
+  G4double           fDetectorThickness;
     G4double           fDetectorRadius;
     G4Material*        fDetectorMater;
     G4LogicalVolume*   fLogicDetector;
@@ -153,18 +110,76 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double           fWorldLength;
     G4double           fWorldRadius;
     G4Material*        fWorldMater;     
-    G4VPhysicalVolume* fPhysiWorld;
-                
+    
+     G4double fthickness;
+
+  G4double fLatY;
+  G4double fLatZ;
+
+  G4double fwindow;
+  G4double fwindowY;
+  G4double fwindowZ;
+
+  G4double      fWorldSizeX;
+  G4double      fWorldSizeY;
+  G4double      fWorldSizeZ;
+  G4double      fCryostat_x;
+  G4double      fCryostat_y;
+  G4double      fCryostat_z;
+  G4double      fFC_x;
+  G4double      fFC_y;
+  G4double      fFC_z;
+  G4double      fFCOut_x;
+  G4double      fFCOut_y;
+  G4double      fFCOut_z;
+  G4double      fAra_x;
+  G4double      fAra_y;
+  G4double      fAra_z;
+  G4double      fAra_offset;
+  G4double      fAras_yspacing;
+
+  G4double      fCathode_x;
+  G4double      fCathode_z;
+  G4double      fAPA_x;
+  G4double      fAPA_y;
+  G4double      fAPA_z;
+
+  G4double fptp_width;
+
+  G4double fvert_bar_x;
+  G4double fvert_bar_y;
+  G4double fvert_bar_z;
+
+
+// Materials
+
+   G4Material*   fDefaultMaterial;
+   G4Material*   fSteel;
+   G4Material*   fAluminium;
+   G4Material*   fG10;
+   G4Material*   fBase;
+   G4Material*   facrylic;
+   G4Material*   fPTP;
+
+   G4VPhysicalVolume* fPhysiWorld;
+   G4LogicalVolume*   fLogicWorld;
+   G4Box*             fSolidWorld;
+
+   G4VPhysicalVolume* fPhysiVol;
+   G4LogicalVolume*   fLogicVol;
+   G4Box*             fSolidVol;
+
+
+
     DetectorMessenger* fDetectorMessenger;
 
   private:
     
     void               DefineMaterials();
-    G4VPhysicalVolume* ConstructVolumes();     
-    void               DetSiPMs(G4String , G4LogicalVolume* );
-    void               DetAPEX (G4String , G4LogicalVolume* );
-    MaterialPropertyLoader* fMPL;
-
+    G4VPhysicalVolume* ConstructVolumes();        
+    G4VPhysicalVolume* ConstructLine();
+ 
+ 
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

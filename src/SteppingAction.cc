@@ -74,8 +74,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
 
 
-  if (lVolume == fDetector->GetLogicTarget())   iVol = 1;
-  if (lVolume == fDetector->GetLogicDetector()) iVol = 2;
+//  if (lVolume == fDetector->GetLogicTarget())   iVol = 1;
+ // if (lVolume == fDetector->GetLogicDetector()) iVol = 2;
 
 
   // count processes
@@ -94,12 +94,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     {
       eVname = eVolume->GetName();  
       //            std::cout << "SteppingAction eVname: " << eVname << std::endl;
-      if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
+/*      if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
 	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
 
       //      if (( eVname.find("Arapuca")!=std::string::npos || (lVolume->GetName()).find("Arapuca")!=std::string::npos ) and (pID==0 || pID==-22))
       if ( (eVname.find("Arapuca")!=std::string::npos)  and (pID==0 || pID==-22))
-	iVol = 4;
+	Vol = 4;*/
     }
 
 
@@ -163,7 +163,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 	  fEventAction->AddEdep(3, 1.0, time, weight);	  
   }
 
-  if (iVol!=4 and fDetector->GetAPEX()) return; // do not fill the steps TTree if we haven't stepped into an Arapuca
+//  if (iVol!=4 and fDetector->GetAPEX()) return; // do not fill the steps TTree if we haven't stepped into an Arapuca
   
   const G4ThreeVector tspos(track->GetVertexPosition()); // Let's grab the opt photon's point of origin, not the step's, which may not be the same thing. EC, 16-Aug-2023.
   analysisManager->FillNtupleDColumn(id,0, edepStep);
