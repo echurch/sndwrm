@@ -103,7 +103,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       fParticleGun->GetCurrentSource()->GetPosDist()->GetHalfY(),
       fParticleGun->GetCurrentSource()->GetPosDist()->GetHalfZ()};
 
-  std::cout << "GeneratePrimaries() particle requested is " << fParticleGun->GetParticleDefinition() << std::endl;
+  //  std::cout << "GeneratePrimaries() particle requested is " << fParticleGun->GetParticleDefinition() << std::endl;
 
   if (fParticleGun->GetParticleDefinition() == G4Geantino::Geantino()) {  
     std::cout << "GeneratePrimaries: detect that a 'photon bomb' is to be created." << std::endl;

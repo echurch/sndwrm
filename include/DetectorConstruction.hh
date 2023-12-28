@@ -95,14 +95,17 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double           fTargetLength; 
     G4double           fTargetRadius;
     G4double           fShieldThickness;
+    G4double           fWoodThickness;
     G4double           fInsetRadius;
     G4Material*        fTargetMater;
     G4Material*        fShieldMater;
+    G4Material*        fWoodMater;
     G4LogicalVolume*   fLogicTarget;
     G4LogicalVolume*   fLogicShield;
+    G4LogicalVolume*   fLogicWood;
                  
     G4double           fDetectorLength;
-  G4double           fDetectorThickness;
+    G4double           fDetectorThickness;
     G4double           fDetectorRadius;
     G4Material*        fDetectorMater;
     G4LogicalVolume*   fLogicDetector;
@@ -126,6 +129,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double      fCryostat_x;
   G4double      fCryostat_y;
   G4double      fCryostat_z;
+  G4double      fColdSkinThickness;
+  G4double      fWarmSkinThickness;
   G4double      fFC_x;
   G4double      fFC_y;
   G4double      fFC_z;
@@ -155,6 +160,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
    G4Material*   fDefaultMaterial;
    G4Material*   fSteel;
+   G4Material*   fDUNESteel;
    G4Material*   fAluminium;
    G4Material*   fG10;
    G4Material*   fBase;

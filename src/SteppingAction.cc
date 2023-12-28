@@ -96,10 +96,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       //            std::cout << "SteppingAction eVname: " << eVname << std::endl;
 /*      if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
 	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
-
-      //      if (( eVname.find("Arapuca")!=std::string::npos || (lVolume->GetName()).find("Arapuca")!=std::string::npos ) and (pID==0 || pID==-22))
-      if ( (eVname.find("Arapuca")!=std::string::npos)  and (pID==0 || pID==-22))
-	Vol = 4;*/
+*/
+      if (( eVname.find("Arapuca")!=std::string::npos || (lVolume->GetName()).find("Arapuca")!=std::string::npos ) and (pID==0 || pID==-22))
+	//	if ( (eVname.find("Arapuca")!=std::string::npos)  and (pID==0 || pID==-22))
+	{
+	  iVol = 4;
+	  //	  std::cout << "SteppingAction: Optical photon hit an Arapuca: " << eVname << std::endl;
+	}
     }
 
 
@@ -144,6 +147,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   // If an optical photon is born outside fiducialvolume let's kill it. EC, 4-Aug-2021.
   // Idea being that we'd reco this vtx outside our fidv and cut the event.
+  /*
   if ((pID == 0 or pID == -22 ) and
       ( ( abs(pos[0]) > fidv.at(0) ) or ( abs(pos[1]) > fidv.at(1) ) or ( abs(pos[2]) > fidv.at(2) ) ) 
       //      and track->GetCurrentStepNumber() <= 1  // seems ok looking at steps, but concerned it's biasing. EC, 5-Aug-2021.
@@ -154,7 +158,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       track->SetTrackStatus(fStopAndKill);
       return;
     }
-
+  */
 
   if (iVol!=3)
     fEventAction->AddEdep(iVol, edepStep, time, weight);
@@ -163,6 +167,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 	  fEventAction->AddEdep(3, 1.0, time, weight);	  
   }
 
+  //  if (iVol==4)
+    //    std::cout << "Hit Arapuca, evolume/copyNo, particle: " << eVname << "/" << eVolume->GetCopyNo() << ", " << pID << std::endl;
 //  if (iVol!=4 and fDetector->GetAPEX()) return; // do not fill the steps TTree if we haven't stepped into an Arapuca
   
   const G4ThreeVector tspos(track->GetVertexPosition()); // Let's grab the opt photon's point of origin, not the step's, which may not be the same thing. EC, 16-Aug-2023.

@@ -97,6 +97,10 @@ void DetectorConstruction::DefineMaterials()
   G4Element*  Ni = new G4Element(name="Niquel",symbol="Ni",z=28.,58.6934*g/mole);
   G4Element*  Si = new G4Element(name="Silicon",symbol="Si",z=14.,28.085*g/mole);
   G4Element*  Cr = new G4Element(name="Chromium",symbol="Cr",z=24.,51.9961*g/mole);
+  G4Element* N  = new G4Element("Nitrogen", "N", 7, 14.01*g/mole);
+  G4Element* Mn  = new G4Element("Manganese","Mn", 25, 54.94*g/mole);
+  G4Element* Cu  = new G4Element("Copper","Cu", 29, 63.55*g/mole);
+  
   G4NistManager * man = G4NistManager::Instance();
 
   G4Material* StainlessSteel = new G4Material(name="StainlessSteel",7.93*g/cm3,nel=4);//STEEL_STAINLESS_Fe7Cr2Ni
@@ -105,6 +109,17 @@ void DetectorConstruction::DefineMaterials()
   StainlessSteel->AddElement(Fe, 0.7298);
   StainlessSteel->AddElement(Ni, 0.0900);
 
+  G4int ncomponents;
+  G4double fractionmass;
+  fDUNESteel=new G4Material("DUNESteel"/*SS407L*/,7.93*g/cm3, ncomponents=7);
+  fDUNESteel->AddElement(Fe,fractionmass=95.8/100.);
+  fDUNESteel->AddElement(Mn,fractionmass=1.8/100.);
+  fDUNESteel->AddElement(Ni,fractionmass=0.8/100.);
+  fDUNESteel->AddElement(Si,fractionmass=0.6/100.);
+  fDUNESteel->AddElement(Cu,fractionmass=0.5/100.);
+  fDUNESteel->AddElement(Cr,fractionmass=0.3/100.);
+  fDUNESteel->AddElement(C, fractionmass=0.2/100.);
+  
   G4Material* G10 = new G4Material(name="G10",1.7*g/cm3,nel=4);
   G10->AddElement(Si, 0.2805);
   G10->AddElement(O, 0.3954);
@@ -118,6 +133,23 @@ void DetectorConstruction::DefineMaterials()
   G4Material* ptp_mat =  new G4Material(name = "ptp_mat", 1.079*g/cm3, nel = 2); //p-Terphenyl
   ptp_mat->AddElement (C, natoms=18);
   ptp_mat->AddElement (H, natoms=14);
+
+  //Foam. From https://indico.fnal.gov/event/20144/session/19/contribution/267/material/slides/1.pdf 
+
+  G4int number_of_atoms;
+  G4Material *foam=new G4Material("Foam",0.09*g/cm3, ncomponents=4);
+  foam->AddElement(C,number_of_atoms=54);
+  foam->AddElement(O,number_of_atoms=15);
+  foam->AddElement(N,number_of_atoms=4);
+  foam->AddElement(H,number_of_atoms=60);
+
+  G4Material *wood=new G4Material("Wood",0.5*g/cm3, ncomponents=3);
+  wood->AddElement(C,number_of_atoms=50);
+  wood->AddElement(O,number_of_atoms=44);
+  wood->AddElement(H,number_of_atoms=6);
+
+  fShieldMater =  foam ;
+  fWoodMater =  wood ;
   
   /*const G4int nEntries = 6;
   G4double PhotonEnergy[nEntries] =
@@ -254,25 +286,72 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
                                  false,			//no boolean operation
                                  0);			//copy number
 
-  G4Box* fSolidCryostat = new G4Box("Cryostat",(fCryostat_x/2+0.1)*m, (fCryostat_y/2.0+0.1)*m,(fCryostat_z/2+0.1)*m); //make it a little bigger to avoid overlaps
-  /*G4LogicalVolume* fLogicCryostat = new G4LogicalVolume(fSolidCryostat,fDefaultMaterial,"Cryostat");
-  G4VPhysicalVolume* fPhysCryostat = new G4PVPlacement(0,G4ThreeVector(0,0,0),"Cryostat",
-                                 fLogicCryostat,     //its logical volume
-                                 fPhysiWorld,    	//its mother  volume
-                                 false,			//no boolean operation
-				 0,
-				 true); //check for overlaps*/
+  // Beginning of cryostat construction: coldskin, wood, foam, nougat, etc., ..., warmskin
 
-  G4Box* ShellOut = new G4Box("ShellOut",(fCryostat_x/2+0.3)*m, (fCryostat_y/2.0+0.3)*m,(fCryostat_z/2+0.3)*m);
-  G4SubtractionSolid* fShell = new G4SubtractionSolid("Shell", ShellOut, fSolidCryostat);
-  G4LogicalVolume* fLogicShell = new G4LogicalVolume(fShell,fSteel,"Shell");
-  G4VPhysicalVolume* fPhysShell = new G4PVPlacement(0,G4ThreeVector(0,0,0),"Shell",
+  //coldskin
+  fColdSkinThickness =  0.012; //m
+  G4double Offset(0.010); //m
+  G4Box* fSolidCryostat = new G4Box("Cryostat",(fCryostat_x/2+Offset)*m, (fCryostat_y/2.0+Offset)*m,(fCryostat_z/2+Offset)*m); //make it a little bigger to avoid overlaps
+  G4Box* ShellOut = new G4Box("ShellOut",(fCryostat_x/2+fColdSkinThickness+Offset)*m, (fCryostat_y/2.0+fColdSkinThickness+Offset)*m,(fCryostat_z/2+fColdSkinThickness+Offset)*m);
+  G4SubtractionSolid* fShell = new G4SubtractionSolid("ColdSkin", ShellOut, fSolidCryostat);
+  G4LogicalVolume* fLogicShell = new G4LogicalVolume(fShell,fDUNESteel,"ColdSkin");
+  G4VPhysicalVolume* fPhysShell = new G4PVPlacement(0,G4ThreeVector(0,0,0),"ColdSkin",
                                  fLogicShell,     //its logical volume
                                  fPhysiWorld,    	//its mother  volume
                                  false,			//no boolean operation
-                                 0);
+						    0, true);
+  
+  // foam
+  fShieldThickness = 0.776 ; //m 
+  G4Box* sOutShield = new G4Box("InShield", (fCryostat_x/2+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_z/2.+fShieldThickness+fColdSkinThickness+Offset)*m);
+  G4SubtractionSolid *sShield = new G4SubtractionSolid("Foam",sOutShield, ShellOut);  
 
-  //Bulk box for wls optical properties tests
+  fLogicShield = new G4LogicalVolume(sShield,       //shape
+                             fShieldMater,            //material
+                             "Foam");               //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+                           fLogicShield,              //logical volume
+                           "Foam",                  //name
+			     fLogicWorld,                      //mother  volume
+                           false,                       //no boolean operation
+			     0, true);                          //copy number
+
+  // wood
+  fWoodThickness = 0.024; //m
+  G4Box* sOutWood = new G4Box("InWood", (fCryostat_x/2+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_z/2.+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m);
+  G4SubtractionSolid *sWood = new G4SubtractionSolid("Wood",sOutWood, sOutShield);  
+
+  fLogicWood = new G4LogicalVolume(sWood,       //shape
+                             fWoodMater,            //material
+                             "Wood");               //name
+                               
+           new G4PVPlacement(0,                         //no rotation
+			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
+                           fLogicWood,              //logical volume
+                           "Wood",                  //name
+			   fLogicWorld,                      //mother  volume
+                           false,                       //no boolean operation
+			     0, true);                          //copy number
+
+  // warmskin
+  fWarmSkinThickness =  0.024 ; //m
+  G4Box* ShellOutW = new G4Box("ShellOut",(fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2.0+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m,(fCryostat_z/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m);
+  G4SubtractionSolid* fShellW = new G4SubtractionSolid("WarmSkin", ShellOutW, sOutWood);
+  G4LogicalVolume* fLogicShellW = new G4LogicalVolume(fShellW,fDUNESteel,"WarmSkin");
+  G4VPhysicalVolume* fPhysShellW = new G4PVPlacement(0,G4ThreeVector(0,0,0),"WarmSkin",
+                                 fLogicShellW,     //its logical volume
+                                 fPhysiWorld,    	//its mother  volume
+                                 false,			//no boolean operation
+						    0, true);
+    std::cout << "Checking units on warm CryoSkin. xout size [mm]: " << (fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m << std::endl;
+
+  
+
+
+
+	   //Bulk box for wls optical properties tests
 
   /*G4Box* bulk = new G4Box("bulk",1.0*um,0.5*m,0.5*m);
   G4LogicalVolume* lbulk = new G4LogicalVolume(bulk,fPTP,"bulk");
@@ -468,10 +547,10 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaR"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaR"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname3 = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
       name2 = "ArapucaL"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaL"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname2 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
       
       ypos+=(fAra_y+fAras_yspacing);
     }
@@ -488,10 +567,10 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaR"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaR"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname3 = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
       name2 = "ArapucaL"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaL"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname2 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
       ypos-=(fAra_y+fAras_yspacing);
     }
     
@@ -523,10 +602,10 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaF"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaF"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname3 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
       name2 = "ArapucaB"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaB"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname2 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
       ypos+=(fAra_y+fAras_yspacing);
     }
     
@@ -540,10 +619,10 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaF"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaF"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname3 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
       name2 = "ArapucaB"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaB"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname2 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
       ypos-=(fAra_y+fAras_yspacing);
     }
     
