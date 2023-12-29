@@ -532,6 +532,7 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
    
   int ptp_cnt = 0; G4VPhysicalVolume* ptp_phys;
   G4String name, physname, name2, physname2;
+  int nArapucaEC(0);
   for(int i=0; i<ncol; i++){
     ypos=(-fCryostat_y/2.0) + (fCryostat_y/2.0 - (nrows*fAra_y+(nrows-1)*fAras_yspacing))/2 + fAra_y/2;
     //lower edge of cryostat + space between closest edges of cryostat & lower XARAPUCA + y_arapuca_side/2 in m
@@ -547,10 +548,10 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaR"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaR"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname3 = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname3 = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
       name2 = "ArapucaL"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaL"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
       
       ypos+=(fAra_y+fAras_yspacing);
     }
@@ -567,14 +568,16 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaR"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaR"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname3 = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname3 = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
       name2 = "ArapucaL"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaL"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
       ypos-=(fAra_y+fAras_yspacing);
     }
     
   }
+
+  std::cout << "DetectorConstruction: " << nArapucaEC << " standard Arapucas placed." << std::endl;
   
   //Shorter side
   G4Box* ArapucaShort = new G4Box("ArapucaShort",fAra_x/2*m,fAra_y/2*m,(darapuca/2-1e-3)*m);
@@ -602,10 +605,10 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaF"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaF"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname3 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname3 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
       name2 = "ArapucaB"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaB"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
       ypos+=(fAra_y+fAras_yspacing);
     }
     
@@ -619,15 +622,16 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaF"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaF"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname3 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname3 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
       name2 = "ArapucaB"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaB"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
+      G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
       ypos-=(fAra_y+fAras_yspacing);
     }
     
   }
-  
+
+  std::cout << "DetectorConstruction: " << nArapucaEC << " total Arapucas placed (last ones are short)." << std::endl;
   //vertical bars on longer laterals
   ncol = 60;
   G4Box* VerticalBar = new G4Box("VerticalBar",fvert_bar_x/2*m,fvert_bar_y/2*m,fvert_bar_z/2*m);
