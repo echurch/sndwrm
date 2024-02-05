@@ -134,6 +134,11 @@ void DetectorConstruction::DefineMaterials()
   ptp_mat->AddElement (C, natoms=18);
   ptp_mat->AddElement (H, natoms=14);
 
+  G4Material* Mylar =  new G4Material("Mylar", density= 1.40*g/cm3, ncomponents=3);
+  Mylar->AddElement(H, natoms=4);
+  Mylar->AddElement(C, natoms=5);
+  Mylar->AddElement(O, natoms=2);
+
   //Foam. From https://indico.fnal.gov/event/20144/session/19/contribution/267/material/slides/1.pdf 
 
   G4int number_of_atoms;
@@ -255,6 +260,7 @@ void DetectorConstruction::DefineMaterials()
   fSteel = StainlessSteel;
   fAluminium = Aluminium;
   fG10 = G10;
+  fMylar = Mylar;
   // DISPLAY MATERIALS
   G4cout << G4endl << *(G4Material::GetMaterialTable()) << G4endl;
   G4cout << " " << G4endl;
@@ -528,9 +534,11 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
 
    G4Box* ptp_film = new G4Box("PTP_film",fptp_width/2.0,fAra_y/2*m,(darapuca/2-1e-3)*m);
      G4LogicalVolume* fLogicPTP = new G4LogicalVolume(ptp_film,fPTP,"PTP_film");
+     G4LogicalVolume* fLogicAB = new G4LogicalVolume(ptp_film,fMylar,"ArapucaBackCoating");
 
    
   int ptp_cnt = 0; G4VPhysicalVolume* ptp_phys;
+  int myl_cnt = 0; G4VPhysicalVolume* myl_phys;
   G4String name, physname, name2, physname2;
   int nArapucaEC(0);
   for(int i=0; i<ncol; i++){
@@ -552,6 +560,11 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       name2 = "ArapucaL"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaL"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
       G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
+
+      myl_phys = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset)*m-fptp_width/2,ypos*m,zpos*m),"MYL_film", fLogicAB, fPhysiWorld, false,myl_cnt, true);
+      myl_cnt++;
+      myl_phys = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset)*m+fptp_width/2,ypos*m,zpos*m),"MYL_film", fLogicAB, fPhysiWorld, false,myl_cnt, true);
+      myl_cnt++;
       
       ypos+=(fAra_y+fAras_yspacing);
     }
@@ -572,6 +585,13 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       name2 = "ArapucaL"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaL"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
       G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
+
+      myl_phys = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset)*m-fptp_width/2,ypos*m,zpos*m),"MYL_film", fLogicAB, fPhysiWorld, false,myl_cnt, true);
+      myl_cnt++;
+      myl_phys = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset)*m+fptp_width/2,ypos*m,zpos*m),"MYL_film", fLogicAB, fPhysiWorld, false,myl_cnt, true);
+      myl_cnt++;
+
+      
       ypos-=(fAra_y+fAras_yspacing);
     }
     
@@ -585,9 +605,11 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
 
   G4Box* ptps_film = new G4Box("PTPs_film",fptp_width/2.0,fAra_y/2*m,(darapuca/2-1e-3)*m);
     G4LogicalVolume* fLogicPTPs = new G4LogicalVolume(ptps_film,fPTP,"PTPs_film");
+    G4LogicalVolume* fLogicABs = new G4LogicalVolume(ptps_film,fMylar,"ArapucaBackCoatingShort");
   
   ncol=24, nrows=12;
   int ptps_cnt = 0; G4VPhysicalVolume* ptps_phys;
+  int myls_cnt = 0; G4VPhysicalVolume* myls_phys;
 
   G4double xpos;
   
@@ -609,6 +631,12 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       name2 = "ArapucaB"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaB"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
       G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
+
+      myls_phys = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset+fptp_width/2.0)*m),"MYL_film", fLogicABs, fPhysiWorld, false,myls_cnt, true);
+      myls_cnt++;
+      myls_phys = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset-fptp_width/2.0)*m),"MYL_film", fLogicABs, fPhysiWorld, false,myls_cnt, true);
+      myls_cnt++;
+      
       ypos+=(fAra_y+fAras_yspacing);
     }
     
@@ -626,6 +654,12 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       name2 = "ArapucaB"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaB"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
       G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
+
+      myls_phys = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset+fptp_width/2.0)*m),"MYL_film", fLogicABs, fPhysiWorld, false,myls_cnt, true);
+      myls_cnt++;
+      myls_phys = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset-fptp_width/2.0)*m),"MYL_film", fLogicABs, fPhysiWorld, false,myls_cnt, true);
+      myls_cnt++;
+      
       ypos-=(fAra_y+fAras_yspacing);
     }
     
@@ -716,13 +750,13 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
   AnodeSurfaceB->SetMaterialPropertiesTable(AnodeSurface_pt);
   new G4LogicalSkinSurface("AnodeSurface", fLogicAnodeB, AnodeSurfaceB);
 
+  //_____________________________FC REFLECTIVITY CHANGE 0.2 -> 0.7 ______________________________
   G4OpticalSurface* FCSurface = new G4OpticalSurface("FCSurface");
   FCSurface->SetType(dielectric_metal);
   FCSurface->SetModel(unified);
   FCSurface->SetFinish(ground);
   FCSurface->SetSigmaAlpha(0.0*deg); // for vikuit
-  
-  //_____________________________FC REFLECTIVITY CHANGE 0.2 -> 0.7 ______________________________
+
   G4double FC_r[nEntries] = {0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7}; //reflection coef for base
   G4double FC_e[nEntries] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}; //absorption coefficient
   //G4double FC_r[nEntries] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; //reflection coef for base
@@ -735,6 +769,25 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
   FCSurface->SetMaterialPropertiesTable(FCSurface_pt);
   new G4LogicalSkinSurface("FCSurface",fLogicFC,FCSurface);
   new G4LogicalSkinSurface("FCSurfaceShort",fLogicFCShort,FCSurface);
+
+  //_____________________________Mylar REFLECTIVITY 1.0 ______________________________
+  G4OpticalSurface* ArapucaBackSurface = new G4OpticalSurface("ArapucaBackSurface");
+  ArapucaBackSurface->SetType(dielectric_metal);
+  ArapucaBackSurface->SetModel(unified);
+  ArapucaBackSurface->SetFinish(ground);
+  ArapucaBackSurface->SetSigmaAlpha(0.0*deg); // for vikuit
+
+  G4double AB_r[nEntries] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}; //reflection coef for base
+  G4double AB_e[nEntries] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}; //absorption coefficient
+  
+  G4MaterialPropertiesTable* ArapucaBackSurface_pt = new G4MaterialPropertiesTable();
+  
+  ArapucaBackSurface_pt->AddProperty("REFLECTIVITY", PhotonEnergy, AB_r, nEntries);
+  ArapucaBackSurface_pt->AddProperty("EFFICIENCY", PhotonEnergy, AB_e, nEntries);
+  
+  ArapucaBackSurface->SetMaterialPropertiesTable(ArapucaBackSurface_pt);
+  new G4LogicalSkinSurface("ArapucaBackSurface",fLogicAB,ArapucaBackSurface);
+  new G4LogicalSkinSurface("ArapucaBackSurfaceShort",fLogicABs,ArapucaBackSurface);
 
 
   // _________________ CHANGE NEW CRYOSTAT PROPERTIES _____________________________________
