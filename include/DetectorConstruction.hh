@@ -166,6 +166,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
    G4Material*   fBase;
    G4Material*   facrylic;
    G4Material*   fPTP;
+   G4Material*   fMylar;
 
    G4VPhysicalVolume* fPhysiWorld;
    G4LogicalVolume*   fLogicWorld;
