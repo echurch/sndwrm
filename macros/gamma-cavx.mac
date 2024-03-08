@@ -55,7 +55,7 @@
 /gps/ang/type iso
 #/gps/ang/maxtheta 90 deg
 
-/analysis/setFileName cavgam_xwall
+/analysis/setFileName cavgam_xwallvis
 /analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 2. MeV
 /analysis/h1/set 6 100 0. 2. MeV
@@ -68,8 +68,15 @@
 /analysis/ntuple/setActivation 4 true
 /run/printProgress 1000
 /random/setSeeds 1 11
+<<<<<<< HEAD
+/control/execute /rcfs/projects/dunelb/more407/FDM3/sndwrm/macros/vis.mac
+# 1.05104 /cm2/sec gammas incident in narrow sliver plane of LAr, just in cryostat, so on x plane of 12*60 m2 this is 7567488.0/sec.
+# 75 jobs of 100000 evts is about 1 sec exposure.
+/run/beamOn 10
+=======
 /control/execute /Users/chur558/rdecay02/macros/vis.mac
 # 1.05104 /cm2/sec gammas incident in narrow sliver plane of LAr, just in cryostat, so on x plane of 12*60 m2 this is 7567488.0/sec.
 # 75 jobs of 100000 evts is about 1 sec exposure.
 #/run/beamOn 10000
+>>>>>>> 8aa3cd8496140345872008143406452e0167b9cc
 
