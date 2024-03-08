@@ -57,7 +57,7 @@ DetectorConstruction::DetectorConstruction()
   fptp_width = 2.0*um;
   //fptp_width = 10*cm;
 
-  fvert_bar_x = 0.006; //in m
+  fvert_bar_x = 0.075; //in m
   fvert_bar_y = fFC_y/2-0.1;//making it slightly smaller to avoid overlap on cathode
   fvert_bar_z = 0.075;
   
