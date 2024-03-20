@@ -68,7 +68,7 @@
 /analysis/ntuple/setActivation 4 true
 /run/printProgress 1000
 /random/setSeeds 1 11
-/control/execute /rcfs/projects/dunelb/more407/FDM3/sndwrm/macros/vis.mac
+#/control/execute /rcfs/projects/dunelb/more407/FDM3/sndwrm/macros/vis.mac
 # 1.05104 /cm2/sec gammas incident in narrow sliver plane of LAr, just in cryostat, so on x plane of 12*60 m2 this is 7567488.0/sec.
 # 75 jobs of 100000 evts is about 1 sec exposure.
-/run/beamOn 10
+/run/beamOn 100000

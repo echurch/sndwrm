@@ -97,7 +97,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 /*      if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
 	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
 */
-      if (( eVname.find("Arapuca")!=std::string::npos || (lVolume->GetName()).find("Arapuca")!=std::string::npos ) and (pID==0 || pID==-22))
+      if (( eVname.find("Arapuca")!=std::string::npos /* || (lVolume->GetName()).find("Arapuca")!=std::string::npos */ ) and (pID==0 || pID==-22))
 	//	if ( (eVname.find("Arapuca")!=std::string::npos)  and (pID==0 || pID==-22))
 	{
 	  iVol = 4;

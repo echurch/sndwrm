@@ -295,7 +295,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   // Beginning of cryostat construction: coldskin, wood, foam, nougat, etc., ..., warmskin
 
   //coldskin
-  fColdSkinThickness =  0.012; //m
+  fColdSkinThickness =  0.0018; //m
   G4double Offset(0.010); //m
   G4Box* fSolidCryostat = new G4Box("Cryostat",(fCryostat_x/2+Offset)*m, (fCryostat_y/2.0+Offset)*m,(fCryostat_z/2+Offset)*m); //make it a little bigger to avoid overlaps
   G4Box* ShellOut = new G4Box("ShellOut",(fCryostat_x/2+fColdSkinThickness+Offset)*m, (fCryostat_y/2.0+fColdSkinThickness+Offset)*m,(fCryostat_z/2+fColdSkinThickness+Offset)*m);
@@ -325,7 +325,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
 			     0, true);                          //copy number
 
   // wood
-  fWoodThickness = 0.024; //m
+  fWoodThickness = 0.048; //m
   G4Box* sOutWood = new G4Box("InWood", (fCryostat_x/2+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_z/2.+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m);
   G4SubtractionSolid *sWood = new G4SubtractionSolid("Wood",sOutWood, sOutShield);  
 
@@ -342,7 +342,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
 			     0, true);                          //copy number
 
   // warmskin
-  fWarmSkinThickness =  0.024 ; //m
+  fWarmSkinThickness =  0.020 ; //m
   G4Box* ShellOutW = new G4Box("ShellOut",(fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2.0+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m,(fCryostat_z/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m);
   G4SubtractionSolid* fShellW = new G4SubtractionSolid("WarmSkin", ShellOutW, sOutWood);
   G4LogicalVolume* fLogicShellW = new G4LogicalVolume(fShellW,fDUNESteel,"WarmSkin");
