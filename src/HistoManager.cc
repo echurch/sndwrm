@@ -179,9 +179,10 @@ void HistoManager::Book( )
   analysis->FinishNtuple();
   
   analysis->CreateNtuple("T3", "Energy depositions");
-  analysis->CreateNtupleDColumn("EnergyDep");    //column 0
-  analysis->CreateNtupleDColumn("Time");      //column 1
-  analysis->CreateNtupleDColumn("Weight");    //column 2
+  analysis->CreateNtupleDColumn("EnergyDepEvt");    //column 0
+  analysis->CreateNtupleDColumn("EnergyDepQ");      //column 1
+  analysis->CreateNtupleDColumn("EnergyDepL");    //column 2
+  analysis->CreateNtupleDColumn("EnergyDepHit");    //column 3
   analysis->FinishNtuple();
   
   analysis->CreateNtuple("Tracks", "Track Summaries");

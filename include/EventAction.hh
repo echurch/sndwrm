@@ -55,8 +55,13 @@ class EventAction : public G4UserEventAction
   public:
     virtual void BeginOfEventAction(const G4Event*);
     virtual void   EndOfEventAction(const G4Event*);
-    
+   
     void AddEdep (G4int iVol, G4double Edep, G4double time, G4double weight);
+    void AddEdepTot(G4double);
+    void AddEdepL(G4double );
+    void AddEdepLhit(G4double  );
+    void AddEdepQ(G4double );
+
     void SetFiducial(bool fid) {fFiducial = fid;};              
     bool GetFiducial() {return fFiducial;}; 
     void SetProcVtx(const G4ThreeVector &vtx) { procVtx[0] = vtx[0];   procVtx[1] = vtx[1];   procVtx[2] = vtx[2];}
@@ -66,6 +71,7 @@ class EventAction : public G4UserEventAction
   private:
     PrimaryGeneratorAction* fPGA;
     G4double fEdep1,   fEdep2;
+    G4double fEdepEvt, fEdepL, fEdepLhit, fEdepQ;
     G4double fWeight1, fWeight2;
     G4double fTime0;    
     bool fFiducial;

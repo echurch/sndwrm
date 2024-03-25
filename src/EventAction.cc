@@ -79,6 +79,7 @@ EventAction::~EventAction()
 void EventAction::BeginOfEventAction(const G4Event*)
 {
   fEdep1 = fEdep2 = fWeight1 = fWeight2 = 0.;
+  fEdepEvt = fEdepL = fEdepLhit = fEdepQ = 0.0;
   fTime0 = -1*s;
   fFiducial = false;
   procVtx[0] = procVtx[1] = procVtx[2] = 0.0;
@@ -114,6 +115,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+// all these called in SteppingAction::UserSteppingAction()
 void EventAction::AddEdep(G4int iVol, G4double edep,
                                       G4double time, G4double weight)
 {
@@ -131,6 +133,23 @@ void EventAction::AddEdep(G4int iVol, G4double edep,
   // If we ran Marley (vtx!=0) just assume they were run in the fiducial volume. EC, 6-May-2021.
   if (iVol == 3 and (GetFiducial() || vtx[0]!=0.0)) { fEdep2 += edep; fWeight2 += edep*weight; }
 
+}
+
+void EventAction::AddEdepTot(G4double edep)
+{
+  fEdepEvt+=edep;
+}
+void EventAction::AddEdepL(G4double L)
+{
+  fEdepL+=L;
+}
+void EventAction::AddEdepLhit(G4double L)
+{
+  fEdepLhit+=L;
+}
+void EventAction::AddEdepQ(G4double Q)
+{
+  fEdepQ+=Q;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -186,7 +205,13 @@ void EventAction::EndOfEventAction(const G4Event*)
    else 
      analysisManager->FillH1(6, Energy, 1.0);
 
-
+  //fill ntuple EnergyDepositions,Q,L
+   G4int id = 2;
+   analysisManager->FillNtupleDColumn(id,0, fEdepEvt);
+   analysisManager->FillNtupleDColumn(id,1, fEdepQ);
+   analysisManager->FillNtupleDColumn(id,2, fEdepL);
+   analysisManager->FillNtupleDColumn(id,3, fEdepLhit);
+   
    // std::cout << "EventAction::EndOfEventAction(): primaryVtx: " << vtx[0]/m <<"," << vtx[1]/m << "," << vtx[2]/m  << std::endl;
    analysisManager->FillP1(0, fabs(vtx[0]/m) , fEdep2); 
    analysisManager->FillP1(1, fabs(vtx[1]/m) , fEdep2); 

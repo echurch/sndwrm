@@ -86,8 +86,9 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   const G4VProcess* process   = track->GetCreatorProcess();
   G4String processName("null") ;
   if (process)
-    processName = process->GetProcessName();
-
+    {
+      processName = process->GetProcessName();
+    }  
   run->ParticleCount(name,energy,iVol);
   
   std::vector<std::string> procOfInterest({"capt","beta","radioactive"}); // to catch ncapt, Rn222 chain, Ar39, Ar42 chain betas. And primaries with "null".
@@ -97,6 +98,8 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   std::for_each(processName.begin(), processName.end(), [](char & c) {
       c = ::tolower(c);
     });
+
+
 
   /*
   const std::vector<double> fidv {

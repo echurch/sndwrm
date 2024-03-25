@@ -9,20 +9,6 @@
 /run/verbose 0
 /tracking/verbose 0
 
-#
-# set the target/detector geometry
-#/rdecay02/det/setTargetMate G4_SODIUM_IODIDE
-# set the target/detector geometry
-/rdecay02/det/setTargetLength 58 m
-# "Radius" means halfXBox, halfYBox
-/rdecay02/det/setTargetRadius 6 m
-/rdecay02/det/setDetectorLength 20. m
-# Detector"Radius" is set to TargetRadius-InsetRadius
-/rdecay02/det/setInsetRadius 3 m
-# postive puts shield outside cryostat
-#/rdecay02/det/setShieldThickness 40 cm
-# a negative value puts shield inside cryostat
-/rdecay02/det/setShieldThickness -20 cm
 
 
 #
@@ -32,7 +18,7 @@
 #
 # rdm is applied only to the target volume
 /grdm/noVolumes
-/grdm/selectVolume Target
+#/grdm/selectVolume Target
 
 /gps/particle e-
 
@@ -59,9 +45,10 @@
 /gps/pos/type Point
 #/gps/pos/shape Rectangle
 ##/gps/pos/rot1 0 1 0 
-/gps/pos/rot2 0 0 -1
+#/gps/pos/rot2 0 0 -1
 /gps/pos/halfx 6 m
-/gps/pos/halfy 29 m
+/gps/pos/halfy 6 m
+/gps/pos/halfy 30 m
 
 /gps/ang/type iso
 #/gps/ang/maxtheta 90 deg
@@ -77,8 +64,8 @@
 /analysis/ntuple/setActivation 4 true
 /run/printProgress 1000
 
-/control/execute vis.mac
+#/control/execute vis.mac
 
 
 #/run/beamOn 31000000  # 10000
-/run/beamOn 30
+/run/beamOn 30000

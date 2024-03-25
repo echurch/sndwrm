@@ -90,6 +90,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4TouchableHandle touch = endPoint->GetTouchableHandle();
   G4VPhysicalVolume* eVolume = touch->GetVolume();
   G4String eVname("null");
+  G4double W(19.5*1E-6); // eV
+  
   if (eVolume)
     {
       eVname = eVolume->GetName();  
@@ -102,6 +104,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 	{
 	  iVol = 4;
 	  //	  std::cout << "SteppingAction: Optical photon hit an Arapuca: " << eVname << std::endl;
+	  fEventAction->AddEdepLhit(W);
 	}
     }
 
@@ -113,15 +116,46 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   tprocess = aStep->GetPostStepPoint()->GetProcessDefinedStep();
 
+  if (pID != -22)
+    {
+      static G4ParticleDefinition* opticalphoton =
+       G4OpticalPhoton::OpticalPhotonDefinition();
+      const std::vector<const G4Track*>* secondaries =
+       aStep->GetSecondaryInCurrentStep();
+      G4double L(0.0), Q(0.0);
+      for (auto sec: *secondaries)
+      {
+       if(sec->GetDynamicParticle()->GetParticleDefinition() == opticalphoton)
+       {
+         G4String creator_process = sec->GetCreatorProcess()->GetProcessName();
+         if(creator_process == "Cerenkov")
+	   {
+	     L++;
+	   }
+         else if(creator_process == "Scintillation")
+	   {
+	     L++;
+	   }
+	 }
+      }
+      
+      if (edepStep > 0.)
+	{
 
-
+	  // let's capture edep, L, and calculated Q
+	  Q = edepStep/W - L;
+	  fEventAction->AddEdepTot(edepStep);
+	  fEventAction->AddEdepL(L*W);
+	  fEventAction->AddEdepQ(Q*W);
+	}
+    }
 
   if (edepStep <= 0. && (pID!=0 && pID!=-22) ) return; // the deception version of G4 uses -22 for optical photons; my Mac's uses 0.
 
   G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
   G4double weight = aStep->GetPreStepPoint()->GetWeight();   
 
-  //fill ntuple id = 2
+
   G4int id = 4;   
   const G4double length = aStep->GetStepLength();
   const G4ThreeVector pos(aStep->GetPreStepPoint()->GetPosition());
