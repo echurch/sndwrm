@@ -160,6 +160,13 @@ void EventAction::EndOfEventAction(const G4Event*)
  
  // pulse height in target
  //
+  G4int id = 2;
+   analysisManager->FillNtupleDColumn(id,0, fEdepEvt);
+   analysisManager->FillNtupleDColumn(id,1, fEdepQ);
+   analysisManager->FillNtupleDColumn(id,2, fEdepL);
+   analysisManager->FillNtupleDColumn(id,3, fEdepLhit);
+   analysisManager->AddNtupleRow(id);
+
  if (fEdep1 > 0.) {
    fWeight1 /= fEdep1;
 
@@ -206,12 +213,6 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->FillH1(6, Energy, 1.0);
 
   //fill ntuple EnergyDepositions,Q,L
-   G4int id = 2;
-   analysisManager->FillNtupleDColumn(id,0, fEdepEvt);
-   analysisManager->FillNtupleDColumn(id,1, fEdepQ);
-   analysisManager->FillNtupleDColumn(id,2, fEdepL);
-   analysisManager->FillNtupleDColumn(id,3, fEdepLhit);
-   
    // std::cout << "EventAction::EndOfEventAction(): primaryVtx: " << vtx[0]/m <<"," << vtx[1]/m << "," << vtx[2]/m  << std::endl;
    analysisManager->FillP1(0, fabs(vtx[0]/m) , fEdep2); 
    analysisManager->FillP1(1, fabs(vtx[1]/m) , fEdep2); 
