@@ -41,6 +41,7 @@
 #include "G4SubtractionSolid.hh"
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "MaterialPropertyLoader.hh"
 #include "G4OpticalSurface.hh"
 #include "G4LogicalSkinSurface.hh"
 //class G4LogicalVolume;
@@ -185,7 +186,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void               DefineMaterials();
     G4VPhysicalVolume* ConstructVolumes();        
     G4VPhysicalVolume* ConstructLine();
- 
+
+    MaterialPropertyLoader* fMPL;
  
 };
 

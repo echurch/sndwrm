@@ -5,6 +5,9 @@
 // Added modifications should be reported to the original authors for updating authorship
 
 #include "DetectorConstruction.hh"
+#include "MaterialPropertyLoader.hh"
+#include "G4LogicalVolumeStore.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Tubs.hh"
@@ -60,7 +63,8 @@ DetectorConstruction::DetectorConstruction()
   fvert_bar_x = 0.075; //in m
   fvert_bar_y = fFC_y/2-0.1;//making it slightly smaller to avoid overlap on cathode
   fvert_bar_z = 0.075;
-  
+
+  fMPL = new MaterialPropertyLoader();  
 }
 
   
@@ -75,6 +79,13 @@ DetectorConstruction::~DetectorConstruction()
 G4VPhysicalVolume* DetectorConstruction::Construct()
   
 {
+
+  // Now for the purpose of tracking optical photons we do the following to the Argon and TPB to endow them w optical physics properties.
+  // Must wait till this late, cuz MLP works by looping over all Logical Volumes which are only just now established.
+  // Get the logical volume store and assign material properties. MaterialPropLoader() is borrowed, heavily-edited from LArSoft.   
+
+
+
   DefineMaterials();
   return ConstructLine();
 }
@@ -180,8 +191,25 @@ void DetectorConstruction::DefineMaterials()
   lAr_pt->AddProperty("RINDEX", Energy_n_lar, n_lAr, 72);
   lAr_pt->AddProperty("RAYLEIGH", ray_e_lAr, ray_s_lAr, 21);
   lAr_pt->AddProperty("ABSLENGTH", PhotonEnergy, l_lAr, nEntries);
+  lAr_pt->AddConstProperty("FASTTIMECONSTANT", 6. * ns);
+  lAr_pt->AddConstProperty("SLOWTIMECONSTANT", 1590. * ns);
 
-  env_mat->SetMaterialPropertiesTable(lAr_pt);
+  std::vector<double> FastScintEnergies { 6.0,  6.7,  7.1,  7.4,  7.7, 7.9,  8.1,  8.4,  8.5,  8.6,  8.8,  9.0,  9.1,  9.4,  9.8,  10.4,  10.7};
+  std::vector<double> SlowScintEnergies { 6.0,  6.7,  7.1,  7.4,  7.7, 7.9,  8.1,  8.4,  8.5,  8.6,  8.8,  9.0,  9.1,  9.4,  9.8,  10.4,  10.7};
+  std::vector<double> FastScintSpectrumloc { 0.0,  0.04, 0.12, 0.27, 0.44, 0.62, 0.80, 0.91, 0.92, 0.85, 0.70, 0.50, 0.31, 0.13, 0.04,  0.01, 0.0};
+  std::vector<double> SlowScintSpectrumloc { 0.0,  0.04, 0.12, 0.27, 0.44, 0.62, 0.80, 0.91, 0.92, 0.85, 0.70, 0.50, 0.31, 0.13, 0.04,  0.01, 0.0};
+  lAr_pt->AddProperty("FASTCOMPONENT", FastScintEnergies, FastScintSpectrumloc);
+  lAr_pt->AddProperty("SLOWCOMPONENT", SlowScintEnergies, SlowScintSpectrumloc);
+  lAr_pt->AddConstProperty("SCINTILLATIONYIELD", 24000/CLHEP::MeV );
+  lAr_pt->AddConstProperty("YIELDRATIO", 0.3 );
+  lAr_pt->AddConstProperty("RESOLUTIONSCALE", 1.0 );
+  env_mat->GetIonisation()->SetBirksConstant(0.069 * cm / MeV);
+
+  // By commenting out below, and running these lines instead I will enforce the G4_lAr properties set in MaterialPropertiesLoader.
+  env_mat->SetMaterialPropertiesTable(lAr_pt); 
+  //fMPL->SetPropertiesFromServices();  // fills local LArprop class with hard-coded data cutnpasted from fcl file.
+  //fMPL->GetPropertiesFromServices();  // Shoves these into local MaterialTables
+  //fMPL->UpdateGeometry(G4LogicalVolumeStore::GetInstance()); // Finally, loads properties into G4MaterialProperties
   
   const G4int num = 3;
   G4double n_teflon[num] = {1.41, 1.41, 1.41};

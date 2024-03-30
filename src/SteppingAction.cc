@@ -115,14 +115,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4double edepStep = aStep->GetTotalEnergyDeposit();
 
   tprocess = aStep->GetPostStepPoint()->GetProcessDefinedStep();
+  //  if (pID == 11)
+  //    std::cout << "SteppingAction material in which e- step and x,y,z [mm]: " << lVolume->GetMaterial()->GetName()<< ", " << aStep->GetPreStepPoint()->GetPosition()[0] << ", " << aStep->GetPreStepPoint()->GetPosition()[1] << ", " << aStep->GetPreStepPoint()->GetPosition()[2] << std::endl;
 
-  if (pID != -22)
+  if (abs(pID) == 11 && lVolume->GetMaterial()->GetName().find("G4_lAr") != std::string::npos)
     {
       static G4ParticleDefinition* opticalphoton =
        G4OpticalPhoton::OpticalPhotonDefinition();
       const std::vector<const G4Track*>* secondaries =
        aStep->GetSecondaryInCurrentStep();
-      G4double L(0.0), Q(0.0);
+      G4double Lq(0.0), Qq(0.0);
       for (auto sec: *secondaries)
       {
        if(sec->GetDynamicParticle()->GetParticleDefinition() == opticalphoton)
@@ -130,12 +132,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          G4String creator_process = sec->GetCreatorProcess()->GetProcessName();
          if(creator_process == "Cerenkov")
 	   {
-	     L++;
+	     Lq++;
 	   }
          else if(creator_process == "Scintillation")
 	   {
-	     L++;
+	     Lq++;
 	   }
+	 else 
+	   Lq++;
 	 }
       }
       
@@ -143,10 +147,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 	{
 
 	  // let's capture edep, L, and calculated Q
-	  Q = edepStep/W - L;
+	  Qq = edepStep/W - Lq; // smear this by 2-3%
+	  //	  std::cout << "SteppingAction: edepStep [MeV], L, Q, material, stepLength [mm]: " << edepStep << ", " << Lq << ", " << Qq << "," << lVolume->GetMaterial()->GetName() << ", " << aStep->GetStepLength()<< std::endl;
 	  fEventAction->AddEdepTot(edepStep);
-	  fEventAction->AddEdepL(L*W);
-	  fEventAction->AddEdepQ(Q*W);
+	  fEventAction->AddEdepL(Lq*W);
+	  fEventAction->AddEdepQ(Qq*W);
 	}
     }
 

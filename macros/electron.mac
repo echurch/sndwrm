@@ -33,16 +33,16 @@
 
 ### from end cap
 #/gps/position 0 0 -29 m
-#/gps/pos/type Volume
-#/gps/pos/shape Para
+/gps/pos/type Volume
+/gps/pos/shape Para
 #/gps/pos/halfx 6 m
 #/gps/pos/halfy 6 m
 # This is for emitting n's from outside the water shielding
 ##/gps/pos/centre 0. 6.4 0. m
-#/gps/pos/centre 0. 3.0 0. m
-/gps/position 0. 0. 0. m
+/gps/pos/centre 0. 0.0 0. m
+#/gps/position 0. 0. 0. m
 #/gps/pos/type Plane
-/gps/pos/type Point
+#/gps/pos/type Point
 #/gps/pos/shape Rectangle
 ##/gps/pos/rot1 0 1 0 
 #/gps/pos/rot2 0 0 -1
@@ -64,8 +64,8 @@
 /analysis/ntuple/setActivation 4 true
 /run/printProgress 1000
 
-#/control/execute vis.mac
+#/control/execute /rcfs/projects/dunelb/rdecay02/macros/vis.mac
 
 
 #/run/beamOn 31000000  # 10000
-/run/beamOn 30000
+/run/beamOn 3000

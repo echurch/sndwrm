@@ -154,7 +154,7 @@ void EventAction::AddEdepQ(G4double Q)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::EndOfEventAction(const G4Event*)
+void EventAction::EndOfEventAction(const G4Event* G4Evt)
 {
  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
  
@@ -165,6 +165,11 @@ void EventAction::EndOfEventAction(const G4Event*)
    analysisManager->FillNtupleDColumn(id,1, fEdepQ);
    analysisManager->FillNtupleDColumn(id,2, fEdepL);
    analysisManager->FillNtupleDColumn(id,3, fEdepLhit);
+   analysisManager->FillNtupleDColumn(id,4, G4Evt->GetEventID());
+   G4ThreeVector vtxftt(fPGA->GetPrimaryGenerator()->GetParticlePosition());
+   analysisManager->FillNtupleDColumn(id,5, vtxftt[0]);
+   analysisManager->FillNtupleDColumn(id,6, vtxftt[1]);
+   analysisManager->FillNtupleDColumn(id,7, vtxftt[2]);
    analysisManager->AddNtupleRow(id);
 
  if (fEdep1 > 0.) {

@@ -182,7 +182,11 @@ void HistoManager::Book( )
   analysis->CreateNtupleDColumn("EnergyDepEvt");    //column 0
   analysis->CreateNtupleDColumn("EnergyDepQ");      //column 1
   analysis->CreateNtupleDColumn("EnergyDepL");    //column 2
-  analysis->CreateNtupleDColumn("EnergyDepHit");    //column 3
+  analysis->CreateNtupleDColumn("EnergyDepLHit");    //column 3
+  analysis->CreateNtupleDColumn("Event");    //column 4
+  analysis->CreateNtupleDColumn("X");         //column 5
+  analysis->CreateNtupleDColumn("Y");         //column 6
+  analysis->CreateNtupleDColumn("Z");         //column 7
   analysis->FinishNtuple();
   
   analysis->CreateNtuple("Tracks", "Track Summaries");

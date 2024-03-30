@@ -588,11 +588,11 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
 
     // wavelength dependent quantities
 
-    SetMaterialProperty( "Argon", "FASTCOMPONENT", LarProp->FastScintSpectrum(), 1  );
-    SetMaterialProperty( "Argon", "SLOWCOMPONENT", LarProp->SlowScintSpectrum(), 1  );
-    SetMaterialProperty( "Argon", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
-    SetMaterialProperty( "Argon", "ABSLENGTH",     LarProp->AbsLengthSpectrum(), CLHEP::cm );
-    SetMaterialProperty( "Argon", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );
+    SetMaterialProperty( "G4_lAr", "FASTCOMPONENT", LarProp->FastScintSpectrum(), 1  );
+    SetMaterialProperty( "G4_lAr", "SLOWCOMPONENT", LarProp->SlowScintSpectrum(), 1  );
+    SetMaterialProperty( "G4_lAr", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
+    SetMaterialProperty( "G4_lAr", "ABSLENGTH",     LarProp->AbsLengthSpectrum(), CLHEP::cm );
+    SetMaterialProperty( "G4_lAr", "RAYLEIGH",      LarProp->RayleighSpectrum(),  CLHEP::cm );
 
     // Just use Argon optphoton properties for Acrylic
     SetMaterialProperty( "Acrylic", "RINDEX",        LarProp->RIndexSpectrum(),    1  );
@@ -624,17 +624,17 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
 
     // scalar properties
 
-    SetMaterialConstProperty("Argon", "SCINTILLATIONYIELD",  LarProp->ScintYield(true),       1/CLHEP::MeV ); // true = scaled down by prescale in larproperties
-    SetMaterialConstProperty("Argon", "RESOLUTIONSCALE",     LarProp->ScintResolutionScale(), 1);
-    SetMaterialConstProperty("Argon", "FASTTIMECONSTANT",    LarProp->ScintFastTimeConst(),   CLHEP::ns);
-    SetMaterialConstProperty("Argon", "SLOWTIMECONSTANT",    LarProp->ScintSlowTimeConst(),   CLHEP::ns);
-    SetMaterialConstProperty("Argon", "YIELDRATIO",          LarProp->ScintYieldRatio(),      1);
-    //    SetMaterialConstProperty("Argon", "ELECTRICFIELD",       DetProp->Efield(),               CLHEP::kilovolt/CLHEP::cm);
+    SetMaterialConstProperty("G4_lAr", "SCINTILLATIONYIELD",  LarProp->ScintYield(true),       1/CLHEP::MeV ); // true = scaled down by prescale in larproperties
+    SetMaterialConstProperty("G4_lAr", "RESOLUTIONSCALE",     LarProp->ScintResolutionScale(), 1);
+    SetMaterialConstProperty("G4_lAr", "FASTTIMECONSTANT",    LarProp->ScintFastTimeConst(),   CLHEP::ns);
+    SetMaterialConstProperty("G4_lAr", "SLOWTIMECONSTANT",    LarProp->ScintSlowTimeConst(),   CLHEP::ns);
+    SetMaterialConstProperty("G4_lAr", "YIELDRATIO",          LarProp->ScintYieldRatio(),      1);
+    //    SetMaterialConstProperty("G4_lAr", "ELECTRICFIELD",       DetProp->Efield(),               CLHEP::kilovolt/CLHEP::cm);
 
-    SetBirksConstant("Argon",LarProp->ScintBirksConstant(), CLHEP::cm/CLHEP::MeV);
+    SetBirksConstant("G4_lAr",LarProp->ScintBirksConstant(), CLHEP::cm/CLHEP::MeV);
     //    if(DetProp->SimpleBoundary())
     SetReflectances(LarProp->SurfaceReflectances()); // not else, but Also. EC, 12-Feb-2021.
-    //    SetReflectances("Argon", LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
+    //    SetReflectances("G4_lAr", LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
     // SetReflectances("Acrylic", LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
     SetReflectances(LarProp->SurfaceReflectances(), LarProp->SurfaceReflectanceDiffuseFractions());
       //    else
@@ -645,20 +645,20 @@ void MaterialPropertyLoader::SetReflectances(std::map<std::string,std::map<doubl
     if(LarProp->ScintByParticleType())
       {
         // true = scaled down by prescale in larproperties
-        SetMaterialConstProperty("Argon", "PROTONSCINTILLATIONYIELD",  LarProp->ProtonScintYield(true),    1./CLHEP::MeV );
-        SetMaterialConstProperty("Argon", "PROTONYIELDRATIO",          LarProp->ProtonScintYieldRatio(),   1.);
-        SetMaterialConstProperty("Argon", "MUONSCINTILLATIONYIELD",    LarProp->MuonScintYield(true),      1./CLHEP::MeV );
-        SetMaterialConstProperty("Argon", "MUONYIELDRATIO",            LarProp->MuonScintYieldRatio(),     1.);
-        SetMaterialConstProperty("Argon", "KAONSCINTILLATIONYIELD",    LarProp->KaonScintYield(true),      1./CLHEP::MeV );
-        SetMaterialConstProperty("Argon", "KAONYIELDRATIO",            LarProp->KaonScintYieldRatio(),     1.);
-        SetMaterialConstProperty("Argon", "PIONSCINTILLATIONYIELD",    LarProp->PionScintYield(true),      1./CLHEP::MeV );
-        SetMaterialConstProperty("Argon", "PIONYIELDRATIO",            LarProp->PionScintYieldRatio(),     1.);
-        SetMaterialConstProperty("Argon", "ELECTRONSCINTILLATIONYIELD",LarProp->ElectronScintYield(true),  1./CLHEP::MeV );
-        SetMaterialConstProperty("Argon", "ELECTRONYIELDRATIO",        LarProp->ElectronScintYieldRatio(), 1.);
-        SetMaterialConstProperty("Argon", "ALPHASCINTILLATIONYIELD",   LarProp->AlphaScintYield(true),     1./CLHEP::MeV );
-        SetMaterialConstProperty("Argon", "ALPHAYIELDRATIO",           LarProp->AlphaScintYieldRatio(),    1.);
-        SetMaterialConstProperty("Argon", "AR40SCINTILLATIONYIELD",   LarProp->Ar40ScintYield(true),     1./CLHEP::MeV );
-        SetMaterialConstProperty("Argon", "AR40YIELDRATIO",           LarProp->Ar40ScintYieldRatio(),    1.);
+        SetMaterialConstProperty("G4_lAr", "PROTONSCINTILLATIONYIELD",  LarProp->ProtonScintYield(true),    1./CLHEP::MeV );
+        SetMaterialConstProperty("G4_lAr", "PROTONYIELDRATIO",          LarProp->ProtonScintYieldRatio(),   1.);
+        SetMaterialConstProperty("G4_lAr", "MUONSCINTILLATIONYIELD",    LarProp->MuonScintYield(true),      1./CLHEP::MeV );
+        SetMaterialConstProperty("G4_lAr", "MUONYIELDRATIO",            LarProp->MuonScintYieldRatio(),     1.);
+        SetMaterialConstProperty("G4_lAr", "KAONSCINTILLATIONYIELD",    LarProp->KaonScintYield(true),      1./CLHEP::MeV );
+        SetMaterialConstProperty("G4_lAr", "KAONYIELDRATIO",            LarProp->KaonScintYieldRatio(),     1.);
+        SetMaterialConstProperty("G4_lAr", "PIONSCINTILLATIONYIELD",    LarProp->PionScintYield(true),      1./CLHEP::MeV );
+        SetMaterialConstProperty("G4_lAr", "PIONYIELDRATIO",            LarProp->PionScintYieldRatio(),     1.);
+        SetMaterialConstProperty("G4_lAr", "ELECTRONSCINTILLATIONYIELD",LarProp->ElectronScintYield(true),  1./CLHEP::MeV );
+        SetMaterialConstProperty("G4_lAr", "ELECTRONYIELDRATIO",        LarProp->ElectronScintYieldRatio(), 1.);
+        SetMaterialConstProperty("G4_lAr", "ALPHASCINTILLATIONYIELD",   LarProp->AlphaScintYield(true),     1./CLHEP::MeV );
+        SetMaterialConstProperty("G4_lAr", "ALPHAYIELDRATIO",           LarProp->AlphaScintYieldRatio(),    1.);
+        SetMaterialConstProperty("G4_lAr", "AR40SCINTILLATIONYIELD",   LarProp->Ar40ScintYield(true),     1./CLHEP::MeV );
+        SetMaterialConstProperty("G4_lAr", "AR40YIELDRATIO",           LarProp->Ar40ScintYieldRatio(),    1.);
       }
 
     // If we are simulating the TPB load this
