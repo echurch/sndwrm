@@ -145,10 +145,10 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
     analysisManager->FillNtupleDColumn(id,9,  pvtx[0]/sqrt(pvtx[0]*pvtx[0]+pvtx[1]*pvtx[1]+pvtx[2]*pvtx[2]));
     analysisManager->FillNtupleDColumn(id,10, pvtx[1]/sqrt(pvtx[0]*pvtx[0]+pvtx[1]*pvtx[1]+pvtx[2]*pvtx[2]));
     analysisManager->FillNtupleDColumn(id,11, pvtx[2]/sqrt(pvtx[0]*pvtx[0]+pvtx[1]*pvtx[1]+pvtx[2]*pvtx[2]));
-    analysisManager->FillNtupleDColumn(id,12, length);
+    //    analysisManager->FillNtupleDColumn(id,12, length);
     analysisManager->FillNtupleDColumn(id,13, event);
     analysisManager->FillNtupleSColumn(id,14, processName);
-    analysisManager->AddNtupleRow(id);
+    //    analysisManager->AddNtupleRow(id); // Do this in PostUserTrackingAction() after I've gotten track length.
 
     if (tID == 1) {   // primaries
       //fill ntuple id = 0
@@ -179,8 +179,37 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TrackingAction::PostUserTrackingAction(const G4Track* )
-{ }
+void TrackingAction::PostUserTrackingAction(const G4Track* track)
+{ 
+  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+  const G4double length = track->GetTrackLength();
+  G4int id(3);
+  analysisManager->FillNtupleDColumn(id,12, length);
+
+
+  G4double x = track->GetStep()->GetPostStepPoint()->GetPosition().x()/mm;
+  G4double y = track->GetStep()->GetPostStepPoint()->GetPosition().y()/mm;
+  G4double z = track->GetStep()->GetPostStepPoint()->GetPosition().z()/mm;
+  const G4VProcess* tprocess   = track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep();
+  G4TouchableHandle touch = track->GetStep()->GetPostStepPoint()->GetTouchableHandle();
+  G4VPhysicalVolume* eVolume = touch->GetVolume();
+  G4String eMaterial("null");
+  G4String eVname("null");
+  if (eVolume)
+    {
+      eMaterial = eVolume->GetLogicalVolume()->GetMaterial()->GetName();
+      eVname = eVolume->GetName();
+    }
+
+  analysisManager->FillNtupleDColumn(id,15, x);
+  analysisManager->FillNtupleDColumn(id,16, y);
+  analysisManager->FillNtupleDColumn(id,17, z);
+  analysisManager->FillNtupleSColumn(id,18, tprocess->GetProcessName());
+  analysisManager->FillNtupleSColumn(id,19, eVname);
+  analysisManager->FillNtupleSColumn(id,20, eMaterial);
+
+  analysisManager->AddNtupleRow(id);
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

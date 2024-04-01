@@ -205,6 +205,12 @@ void HistoManager::Book( )
   analysis->CreateNtupleDColumn("Length");         //column 12
   analysis->CreateNtupleDColumn("Event");         //column 13
   analysis->CreateNtupleSColumn("Process");         //column 14
+  analysis->CreateNtupleDColumn("TX");         //column 15
+  analysis->CreateNtupleDColumn("TY");         //column 16
+  analysis->CreateNtupleDColumn("TZ");         //column 17
+  analysis->CreateNtupleSColumn("TProcess");         //column 18
+  analysis->CreateNtupleSColumn("TVolume");         //column 19
+  analysis->CreateNtupleSColumn("TMaterial");         //column 20
   analysis->FinishNtuple();
 
   analysis->CreateNtuple("Steps", "Step Summaries"); 

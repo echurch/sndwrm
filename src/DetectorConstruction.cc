@@ -1,6 +1,7 @@
+
 // Module 3 light simulation
-// Authors: L. Paulucci & F. Marinho
-// Date: 7th October 2022
+// Authors: L. Paulucci & F. Marinho & E. Church
+// Date:  2024
 //
 // Added modifications should be reported to the original authors for updating authorship
 
@@ -47,9 +48,9 @@ DetectorConstruction::DetectorConstruction()
 
   fthickness=0.10; //m
 
-  fFCOut_x=0.01;//m
-  fFCOut_y=0.02; //m
-  fFCOut_z= fCryostat_z; //m
+  fFCOut_x=0.0345;//m
+  fFCOut_y=0.04; //m
+  fFCOut_z= 3.0/2; //m
 
   fAra_x = 0.007; //Arapuca window size in m  
   fAra_y = 0.50; //Arapuca window size in m
@@ -178,6 +179,8 @@ void DetectorConstruction::DefineMaterials()
   //_________ RELEVANT ENERGY VALUES Xe 175nm -> 7.08eV; Ar 128 -> 9.69eV_________
   G4double PhotonEnergy[nEntries] = {2.5*eV, 5.0*eV, 7.0*eV, 7.5*eV, 8.0*eV, 9.0*eV, 9.5*eV, 10.136*eV};
   G4double l_lAr[nEntries] =        {80*m,     80*m,   80*m,   80*m,   20*m,   20*m,   20*m,      20*m}; 
+  //  G4double l_lAr[nEntries] =        {80*m,     80*m,   80*m,   80*m,   2000*m,   2000*m,   2000*m,      2000*m}; 
+
 
   //  G4double n_lAr[nEntries] = {1.3,1.3,1.3,1.3,1.3};
   G4double n_lAr[72] = {1.2310665394518083, 1.2311200318147684, 1.2312727482978456, 1.2313496348295065, 1.2313506914097514, 1.2314023012909403, 1.2321538166889967, 1.231909947460871, 1.2321384938953646, 1.2323923169803301, 1.232443926861519, 1.2328668458034384, 1.233095392237932, 1.233053736213583, 1.233509772502325, 1.2335361057330418, 1.2334866090123424, 1.2338668153496684, 1.2343481282888824, 1.2344502914710154, 1.2346282846045646, 1.2350337675923626, 1.2354898038811046, 1.2358874461725522, 1.2361238333033957, 1.2364787629902494, 1.2371038951359457, 1.2374666655191495, 1.237720488604115, 1.2384292913975776, 1.2388853276863196, 1.2393413639750617, 1.2402271033218288, 1.2409106294648191, 1.2417458155106422, 1.2425810015564651, 1.2435678475051206, 1.2446558000556642, 1.245844859208096, 1.2472614082147766, 1.2488296171242892, 1.2505242092861624, 1.2525221212537003, 1.2548739063278473, 1.257579564508603, 1.2607654790483278, 1.2644822032479663, 1.269108886864599, 1.2747719131505861, 1.2816987719601767, 1.2910690403154002, 1.302368759656658, 1.316713517166515, 1.3329411664124329, 1.3493804523854165, 1.365926455672306, 1.3820018039345536, 1.4010549636291998, 1.423580491960391, 1.442600693158671, 1.46103487273757, 1.4894895758980782, 1.508978836972031, 1.5300372520419365, 1.5496431051408859, 1.5737334642006038, 1.5996151986767673, 1.6187496758472137, 1.6361783106957755, 1.6540241603412935, 1.672490509546729, 1.69156768392026};
@@ -186,10 +189,17 @@ void DetectorConstruction::DefineMaterials()
 
   G4double ray_e_lAr[21] = { 1.18626*eV, 1.68626*eV, 2.18626*eV, 2.68626*eV, 3.18626*eV, 3.68626*eV, 4.18626*eV, 4.68626*eV, 5.18626*eV, 5.68626*eV, 6.18626*eV, 6.68626*eV, 7.18626*eV, 7.68626*eV, 8.18626*eV, 8.68626*eV, 9.18626*eV, 9.68626*eV, 10.1863*eV, 10.6863*eV, 11.1863*eV};
   G4double ray_s_lAr[21] = { 1200800*cm, 390747*cm, 128633*cm, 54969.1*cm, 27191.8*cm, 14853.7*cm, 8716.9*cm, 5397.42*cm, 3481.37*cm, 2316.51*cm, 1577.63*cm, 1092.02*cm, 763.045*cm, 534.232*cm, 371.335*cm, 252.942*cm, 165.38*cm, 99.9003*cm, 51.2653*cm, 17.495*cm, 0.964341*cm };
+  //  G4double ray_s_lAr[21] = { 1200800*cm, 390747*cm, 128633*cm, 54969.1*cm, 27191.8*cm, 14853.7*cm, 8716.9*cm, 5397.42*cm, 3481.37*cm, 2316.51*cm, 1577.63*cm, 1092.02*cm, 763.045*cm, 534.232*cm, 371.335*cm, 252.942*cm, 965.38*cm, 899.9003*cm, 451.2653*cm, 17.495*cm, 0.964341*cm };
+
+  G4double RayleighEnergies[22] = {   2.80*eV,   3.00*eV,   3.50*eV,   4.00*eV,  5.00*eV,  6.00*eV,  7.00*eV,  8.00*eV,  8.50*eV,  9.00*eV,  9.20*eV,  9.40*eV,  9.50*eV,  9.60*eV,  9.70*eV,  9.80*eV,  9.90*eV,  10.0*eV,  10.2*eV,  10.4*eV,  10.6*eV, 10.8*eV };
+  G4double RayleighSpectrum[22] = { 47923.*cm, 35981.*cm, 18825.*cm, 10653.*cm, 3972.*cm, 1681.*cm, 750.9*cm, 334.7*cm, 216.8*cm, 135.0*cm, 109.7*cm, 88.06*cm, 78.32*cm, 69.34*cm, 61.06*cm, 53.46*cm, 46.50*cm, 40.13*cm, 28.91*cm, 19.81*cm, 12.61*cm, 7.20*cm };
+  
 
   G4MaterialPropertiesTable* lAr_pt = new G4MaterialPropertiesTable();
   lAr_pt->AddProperty("RINDEX", Energy_n_lar, n_lAr, 72);
-  lAr_pt->AddProperty("RAYLEIGH", ray_e_lAr, ray_s_lAr, 21);
+  //  lAr_pt->AddProperty("RAYLEIGH", ray_e_lAr, ray_s_lAr, 21);
+
+  lAr_pt->AddProperty("RAYLEIGH", RayleighEnergies, RayleighSpectrum, 22);
   lAr_pt->AddProperty("ABSLENGTH", PhotonEnergy, l_lAr, nEntries);
   lAr_pt->AddConstProperty("FASTTIMECONSTANT", 6. * ns);
   lAr_pt->AddConstProperty("SLOWTIMECONSTANT", 1590. * ns);
@@ -200,13 +210,16 @@ void DetectorConstruction::DefineMaterials()
   std::vector<double> SlowScintSpectrumloc { 0.0,  0.04, 0.12, 0.27, 0.44, 0.62, 0.80, 0.91, 0.92, 0.85, 0.70, 0.50, 0.31, 0.13, 0.04,  0.01, 0.0};
   lAr_pt->AddProperty("FASTCOMPONENT", FastScintEnergies, FastScintSpectrumloc);
   lAr_pt->AddProperty("SLOWCOMPONENT", SlowScintEnergies, SlowScintSpectrumloc);
-  lAr_pt->AddConstProperty("SCINTILLATIONYIELD", 24000/CLHEP::MeV );
+  lAr_pt->AddConstProperty("SCINTILLATIONYIELD", 24000 / MeV );
   lAr_pt->AddConstProperty("YIELDRATIO", 0.3 );
   lAr_pt->AddConstProperty("RESOLUTIONSCALE", 1.0 );
   env_mat->GetIonisation()->SetBirksConstant(0.069 * cm / MeV);
 
+
   // By commenting out below, and running these lines instead I will enforce the G4_lAr properties set in MaterialPropertiesLoader.
   env_mat->SetMaterialPropertiesTable(lAr_pt); 
+  std::cout << "Dumping G4_lAr properties .... " << std::endl;
+  env_mat->GetMaterialPropertiesTable()->DumpTable();
   //fMPL->SetPropertiesFromServices();  // fills local LArprop class with hard-coded data cutnpasted from fcl file.
   //fMPL->GetPropertiesFromServices();  // Shoves these into local MaterialTables
   //fMPL->UpdateGeometry(G4LogicalVolumeStore::GetInstance()); // Finally, loads properties into G4MaterialProperties
@@ -320,11 +333,11 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
                                  false,			//no boolean operation
                                  0);			//copy number
 
-  // Beginning of cryostat construction: coldskin, wood, foam, nougat, etc., ..., warmskin
+  // Beginning of cryostat construction: coldskin, wood, foam, nougat, etc.*cm, ...*cm, warmskin
 
   //coldskin
   fColdSkinThickness =  0.0018; //m
-  G4double Offset(0.010); //m
+  G4double Offset(0.10); //m
   G4Box* fSolidCryostat = new G4Box("Cryostat",(fCryostat_x/2+Offset)*m, (fCryostat_y/2.0+Offset)*m,(fCryostat_z/2+Offset)*m); //make it a little bigger to avoid overlaps
   G4Box* ShellOut = new G4Box("ShellOut",(fCryostat_x/2+fColdSkinThickness+Offset)*m, (fCryostat_y/2.0+fColdSkinThickness+Offset)*m,(fCryostat_z/2+fColdSkinThickness+Offset)*m);
   G4SubtractionSolid* fShell = new G4SubtractionSolid("ColdSkin", ShellOut, fSolidCryostat);
@@ -370,7 +383,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
 			     0, true);                          //copy number
 
   // warmskin
-  fWarmSkinThickness =  0.020 ; //m
+  fWarmSkinThickness =  0.024 ; //m
   G4Box* ShellOutW = new G4Box("ShellOut",(fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2.0+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m,(fCryostat_z/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m);
   G4SubtractionSolid* fShellW = new G4SubtractionSolid("WarmSkin", ShellOutW, sOutWood);
   G4LogicalVolume* fLogicShellW = new G4LogicalVolume(fShellW,fDUNESteel,"WarmSkin");
@@ -470,106 +483,116 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
 
   //FC Structure
 
+  //26 c-shaped profiles per FC module/each modelled as eliptical cutted tubes
   //Longer lateral
+
   G4double ypos=-fCryostat_y/2.0 + fFCOut_y/2.0; //in m
-
-  G4Box* fFieldCageOut = new G4Box("FieldCageOut",fFCOut_x/2*m,fFCOut_y/2*m,fFCOut_z/2*m);  
-  G4Box* fFieldCageIn = new G4Box("FieldCageIn",(fAra_x+0.005)/2*m,(fAra_y+0.005)/2*m,(fAra_z+0.5)/2*m);  
-  G4SubtractionSolid* fFCAux = new G4SubtractionSolid("FieldCageAux", fFieldCageOut, fFieldCageIn, 0, G4ThreeVector(0.,(0.5*fFCOut_y+0.5*(fAra_y+0.005)-0.005)*m,0.));
-  G4SubtractionSolid* fSolidFC = new G4SubtractionSolid("FieldCage", fFCAux, fFieldCageIn, 0, G4ThreeVector(0.,(-0.5*fFCOut_y-0.5*(fAra_y+0.005)+0.005)*m,0.));
-  G4LogicalVolume* fLogicFC = new G4LogicalVolume(fSolidFC,fAluminium,"FieldCage");
-  G4VPhysicalVolume* fPhysFC = new G4PVPlacement(0,G4ThreeVector(fFC_x/2.*m,ypos*m,0),"FieldCage",
-                                 fLogicFC,              //its logical volume
-                                 fPhysiWorld,    	//its mother  volume
-                                 false,			//no boolean operation
-				 0, true); 
-
-  G4VPhysicalVolume* fPhysFC2 = new G4PVPlacement(0,G4ThreeVector(-fFC_x/2.*m,ypos*m,0),"FieldCage",
-                                 fLogicFC,              //its logical volume
-                                 fPhysiWorld,    	//its mother  volume
-                                 false,			//no boolean operation
-				 0, true); 
-	
+  G4double zpos=-fCryostat_z/2.0 + fFCOut_z/2.0; //in m
   
-  for(int i = 1; i<=80; i++){ //copies of FC
-  	  ypos+=0.08;
-      G4PVPlacement* ph_cp  = new G4PVPlacement(0,G4ThreeVector(fFC_x/2.*m,ypos*m,0),
-						"FieldCage", fLogicFC, fPhysiWorld, false, i, true);
-      G4PVPlacement* ph_cp2  = new G4PVPlacement(0,G4ThreeVector(-fFC_x/2.*m,ypos*m,0),
-						"FieldCage", fLogicFC, fPhysiWorld, false, i, true);
+  G4EllipticalTube* fFieldCageOut = new G4EllipticalTube("fFieldCageOut",fFCOut_x*m,fFCOut_y*m,(fFCOut_z-0.001)*m);
+  G4EllipticalTube* fFieldCageIn = new G4EllipticalTube("fFieldCageIn",(fFCOut_x-0.002)*m,(fFCOut_y-0.002)*m,(fFCOut_z-0.001)*m);
+  G4SubtractionSolid* fFCAux = new G4SubtractionSolid("FieldCageAux", fFieldCageOut, fFieldCageIn, 0, G4ThreeVector(0.,0.,0.));
+  G4Box* fFCcutout = new G4Box("fFCcutout",0.02*m,fFCOut_y*m,(fFCOut_z+0.001)*m);
+  G4SubtractionSolid* fSolidFC = new G4SubtractionSolid("FieldCage", fFCAux,  fFCcutout, 0, G4ThreeVector((-0.02-0.015)*m,0.,0.));
+  G4LogicalVolume* fLogicFC = new G4LogicalVolume(fSolidFC,fAluminium,"FieldCage");
+
+  cnt=0;
+  int ncols=20, nrows=26;
+
+  G4RotationMatrix* fcMirror = new G4RotationMatrix();
+  G4ThreeVector* axisfcMirror = new G4ThreeVector(0.0,0.0,1.0);
+  fcMirror->rotate(CLHEP::pi,axisfcMirror);
+
+  
+  for(int i=0; i<ncols; i++){    
+    for(int j=0; j<nrows; j++){
+      G4cout << "i: " << i << " j: " << j << G4endl;
+      ypos=-fCryostat_y/2.0+(j+0.5)*(fCryostat_y/2.0/nrows);
+      zpos=-fCryostat_z/2.0+(i+0.5)*2*fFCOut_z;
+      G4PVPlacement* ph_cp = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset+fFCOut_x-0.015)*m,ypos*m,zpos*m),
+						"FieldCage", fLogicFC, fPhysiWorld, false, cnt, true);
+      cnt++;
+      ypos=fCryostat_y/2.0-(j+0.5)*(fCryostat_y/2.0/nrows);
+      zpos=-fCryostat_z/2.0+(i+0.5)*2*fFCOut_z;
+      G4PVPlacement* ph_cp2 = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset+fFCOut_x-0.015)*m,ypos*m,zpos*m),
+						"FieldCage", fLogicFC, fPhysiWorld, false, cnt, true);
+      G4cout << "ypos: " << ypos << " zpos: " << zpos << G4endl;
+      cnt++;
+
+      ypos=-fCryostat_y/2.0+(j+0.5)*(fCryostat_y/2.0/nrows);
+      zpos=-fCryostat_z/2.0+(i+0.5)*2*fFCOut_z;
+      G4PVPlacement* ph_cp3 = new G4PVPlacement(fcMirror,G4ThreeVector(-(fFC_x/2.-fAra_offset+fFCOut_x-0.015)*m,ypos*m,zpos*m),
+						"FieldCage", fLogicFC, fPhysiWorld, false, cnt, true);
+      cnt++;
+      ypos=fCryostat_y/2.0-(j+0.5)*(fCryostat_y/2.0/nrows);
+      zpos=-fCryostat_z/2.0+(i+0.5)*2*fFCOut_z;
+      G4PVPlacement* ph_cp4 = new G4PVPlacement(fcMirror,G4ThreeVector(-(fFC_x/2.-fAra_offset+fFCOut_x-0.015)*m,ypos*m,zpos*m),
+						"FieldCage", fLogicFC, fPhysiWorld, false, cnt, true);
+      G4cout << "ypos: " << ypos << " zpos: " << zpos << G4endl;
+      cnt++;   
+    }
   }
 
-  ypos = fCryostat_y/2.0 - fFCOut_y/2.0; //in m
- 
-  for(int i = 81; i<=160; i++){ //copies of FC
-  	  ypos-=0.08;
-      G4PVPlacement* ph_cp  = new G4PVPlacement(0,G4ThreeVector(fFC_x/2.*m,ypos*m,0),
-						"FieldCage", fLogicFC, fPhysiWorld, false, i, true);
-      G4PVPlacement* ph_cp2  = new G4PVPlacement(0,G4ThreeVector(-fFC_x/2.*m,ypos*m,0),
-						"FieldCage", fLogicFC, fPhysiWorld, false, i, true);
-  } 
-  
-  //Shorter laterals
-  ypos=-fCryostat_y/2.0 + fFCOut_y/2; //in m
-//  std::cout << "yposFC1 = " << ypos << std::endl;
+
+  ypos = 0.0;
+  zpos = 0.0;
+  G4double xpos = 0.0;
+  ncols=4;
+
+  //shorter laterals
   G4RotationMatrix* rSh = new G4RotationMatrix();
   G4ThreeVector* axisSh = new G4ThreeVector(0.0,1.0,0.0);
   rSh->rotate(CLHEP::pi/2,axisSh);
 
-  G4Box* fFieldCageShortOut = new G4Box("FieldCageShortOut",fFCOut_x/2*m,fFCOut_y/2*m,(fFC_x/2-0.4)*m);  
-  G4Box* fFieldCageShortIn = new G4Box("FieldCageShortIn",(fAra_x+0.005)/2*m,(fAra_y+0.005)/2*m,(fFC_x)/2*m);  
-  G4SubtractionSolid* fFCShortAux = new G4SubtractionSolid("FieldCageShortAux", fFieldCageShortOut, fFieldCageShortIn, 0, G4ThreeVector(0.,(0.5*fFCOut_y+0.5*(fAra_y+0.005)-0.005)*m,0.));
-  G4SubtractionSolid* fSolidFCShort = new G4SubtractionSolid("FieldCageShort", fFCShortAux, fFieldCageShortIn, 0, G4ThreeVector(0.,(-0.5*fFCOut_y-0.5*(fAra_y+0.005)+0.005)*m,0.));
+  G4RotationMatrix* lSh = new G4RotationMatrix();
+  lSh->rotate(-CLHEP::pi/2,axisSh);
 
-  G4LogicalVolume* fLogicFCShort = new G4LogicalVolume(fSolidFCShort,fAluminium,"FieldCageShort");
-  G4VPhysicalVolume* fPhysFCShort = new G4PVPlacement(rSh,G4ThreeVector(0,ypos*m,fFC_z/2.*m),"FieldCageShort",
-                                 fLogicFCShort,     //its logical volume
-                                 fPhysiWorld,    	//its mother  volume
-                                 false,			//no boolean operation
-						      0,true); 
-  
-  G4VPhysicalVolume* fPhysFCShort2 = new G4PVPlacement(rSh,G4ThreeVector(0,ypos*m,-fFC_z/2.*m),"FieldCageShort",
-                                 fLogicFCShort,     //its logical volume
-                                 fPhysiWorld,    	//its mother  volume
-                                 false,			//no boolean operation
-						       0,true); 
-  
-   for(int i = 1; i<=80; i++){ //copies of FCShort
-     ypos+=0.08;
-     G4PVPlacement* sh_cp  = new G4PVPlacement(rSh,G4ThreeVector(0,ypos*m,fFC_z/2*m),
-					       "FieldCageShort", fLogicFCShort, fPhysiWorld, false, i, true);
-     G4PVPlacement* sh_cp2  = new G4PVPlacement(rSh,G4ThreeVector(0,ypos*m,-fFC_z/2*m),
-						"FieldCageShort", fLogicFCShort, fPhysiWorld, false, i, true);
-   }
-   
-   ypos=fCryostat_y/2.0 - fFCOut_y/2; //in m
-   
-   for(int i = 81; i<=160; i++){ //copies of FCShort
-     ypos-=0.08;
-     G4PVPlacement* sh_cp  = new G4PVPlacement(rSh,G4ThreeVector(0,ypos*m,fFC_z/2*m),
-					       "FieldCageShort", fLogicFCShort, fPhysiWorld, false, i, true);
-     G4PVPlacement* sh_cp2  = new G4PVPlacement(rSh,G4ThreeVector(0,ypos*m,-fFC_z/2*m),
-						"FieldCageShort", fLogicFCShort, fPhysiWorld, false, i, true);
-   }
-   
+  for(int i=0; i<ncols; i++){    
+    for(int j=0; j<nrows; j++){
+      ypos=-fCryostat_y/2.0+(j+0.5)*(fCryostat_y/2.0/nrows);
+      xpos=-fFC_x/2.0+fFCOut_z/2+(i+0.5)*2*fFCOut_z;
+      zpos=fCryostat_z/2.0-fAra_offset+fFCOut_x-0.015;
+      G4PVPlacement* ph_cp5 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,zpos*m),
+						"FieldCageS", fLogicFC, fPhysiWorld, false, cnt, true);
+      cnt++;
+      ypos=-(-fCryostat_y/2.0+(j+0.5)*(fCryostat_y/2.0/nrows));
+      xpos=-fFC_x/2.0+fFCOut_z/2+(i+0.5)*2*fFCOut_z;
+      zpos=fCryostat_z/2.0-fAra_offset+fFCOut_x-0.015;
+      G4PVPlacement* ph_cp6 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,zpos*m),
+
+						"FieldCageS", fLogicFC, fPhysiWorld, false, cnt, true);
+      cnt++;      
+      ypos=-fCryostat_y/2.0+(j+0.5)*(fCryostat_y/2.0/nrows);
+      xpos=-fFC_x/2.0+fFCOut_z/2+(i+0.5)*2*fFCOut_z;
+      zpos=-(fCryostat_z/2.0-fAra_offset+fFCOut_x-0.015);
+      G4PVPlacement* ph_cp7 = new G4PVPlacement(lSh,G4ThreeVector(xpos*m,ypos*m,zpos*m),
+						"FieldCageS", fLogicFC, fPhysiWorld, false, cnt, true);
+      cnt++;      
+      ypos=-(-fCryostat_y/2.0+(j+0.5)*(fCryostat_y/2.0/nrows));
+      xpos=-fFC_x/2.0+fFCOut_z/2+(i+0.5)*2*fFCOut_z;
+      zpos=-(fCryostat_z/2.0-fAra_offset+fFCOut_x-0.015);
+      G4PVPlacement* ph_cp8 = new G4PVPlacement(lSh,G4ThreeVector(xpos*m,ypos*m,zpos*m),
+						"FieldCageS", fLogicFC, fPhysiWorld, false, cnt, true);
+      cnt++;
+      
+     }
+  }
    
    //ARAPUCAs
-   int ncol=120, nrows=12;
-   G4double zpos;
+   ncols=120, nrows=12;
+   zpos=0.0;
    G4double darapuca = fAra_z;
    G4Box* Arapuca = new G4Box("Arapuca",fAra_x/2*m,fAra_y/2*m,(darapuca/2-1e-3)*m);
    G4LogicalVolume* fLogicArapuca = new G4LogicalVolume(Arapuca,facrylic,"Arapuca");
 
    G4Box* ptp_film = new G4Box("PTP_film",fptp_width/2.0,fAra_y/2*m,(darapuca/2-1e-3)*m);
-     G4LogicalVolume* fLogicPTP = new G4LogicalVolume(ptp_film,fPTP,"PTP_film");
-     G4LogicalVolume* fLogicAB = new G4LogicalVolume(ptp_film,fMylar,"ArapucaBackCoating");
-
+   G4LogicalVolume* fLogicPTP = new G4LogicalVolume(ptp_film,fPTP,"PTP_film");
+   G4LogicalVolume* fLogicAB = new G4LogicalVolume(ptp_film,fMylar,"ArapucaBackCoating");
    
   int ptp_cnt = 0; G4VPhysicalVolume* ptp_phys;
   int myl_cnt = 0; G4VPhysicalVolume* myl_phys;
   G4String name, physname, name2, physname2;
-  int nArapucaEC(0);
-  for(int i=0; i<ncol; i++){
+  for(int i=0; i<ncols; i++){
     ypos=(-fCryostat_y/2.0) + (fCryostat_y/2.0 - (nrows*fAra_y+(nrows-1)*fAras_yspacing))/2 + fAra_y/2;
     //lower edge of cryostat + space between closest edges of cryostat & lower XARAPUCA + y_arapuca_side/2 in m
     
@@ -584,10 +607,10 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaR"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaR"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname3 = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
+      new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
       name2 = "ArapucaL"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaL"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
+      new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
 
       myl_phys = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset)*m-fptp_width/2,ypos*m,zpos*m),"MYL_film", fLogicAB, fPhysiWorld, false,myl_cnt, true);
       myl_cnt++;
@@ -609,41 +632,39 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaR"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaR"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname3 = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
+      new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x/2)*m,ypos*m,zpos*m),name.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
       name2 = "ArapucaL"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaL"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname4 = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,nArapucaEC++, true);
+      new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x/2)*m,ypos*m,zpos*m),name2.c_str(), fLogicArapuca, fPhysiWorld, false,0, true);
 
       myl_phys = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset)*m-fptp_width/2,ypos*m,zpos*m),"MYL_film", fLogicAB, fPhysiWorld, false,myl_cnt, true);
       myl_cnt++;
       myl_phys = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset)*m+fptp_width/2,ypos*m,zpos*m),"MYL_film", fLogicAB, fPhysiWorld, false,myl_cnt, true);
       myl_cnt++;
-
       
       ypos-=(fAra_y+fAras_yspacing);
     }
     
   }
-
-  std::cout << "DetectorConstruction: " << nArapucaEC << " standard Arapucas placed." << std::endl;
   
   //Shorter side
   G4Box* ArapucaShort = new G4Box("ArapucaShort",fAra_x/2*m,fAra_y/2*m,(darapuca/2-1e-3)*m);
   G4LogicalVolume* fLogicArapucaShort = new G4LogicalVolume(ArapucaShort,facrylic,"ArapucaShort");
-
-  G4Box* ptps_film = new G4Box("PTPs_film",fptp_width/2.0,fAra_y/2*m,(darapuca/2-1e-3)*m);
-    G4LogicalVolume* fLogicPTPs = new G4LogicalVolume(ptps_film,fPTP,"PTPs_film");
-    G4LogicalVolume* fLogicABs = new G4LogicalVolume(ptps_film,fMylar,"ArapucaBackCoatingShort");
   
-  ncol=24, nrows=12;
+  G4Box* ptps_film = new G4Box("PTPs_film",fptp_width/2.0,fAra_y/2*m,(darapuca/2-1e-3)*m);
+  G4LogicalVolume* fLogicPTPs = new G4LogicalVolume(ptps_film,fPTP,"PTPs_film");
+  G4LogicalVolume* fLogicABs = new G4LogicalVolume(ptps_film,fMylar,"ArapucaBackCoatingShort");
+   
+  ncols=24, nrows=12;
   int ptps_cnt = 0; G4VPhysicalVolume* ptps_phys;
   int myls_cnt = 0; G4VPhysicalVolume* myls_phys;
-
-  G4double xpos;
   
-  for(int i=0; i<ncol; i++){
+  //G4double xpos;
+  xpos=0;
+  
+  for(int i=0; i<ncols; i++){
     ypos=-fCryostat_y/2.0 + (fCryostat_y/2.0 - (nrows*fAra_y+(nrows-1)*fAras_yspacing))/2 + fAra_y/2; //in m
-    xpos = -fFC_x/2+(fFC_x-(ncol*darapuca+(ncol-1)*fAras_yspacing))/2.0 + darapuca/2 + i*(darapuca+fAras_yspacing);
+    xpos = -fFC_x/2+(fFC_x-(ncols*darapuca+(ncols-1)*fAras_yspacing))/2.0 + darapuca/2 + i*(darapuca+fAras_yspacing);
     std::cout << xpos << std::endl;
     for(int j=0; j<nrows;j++){
       
@@ -652,13 +673,12 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       ptps_phys = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset)*m+fAra_x*m+fptp_width/2.0),"PTPs_film", fLogicPTPs, fPhysiWorld, false,ptps_cnt, true);
       ptps_cnt++;
       
-      
       name = "ArapucaF"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaF"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname3 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
+      new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
       name2 = "ArapucaB"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaB"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
+      new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
 
       myls_phys = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset+fptp_width/2.0)*m),"MYL_film", fLogicABs, fPhysiWorld, false,myls_cnt, true);
       myls_cnt++;
@@ -678,10 +698,10 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
       
       name = "ArapucaF"; name.append(std::to_string(i+1)); name.append("_"); name.append(std::to_string(j+1));
       physname = "fPhysArapucaF"; physname.append(std::to_string(i+1)); physname.append("_"); physname.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname3 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
+      new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset-fAra_x/2)*m),name.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
       name2 = "ArapucaB"; name2.append(std::to_string(i+1)); name2.append("_"); name2.append(std::to_string(j+1));
       physname2 = "fPhysArapucaB"; physname2.append(std::to_string(i+1)); physname2.append("_"); physname2.append(std::to_string(j+1));
-      G4VPhysicalVolume* physname4 = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,nArapucaEC++, true);
+      new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(-fFC_z/2.+fAra_offset+fAra_x/2)*m),name2.c_str(), fLogicArapucaShort, fPhysiWorld, false,0, true);
 
       myls_phys = new G4PVPlacement(rSh,G4ThreeVector(xpos*m,ypos*m,(fFC_z/2.-fAra_offset+fptp_width/2.0)*m),"MYL_film", fLogicABs, fPhysiWorld, false,myls_cnt, true);
       myls_cnt++;
@@ -692,31 +712,30 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
     }
     
   }
-
-  std::cout << "DetectorConstruction: " << nArapucaEC << " total Arapucas placed (last ones are short)." << std::endl;
+  
   //vertical bars on longer laterals
-  ncol = 60;
+  ncols = 60;
   G4Box* VerticalBar = new G4Box("VerticalBar",fvert_bar_x/2*m,fvert_bar_y/2*m,fvert_bar_z/2*m);
   G4LogicalVolume* fLogicVerticalBar = new G4LogicalVolume(VerticalBar,facrylic,"VerticalBar");
 
   int vbar_cnt = 0; G4VPhysicalVolume* vbar_phys;
   
-  for(int i=0; i<ncol; i++){
+  for(int i=0; i<ncols; i++){
     zpos = 2*fAra_z*(i+0.5) -fFC_z/2;
     //std::cout << (fFC_x/2.-fAra_offset-fAra_x-fvert_bar_x/2) <<" "<< zpos << std::endl;    
     //vbar_phys = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x-fvert_bar_x/2)*m-fptp_width,0*m,zpos*m),"vbar", fLogicVerticalBar, fPhysiWorld, false, vbar_cnt, true);
     vbar_phys = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x-fvert_bar_x/2)*m-fptp_width,fFC_y/4*m,zpos*m),"vbar", fLogicVerticalBar, fPhysiWorld, false, vbar_cnt, true);
     vbar_cnt++;
-    vbar_phys = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset-fAra_x+fvert_bar_x/2)*m+fptp_width,fFC_y/4*m,zpos*m),"vbar", fLogicVerticalBar, fPhysiWorld, false, vbar_cnt, true);
+    vbar_phys = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x+fvert_bar_x/2)*m+fptp_width,fFC_y/4*m,zpos*m),"vbar", fLogicVerticalBar, fPhysiWorld, false, vbar_cnt, true);
     vbar_cnt++;
     vbar_phys = new G4PVPlacement(0,G4ThreeVector((fFC_x/2.-fAra_offset-fAra_x-fvert_bar_x/2)*m-fptp_width,-fFC_y/4*m,zpos*m),"vbar", fLogicVerticalBar, fPhysiWorld, false, vbar_cnt, true);
     vbar_cnt++;
-    vbar_phys = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset-fAra_x+fvert_bar_x/2)*m+fptp_width,-fFC_y/4*m,zpos*m),"vbar", fLogicVerticalBar, fPhysiWorld, false, vbar_cnt, true);
+    vbar_phys = new G4PVPlacement(0,G4ThreeVector((-fFC_x/2.+fAra_offset+fAra_x+fvert_bar_x/2)*m+fptp_width,-fFC_y/4*m,zpos*m),"vbar", fLogicVerticalBar, fPhysiWorld, false, vbar_cnt, true);
     vbar_cnt++;
   }
 
   //vertical bars on shorter laterals
-  ncol = 12;
+  ncols = 12;
   int ncolx = 24;
 
   G4Box* VerticalBarS = new G4Box("VerticalBarS",fvert_bar_x/2*m,fvert_bar_y/2*m,fvert_bar_z/2*m);
@@ -724,7 +743,7 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
 
   vbar_cnt = 0;
   
-  for(int i=0; i<ncol; i++){
+  for(int i=0; i<ncols; i++){
 
     //zpos;
     xpos = -fFC_x/2+(fFC_x-(ncolx*darapuca+(ncolx-1)*fAras_yspacing))/2.0 + darapuca + fAras_yspacing/2 + i*2*(darapuca + fAras_yspacing);
@@ -742,6 +761,7 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
     
   }
   
+    
   
   //Surfaces setup
 
@@ -796,7 +816,7 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
   
   FCSurface->SetMaterialPropertiesTable(FCSurface_pt);
   new G4LogicalSkinSurface("FCSurface",fLogicFC,FCSurface);
-  new G4LogicalSkinSurface("FCSurfaceShort",fLogicFCShort,FCSurface);
+  //  new G4LogicalSkinSurface("FCSurfaceShort",fLogicFCShort,FCSurface);
 
   //_____________________________Mylar REFLECTIVITY 1.0 ______________________________
   G4OpticalSurface* ArapucaBackSurface = new G4OpticalSurface("ArapucaBackSurface");
@@ -865,7 +885,7 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
   //  fLogicCathode->SetVisAttributes(simpleBoxAtt);
   fLogicArapuca->SetVisAttributes(simpleBoxAttKGM);
   fLogicArapucaShort->SetVisAttributes(simpleBoxAttKGM);
-  fLogicFCShort->SetVisAttributes(simpleBoxAtt);
+  //  fLogicFCShort->SetVisAttributes(simpleBoxAtt);
   fLogicAnodeT->SetVisAttributes(simplePlain);
   fLogicAnodeB->SetVisAttributes(simplePlain);
   fLogicFC->SetVisAttributes(simpleBoxAtt);

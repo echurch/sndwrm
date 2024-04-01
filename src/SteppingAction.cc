@@ -99,7 +99,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 /*      if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
 	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
 */
-      if (( eVname.find("Arapuca")!=std::string::npos /* || (lVolume->GetName()).find("Arapuca")!=std::string::npos */ ) and (pID==0 || pID==-22))
+      if (( eVname.find("Arapuca")!=std::string::npos  || (lVolume->GetName()).find("Arapuca")!=std::string::npos  ) and (pID==0 || pID==-22))
 	//	if ( (eVname.find("Arapuca")!=std::string::npos)  and (pID==0 || pID==-22))
 	{
 	  iVol = 4;
@@ -138,8 +138,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 	   {
 	     Lq++;
 	   }
-	 else 
-	   Lq++;
 	 }
       }
       
@@ -155,7 +153,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 	}
     }
 
-  if (edepStep <= 0. && (pID!=0 && pID!=-22) ) return; // the deception version of G4 uses -22 for optical photons; my Mac's uses 0.
+  if (/*edepStep <= 0. &&*/ /* !(eVname.find("Arapuca")!=std::string::npos) || !(lVolume->GetName().find("Arapuca")!=std::string::npos)  || */ (pID!=0 && pID!=-22) ) return; // the deception version of G4 uses -22 for optical photons; my Mac's uses 0.
 
   G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
   G4double weight = aStep->GetPreStepPoint()->GetWeight();   
