@@ -153,7 +153,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 	}
     }
 
-  if (/*edepStep <= 0. &&*/ /* !(eVname.find("Arapuca")!=std::string::npos) || !(lVolume->GetName().find("Arapuca")!=std::string::npos)  || */ (pID!=0 && pID!=-22) ) return; // the deception version of G4 uses -22 for optical photons; my Mac's uses 0.
+  if (/*edepStep <= 0. &&*/  !(eVname.find("Arapuca")!=std::string::npos) /* || !(lVolume->GetName().find("Arapuca")!=std::string::npos) */ ||  (pID!=0 && pID!=-22) ) return; // the deception version of G4 uses -22 for optical photons; my Mac's uses 0.
 
   G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
   G4double weight = aStep->GetPreStepPoint()->GetWeight();   
