@@ -189,28 +189,29 @@ void DetectorConstruction::DefineMaterials()
 
   G4double ray_e_lAr[21] = { 1.18626*eV, 1.68626*eV, 2.18626*eV, 2.68626*eV, 3.18626*eV, 3.68626*eV, 4.18626*eV, 4.68626*eV, 5.18626*eV, 5.68626*eV, 6.18626*eV, 6.68626*eV, 7.18626*eV, 7.68626*eV, 8.18626*eV, 8.68626*eV, 9.18626*eV, 9.68626*eV, 10.1863*eV, 10.6863*eV, 11.1863*eV};
   G4double ray_s_lAr[21] = { 1200800*cm, 390747*cm, 128633*cm, 54969.1*cm, 27191.8*cm, 14853.7*cm, 8716.9*cm, 5397.42*cm, 3481.37*cm, 2316.51*cm, 1577.63*cm, 1092.02*cm, 763.045*cm, 534.232*cm, 371.335*cm, 252.942*cm, 165.38*cm, 99.9003*cm, 51.2653*cm, 17.495*cm, 0.964341*cm };
-  //  G4double ray_s_lAr[21] = { 1200800*cm, 390747*cm, 128633*cm, 54969.1*cm, 27191.8*cm, 14853.7*cm, 8716.9*cm, 5397.42*cm, 3481.37*cm, 2316.51*cm, 1577.63*cm, 1092.02*cm, 763.045*cm, 534.232*cm, 371.335*cm, 252.942*cm, 965.38*cm, 899.9003*cm, 451.2653*cm, 17.495*cm, 0.964341*cm };
+
 
   G4double RayleighEnergies[22] = {   2.80*eV,   3.00*eV,   3.50*eV,   4.00*eV,  5.00*eV,  6.00*eV,  7.00*eV,  8.00*eV,  8.50*eV,  9.00*eV,  9.20*eV,  9.40*eV,  9.50*eV,  9.60*eV,  9.70*eV,  9.80*eV,  9.90*eV,  10.0*eV,  10.2*eV,  10.4*eV,  10.6*eV, 10.8*eV };
-  G4double RayleighSpectrum[22] = { 47923.*cm, 35981.*cm, 18825.*cm, 10653.*cm, 3972.*cm, 1681.*cm, 750.9*cm, 334.7*cm, 216.8*cm, 135.0*cm, 109.7*cm, 88.06*cm, 78.32*cm, 69.34*cm, 61.06*cm, 53.46*cm, 46.50*cm, 40.13*cm, 28.91*cm, 19.81*cm, 12.61*cm, 7.20*cm };
-  
+    G4double RayleighSpectrum[22] = { 47923.*cm, 35981.*cm, 18825.*cm, 10653.*cm, 3972.*cm, 1681.*cm, 750.9*cm, 334.7*cm, 216.8*cm, 135.0*cm, 109.7*cm, 88.06*cm, 78.32*cm, 69.34*cm, 61.06*cm, 53.46*cm, 46.50*cm, 40.13*cm, 28.91*cm, 19.81*cm, 12.61*cm, 7.20*cm };
 
   G4MaterialPropertiesTable* lAr_pt = new G4MaterialPropertiesTable();
   lAr_pt->AddProperty("RINDEX", Energy_n_lar, n_lAr, 72);
-  //  lAr_pt->AddProperty("RAYLEIGH", ray_e_lAr, ray_s_lAr, 21);
+  //lAr_pt->AddProperty("RAYLEIGH", ray_e_lAr, ray_s_lAr, 21);
 
   lAr_pt->AddProperty("RAYLEIGH", RayleighEnergies, RayleighSpectrum, 22);
   lAr_pt->AddProperty("ABSLENGTH", PhotonEnergy, l_lAr, nEntries);
   lAr_pt->AddConstProperty("FASTTIMECONSTANT", 6. * ns);
   lAr_pt->AddConstProperty("SLOWTIMECONSTANT", 1590. * ns);
 
-  std::vector<double> FastScintEnergies { 6.0,  6.7,  7.1,  7.4,  7.7, 7.9,  8.1,  8.4,  8.5,  8.6,  8.8,  9.0,  9.1,  9.4,  9.8,  10.4,  10.7};
-  std::vector<double> SlowScintEnergies { 6.0,  6.7,  7.1,  7.4,  7.7, 7.9,  8.1,  8.4,  8.5,  8.6,  8.8,  9.0,  9.1,  9.4,  9.8,  10.4,  10.7};
-  std::vector<double> FastScintSpectrumloc { 0.0,  0.04, 0.12, 0.27, 0.44, 0.62, 0.80, 0.91, 0.92, 0.85, 0.70, 0.50, 0.31, 0.13, 0.04,  0.01, 0.0};
-  std::vector<double> SlowScintSpectrumloc { 0.0,  0.04, 0.12, 0.27, 0.44, 0.62, 0.80, 0.91, 0.92, 0.85, 0.70, 0.50, 0.31, 0.13, 0.04,  0.01, 0.0};
+  std::vector<double> FastScintEnergies { 6.0*eV,  6.7*eV,  7.1*eV,  7.4*eV,  7.7*eV, 7.9*eV,  8.1*eV,  8.4*eV,  8.5*eV,  8.6*eV,  8.8*eV,  9.0*eV,  9.1*eV,  9.4*eV,  9.8*eV,  10.4*eV,  10.7*eV};
+  std::vector<double> SlowScintEnergies { 6.0*eV,  6.7*eV,  7.1*eV,  7.4*eV,  7.7*eV, 7.9*eV,  8.1*eV,  8.4*eV,  8.5*eV,  8.6*eV,  8.8*eV,  9.0*eV,  9.1*eV,  9.4*eV,  9.8*eV,  10.4*eV,  10.7*eV};
+  //  std::vector<double> FastScintSpectrumloc { 0.0,  0.04, 0.12, 0.27, 0.44, 0.62, 0.80, 0.91, 0.92, 0.85, 0.70, 0.50, 0.31, 0.13, 0.04,  0.01, 0.0};
+  // std::vector<double> SlowScintSpectrumloc { 0.0,  0.04, 0.12, 0.27, 0.44, 0.62, 0.80, 0.91, 0.92, 0.85, 0.70, 0.50, 0.31, 0.13, 0.04,  0.01, 0.0};
+  std::vector<double> FastScintSpectrumloc { 0.0,  0.0, 1., 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 0.0};
+  std::vector<double> SlowScintSpectrumloc { 0.0,  0.0, 1., 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 0.0};
   lAr_pt->AddProperty("FASTCOMPONENT", FastScintEnergies, FastScintSpectrumloc);
   lAr_pt->AddProperty("SLOWCOMPONENT", SlowScintEnergies, SlowScintSpectrumloc);
-  lAr_pt->AddConstProperty("SCINTILLATIONYIELD", 24000 / MeV );
+  lAr_pt->AddConstProperty("SCINTILLATIONYIELD", 25000 / MeV );
   lAr_pt->AddConstProperty("YIELDRATIO", 0.3 );
   lAr_pt->AddConstProperty("RESOLUTIONSCALE", 1.0 );
   env_mat->GetIonisation()->SetBirksConstant(0.069 * cm / MeV);
