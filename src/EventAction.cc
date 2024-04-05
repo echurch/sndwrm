@@ -167,6 +167,11 @@ void EventAction::EndOfEventAction(const G4Event* G4Evt)
    analysisManager->FillNtupleDColumn(id,3, fEdepLhit);
    analysisManager->FillNtupleDColumn(id,4, G4Evt->GetEventID());
    G4ThreeVector vtxftt(fPGA->GetPrimaryGenerator()->GetParticlePosition());
+   if (vtxftt[0] == 0.0)  // This means it's not a Marley evt, say. So, let's get vtx of interesting (cap,phot, ...) process.
+     {
+       vtxftt = GetProcVtx();
+       std::cout << "EnergyCalc(): Interesting fiducial process's vtx is " << vtxftt[0] << "," << vtxftt[1] << "," << vtxftt[2] << std::endl;
+     }
    analysisManager->FillNtupleDColumn(id,5, vtxftt[0]);
    analysisManager->FillNtupleDColumn(id,6, vtxftt[1]);
    analysisManager->FillNtupleDColumn(id,7, vtxftt[2]);

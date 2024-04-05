@@ -110,14 +110,14 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   */
 
   // no worky when launching n's, gammas from outside the fidv. Hard code it. EC, 4-Aug-2021.
-  const std::vector<double> fidv {3000,4500,20000};
+  const std::vector<double> fidv {6000,6000,30000};
 
   if (abs(vtx[0])<fidv.at(0) && abs(vtx[1])<fidv.at(1) && abs(vtx[2])<fidv.at(2) && !fEventAction->GetFiducial())
     {
       for (const auto& proc : procOfInterest) {
 	if (processName.find(proc) != std::string::npos) {
 	  fEventAction->SetProcVtx(vtx);
-	  //  	  std::cout << "TrackingAction: Interesting Process is " << proc << std::endl;
+	  //	  std::cout << "TrackingAction: Interesting Process is " << proc << std::endl;
 	  fEventAction->SetFiducial(true);
 	  break;
 	}
@@ -129,9 +129,11 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   //G4int procaessType = track->GetCreatorProcess()->GetProcessSubType();
   //  if (processType == fRadioactiveDecay) {
     //fill ntuple id = 3
-
-  //    std::cout << "TrackingAction::PreUserTrackingAction()..." << std::endl ;
-  // std::cout << "\t pid, energy, length, " << pid << ", " << energy << ", "  << length << std::endl;
+  if (fEventAction->GetFiducial()  && 0 /* to shut reporting off for now*/)
+    {
+      std::cout << "TrackingAction::PreUserTrackingAction()..." << std::endl ;
+      std::cout << "\t pid, energy, processName, " << pid << ", " << energy << ", "  << processName << std::endl;
+    }
     G4int id = 3;
     analysisManager->FillNtupleDColumn(id,0, double(pid));
     analysisManager->FillNtupleDColumn(id,1, double(Z));
