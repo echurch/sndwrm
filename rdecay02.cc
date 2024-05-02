@@ -47,8 +47,12 @@
 #include "ActionInitialization.hh"
 #include "SteppingVerbose.hh"
 
+#include "Shielding.hh"
+
 #include "G4UIExecutive.hh"
 #include "G4VisExecutive.hh"
+
+#include "G4OpticalPhysics.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -77,8 +81,28 @@ int main(int argc,char** argv) {
   DetectorConstruction* det= new DetectorConstruction;
   runManager->SetUserInitialization(det);
 
+  /*  
   PhysicsList* phys = new PhysicsList;
   runManager->SetUserInitialization(phys);
+  */
+
+  
+  // EC, 30-Apr-2024. Replace longstanding use of crafting my own physics list.
+  G4VModularPhysicsList* physlist = new Shielding;
+  runManager->SetUserInitialization(physlist);
+  G4int verb(0);
+  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(verb);
+  opticalPhysics->SetWLSTimeProfile("delta");
+  opticalPhysics->SetMaxBetaChangePerStep(10.0);
+  opticalPhysics->SetTrackSecondariesFirst(kCerenkov,true);
+  opticalPhysics->SetTrackSecondariesFirst(kScintillation,true);
+  opticalPhysics->SetScintillationYieldFactor(1.);
+  G4int fMaxNumPhotonStep(7000);
+  opticalPhysics->SetMaxNumPhotonsPerStep(fMaxNumPhotonStep);
+  physlist->RegisterPhysics( opticalPhysics);
+
+  runManager->SetUserInitialization( physlist );
+  
 
   runManager->SetUserInitialization(new ActionInitialization(det));
 

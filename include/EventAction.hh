@@ -61,11 +61,15 @@ class EventAction : public G4UserEventAction
     void AddEdepL(G4double );
     void AddEdepLhit(G4double  );
     void AddEdepQ(G4double );
-
+    void SetInelProc(bool inel) { if (inel) fInel = true;};
+    bool GetInelProc() { return fInel;};
     void SetFiducial(bool fid) {fFiducial = fid;};              
     bool GetFiducial() {return fFiducial;}; 
     void SetProcVtx(const G4ThreeVector &vtx) { procVtx[0] = vtx[0];   procVtx[1] = vtx[1];   procVtx[2] = vtx[2];}
-  
+    std::vector<G4int>& GetNucleiVec() {return fNucleiVec;};
+    void SetNucleiVec(G4int pnucID);
+    void CapEGam(G4double );
+    
     PrimaryGeneratorAction* GetPrimGenAct() {return fPGA;};
 
   private:
@@ -73,13 +77,17 @@ class EventAction : public G4UserEventAction
     G4double fEdep1,   fEdep2;
     G4double fEdepEvt, fEdepL, fEdepLhit, fEdepQ;
     G4double fWeight1, fWeight2;
-    G4double fTime0;    
+    G4double fTime0;
+    bool fInel;
     bool fFiducial;
     std::default_random_engine generator;
   
-  G4double EnergyCalc(G4double, Run*, G4ThreeVector*  );
+    G4double EnergyCalc(G4double, Run*, G4ThreeVector*  );
     G4ThreeVector GetProcVtx() {return procVtx;};
     G4ThreeVector procVtx;
+    std::vector<G4int> fNucleiVec;
+    std::vector<G4double> fEGamCap;
+    G4double fEGamCapSum;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -62,11 +62,12 @@ void ActionInitialization::Build() const
   PrimaryGeneratorAction* primary = new PrimaryGeneratorAction();
   SetUserAction(primary);
 
-  RunAction* runAction = new RunAction(fDetector, primary );
-  SetUserAction(runAction);
   
   EventAction* event = new EventAction(primary);
   SetUserAction(event);  
+
+  RunAction* runAction = new RunAction(fDetector, primary, event );
+  SetUserAction(runAction);
   
   TrackingAction* trackingAction = new TrackingAction(fDetector,event);
   SetUserAction(trackingAction);

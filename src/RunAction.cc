@@ -34,6 +34,7 @@
 #include "Run.hh"
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
+
 #include "HistoManager.hh"
 
 #include "G4Run.hh"
@@ -52,6 +53,14 @@ RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim)
 {
  // Book predefined histograms
  fHistoManager = new HistoManager(); 
+}
+
+RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim, EventAction* evt)
+  : G4UserRunAction(),
+    fDetector(det), fPrimary(prim), fRun(0), fHistoManager(0), fEvtAct(evt)
+{
+ // Book predefined histograms
+ fHistoManager = new HistoManager(fEvtAct); 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

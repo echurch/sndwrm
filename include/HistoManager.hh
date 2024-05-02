@@ -35,6 +35,7 @@
 
 #include "globals.hh"
 #include "PrimaryGeneratorAction.hh"
+#include "EventAction.hh"
 
 #include "g4root.hh"
 //#include "g4xml.hh"
@@ -45,11 +46,16 @@ class HistoManager
 {
   public:
    HistoManager();
+   HistoManager(EventAction* );
    ~HistoManager();
+
+  EventAction* fEvtAct;
+
 
   private:
    void Book();
    G4String fFileName;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -85,10 +85,64 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   
   const G4VProcess* process   = track->GetCreatorProcess();
   G4String processName("null") ;
+
+  if (time/ms > 5.0) // Do not consider long time constant decays, like 41n! 10 msec is a few TPC drifts.
+    {
+      return;
+    }
+
   if (process)
     {
       processName = process->GetProcessName();
+      if (processName.find("neutronInelastic") != std::string::npos) 
+	{
+	  if (track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName().find("G4_lAr") != std::string::npos)
+	  //	  std::cout << "TrackAct::PreTrkUseAct(): event for which neutronInelastic is found: " << event << std::endl;
+	    fEventAction->SetInelProc(true);
+	}
     }  
+  if (pid > 1E9)
+    if (track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName().find("G4_lAr") != std::string::npos)
+      fEventAction->SetNucleiVec(pid);
+
+  // find LAr capture gammas and save their energy  
+  if (pid == 22)
+    {
+      if (track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName().find("G4_lAr") != std::string::npos &&
+	  processName.find("nCapt") != std::string::npos 
+	  ) 
+	{
+	  //	  std::cout << "TrackingAction: LAr cap gamma of energy " << energy << std::endl;
+	  fEventAction->CapEGam(energy);
+	}
+    }
+  // debugging chunk here
+  /*
+  if (pid == 1000060120 && process)
+    {
+
+      G4VPhysicalVolume* eVolume = track->GetVolume();
+      G4String eMaterial("null");
+      G4String eVname("null");
+      //      if (eVolume)
+      try
+	{
+	  std::cout << "TrackingAction: about to define eVname" << std::endl;
+	  eVname = eVolume->GetName();
+	  std::cout << "TrackingAction: about to define  eMaterial" << std::endl;
+	  eMaterial = track->GetVolume()->GetLogicalVolume()->GetMaterial()->GetName();
+	  std::cout << "TrackingAction: about to access process, eVName, eMaterial" << std::endl;
+	  std::cout << "TrakcingAction: C nucleis created by " << process->GetProcessName() << " at Volume/Material " << eVname << "/" << eMaterial << std::endl;
+	  std::cout << "TrackingAction: accessed process, eVName, eMaterial" << std::endl;
+
+	}
+      catch (...)
+	{
+	  std::cout << "TrackingAction: exception" << std::endl;
+	}
+    }
+  */
+
   run->ParticleCount(name,energy,iVol);
   
   std::vector<std::string> procOfInterest({"capt","beta","radioactive"}); // to catch ncapt, Rn222 chain, Ar39, Ar42 chain betas. And primaries with "null".
@@ -111,7 +165,6 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
 
   // no worky when launching n's, gammas from outside the fidv. Hard code it. EC, 4-Aug-2021.
   const std::vector<double> fidv {6000,6000,30000};
-
   if (abs(vtx[0])<fidv.at(0) && abs(vtx[1])<fidv.at(1) && abs(vtx[2])<fidv.at(2) && !fEventAction->GetFiducial())
     {
       for (const auto& proc : procOfInterest) {
@@ -129,7 +182,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
   //G4int procaessType = track->GetCreatorProcess()->GetProcessSubType();
   //  if (processType == fRadioactiveDecay) {
     //fill ntuple id = 3
-  if (fEventAction->GetFiducial()  && 0 /* to shut reporting off for now*/)
+  if (fEventAction->GetFiducial() && pid!=-22    && 0 /* to shut reporting off for now*/)
     {
       std::cout << "TrackingAction::PreUserTrackingAction()..." << std::endl ;
       std::cout << "\t pid, energy, processName, " << pid << ", " << energy << ", "  << processName << std::endl;

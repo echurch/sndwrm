@@ -76,6 +76,30 @@ EventAction::~EventAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+void EventAction::SetNucleiVec(G4int pnucID)
+{
+  // cut Isotope/isomer to trailing 6 digits, ZZAAAI
+  // Add it to vector only if it's new for this event.
+  G4int ntrunc;
+  ntrunc = pnucID - 1000000000;
+
+  for (const auto &n : fNucleiVec)
+  {
+    if (n == ntrunc)
+      return;
+  }
+
+  fNucleiVec.push_back(ntrunc);
+  return;
+
+}
+
+void EventAction::CapEGam(G4double E)
+{
+  fEGamCap.push_back(E);
+  fEGamCapSum+=E;
+}
+
 void EventAction::BeginOfEventAction(const G4Event*)
 {
   fEdep1 = fEdep2 = fWeight1 = fWeight2 = 0.;
@@ -83,6 +107,10 @@ void EventAction::BeginOfEventAction(const G4Event*)
   fTime0 = -1*s;
   fFiducial = false;
   procVtx[0] = procVtx[1] = procVtx[2] = 0.0;
+  fInel = false;
+  fNucleiVec.clear();
+  fEGamCap.clear();
+  fEGamCapSum = 0.0;
 
   G4LogicalVolumeStore * lvs =   G4LogicalVolumeStore::GetInstance();
 
@@ -170,12 +198,16 @@ void EventAction::EndOfEventAction(const G4Event* G4Evt)
    if (vtxftt[0] == 0.0)  // This means it's not a Marley evt, say. So, let's get vtx of interesting (cap,phot, ...) process.
      {
        vtxftt = GetProcVtx();
-       std::cout << "EnergyCalc(): Interesting fiducial process's vtx is " << vtxftt[0] << "," << vtxftt[1] << "," << vtxftt[2] << std::endl;
+       //       std::cout << "EnergyCalc(): Interesting fiducial process's vtx is " << vtxftt[0] << "," << vtxftt[1] << "," << vtxftt[2] << std::endl;
      }
    analysisManager->FillNtupleDColumn(id,5, vtxftt[0]);
    analysisManager->FillNtupleDColumn(id,6, vtxftt[1]);
    analysisManager->FillNtupleDColumn(id,7, vtxftt[2]);
+   analysisManager->FillNtupleIColumn(id,8, int(fInel) );
+   analysisManager->FillNtupleDColumn(id,9, fEGamCapSum);
+   // This line knows to go call GetNucleiVec() to populate this row.
    analysisManager->AddNtupleRow(id);
+
 
  if (fEdep1 > 0.) {
    fWeight1 /= fEdep1;
@@ -188,13 +220,15 @@ void EventAction::EndOfEventAction(const G4Event* G4Evt)
 
    //   std::cout << "fEdep1:: " << fEdep1  << std::endl;
    analysisManager->FillH1(0, fEdep1, 1.0 ); // fWeight1);   
+   for (const auto &E : fEGamCap)
+     analysisManager->FillH1(12, E, 1.0 ); 
  }
  
  // pulse height in SiPM
  //   
  if (fEdep2 > 0.) {
    fWeight2 /= fEdep2;
-   std::cout << "EndofEvtAction: Total SipM hits: " << fEdep2 << std::endl;
+
 
    analysisManager->FillH1(1, fEdep2, 1.0);    //fWeight2);
    if (fPGA->GetPrimaryGenerator()->GetFSNeutrino())

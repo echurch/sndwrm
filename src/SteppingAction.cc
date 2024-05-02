@@ -91,7 +91,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4VPhysicalVolume* eVolume = touch->GetVolume();
   G4String eVname("null");
   G4double W(19.5*1E-6); // eV
+  const G4ThreeVector pos(aStep->GetPreStepPoint()->GetPosition());
+  const G4ThreeVector tpos(aStep->GetPostStepPoint()->GetPosition());
   
+  G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
+  if (time/ms > 5.0) // Do not consider long time constant decays, like 41n! 10 msec is a few TPC drifts.
+    return;
+
   if (eVolume)
     {
       eVname = eVolume->GetName();  
@@ -117,8 +123,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   tprocess = aStep->GetPostStepPoint()->GetProcessDefinedStep();
   //  if (pID == 11)
   //    std::cout << "SteppingAction material in which e- step and x,y,z [mm]: " << lVolume->GetMaterial()->GetName()<< ", " << aStep->GetPreStepPoint()->GetPosition()[0] << ", " << aStep->GetPreStepPoint()->GetPosition()[1] << ", " << aStep->GetPreStepPoint()->GetPosition()[2] << std::endl;
+  const std::vector<double> fidv {6000,6000,30000};
+  if (abs(pID) == 11 && lVolume->GetMaterial()->GetName().find("G4_lAr") != std::string::npos &&
+      // also require deposit to be inside the instrumented region. Else, there will not be any charge measured for these event.
+      ( ( abs(pos[0]) < fidv.at(0) ) && ( abs(pos[1]) < fidv.at(1) ) && ( abs(pos[2]) < fidv.at(2) ) ) 
+      )
 
-  if (abs(pID) == 11 && lVolume->GetMaterial()->GetName().find("G4_lAr") != std::string::npos)
     {
       static G4ParticleDefinition* opticalphoton =
        G4OpticalPhoton::OpticalPhotonDefinition();
@@ -143,7 +153,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       
       if (edepStep > 0.)
 	{
-
 	  // let's capture edep, L, and calculated Q
 	  Qq = edepStep/W - Lq; // smear this by 2-3%
 	  //	  std::cout << "SteppingAction: edepStep [MeV], L, Q, material, stepLength [mm]: " << edepStep << ", " << Lq << ", " << Qq << "," << lVolume->GetMaterial()->GetName() << ", " << aStep->GetStepLength()<< std::endl;
@@ -155,14 +164,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   if (/*edepStep <= 0. &&*//*  !(eVname.find("Arapuca")!=std::string::npos)  || !(lVolume->GetName().find("Arapuca")!=std::string::npos)  ||*/  (pID!=0 && pID!=-22) ) return; // the deception version of G4 uses -22 for optical photons; my Mac's uses 0.
 
-  G4double time   = aStep->GetPreStepPoint()->GetGlobalTime();
-  G4double weight = aStep->GetPreStepPoint()->GetWeight();   
 
+  G4double weight = aStep->GetPreStepPoint()->GetWeight();   
 
   G4int id = 4;   
   const G4double length = aStep->GetStepLength();
-  const G4ThreeVector pos(aStep->GetPreStepPoint()->GetPosition());
-  const G4ThreeVector tpos(aStep->GetPostStepPoint()->GetPosition());
 
   std::string startp("null");
   std::string endp("null");
@@ -178,7 +184,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   // Above does not work when launching n's, gammas from outside the fidV. G'arr! Hard code it for now. EC, 4-Aug-2021.
 
-  const std::vector<double> fidv {3000,4500,20000};
+  //  const std::vector<double> fidv {3000,4500,20000};
   if (sprocess)
       startp = sprocess->GetProcessName();
 

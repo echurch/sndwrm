@@ -33,7 +33,9 @@
 #ifndef RunAction_h
 #define RunAction_h 1
 
+
 #include "G4UserRunAction.hh"
+#include "EventAction.hh"
 #include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -49,6 +51,7 @@ class RunAction : public G4UserRunAction
 {
   public:
     RunAction(DetectorConstruction*, PrimaryGeneratorAction*);
+    RunAction(DetectorConstruction*, PrimaryGeneratorAction*, EventAction*);
    ~RunAction();
 
   public:
@@ -61,7 +64,7 @@ class RunAction : public G4UserRunAction
     PrimaryGeneratorAction*    fPrimary;
     Run*                       fRun;    
     HistoManager*              fHistoManager;
-
+    EventAction*               fEvtAct;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

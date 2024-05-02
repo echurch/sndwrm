@@ -46,6 +46,7 @@
 #include "G4DecayPhysics.hh"
 #include "G4NuclideTable.hh"
 #include "G4RadioactiveDecayPhysics.hh"
+#include "Shielding.hh"
 
 #include "G4HadronElasticPhysicsHP.hh"
 #include "G4HadronElasticPhysics.hh"
@@ -109,7 +110,9 @@ void PhysicsList::ConstructPhys()
 
   G4int verb = 0;
   SetVerboseLevel(verb);
-          
+  
+  
+        
   // EM physics
   RegisterPhysics(new G4EmStandardPhysics());
   G4EmParameters* param = G4EmParameters::Instance();
@@ -122,11 +125,11 @@ void PhysicsList::ConstructPhys()
 
   // Radioactive decay
   RegisterPhysics(new G4RadioactiveDecayPhysics());
-            
+ 
+           
   // Hadron Elastic scattering
   RegisterPhysics( new G4HadronElasticPhysicsHP(verb) );
 
-  
   // Hadron Inelastic physics
   RegisterPhysics( new G4HadronPhysicsFTFP_BERT_HP(verb));
   ////RegisterPhysics( new G4HadronPhysicsQGSP_BIC_HP(verb));
@@ -139,14 +142,15 @@ void PhysicsList::ConstructPhys()
   // Ion Inelastic physics
   RegisterPhysics( new G4IonPhysics(verb));
   ////RegisterPhysics( new G4IonINCLXXPhysics(verb));
-    
+  
+  
   // Gamma-Nuclear Physics
   G4EmExtraPhysics* gnuc = new G4EmExtraPhysics(verb);
   gnuc->ElectroNuclear(false);
   gnuc->MuonNuclear(false);
   RegisterPhysics(gnuc);
 
-
+  std::cout << "PhysicsList::ConstructPhysics() registering optical Physics." << std::endl;
   // per https://indico.cern.ch/event/789510/contributions/3279418/attachments/1818134/2972494/AH_OpticalPhotons_slides.pdf
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(verb);
   opticalPhysics->SetWLSTimeProfile("delta");

@@ -40,6 +40,11 @@ HistoManager::HistoManager()
 {
   Book();
 }
+HistoManager::HistoManager(EventAction* EvtAct)
+  : fFileName("rdecay02"), fEvtAct(EvtAct)
+{
+  Book();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -159,6 +164,10 @@ void HistoManager::Book( )
   id = analysis->CreateH1("H18","Decay emission spectrum (0 - 0.1 MeV)",
                  nbins, vmin, vmax);
   analysis->SetH1Activation(id, false);
+
+  id = analysis->CreateH1("H19","Capture gamma event-summed energies",
+			  25 , 0.0, 25.0);
+  analysis->SetH1Activation(id, false);
   
   // nTuples
   //
@@ -187,6 +196,10 @@ void HistoManager::Book( )
   analysis->CreateNtupleDColumn("X");         //column 5
   analysis->CreateNtupleDColumn("Y");         //column 6
   analysis->CreateNtupleDColumn("Z");         //column 7
+  analysis->CreateNtupleIColumn("InEl");         //column 8
+  analysis->CreateNtupleDColumn("EgamCap");         //column 9
+  if (fEvtAct)
+    analysis->CreateNtupleIColumn("nuclei",fEvtAct->GetNucleiVec());
   analysis->FinishNtuple();
   
   analysis->CreateNtuple("Tracks", "Track Summaries");
