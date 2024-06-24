@@ -103,6 +103,15 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       fParticleGun->GetCurrentSource()->GetPosDist()->GetHalfY(),
       fParticleGun->GetCurrentSource()->GetPosDist()->GetHalfZ()};
 
+  const G4double x = xyzbounds.at(0)*(G4UniformRand()-0.5)*2. ;  
+  const G4double y = xyzbounds.at(1)*(G4UniformRand()-0.5)*2. ;  
+  const G4double z = xyzbounds.at(2)*(G4UniformRand()-0.5)*2. ; 
+
+  const G4ThreeVector center(fParticleGun->GetCurrentSource()->GetPosDist()->GetCentreCoords());
+  xyzbounds.at(0) = x + center[0];
+  xyzbounds.at(1) = y + center[1];
+  xyzbounds.at(2) = z + center[2];
+
   //  std::cout << "GeneratePrimaries() particle requested is " << fParticleGun->GetParticleDefinition() << std::endl;
 
   if (fParticleGun->GetParticleDefinition() == G4Geantino::Geantino()) {  

@@ -63,10 +63,11 @@ void PrimaryGenerator::GeneratePrimaryVertexOpt(G4Event* event, std::vector<doub
 
   const G4int n_particle = 1250; // from our DkMatter paper, via SCENE. 1250 photons per 100 keV n.r.
 
-  const G4double x = xyzb.at(0)*(G4UniformRand()-0.5)*2. ;  
-  const G4double y = xyzb.at(1)*(G4UniformRand()-0.5)*2. ;  
-  const G4double z = xyzb.at(2)*(G4UniformRand()-0.5)*2. ; 
-  //
+  const G4double x = xyzb.at(0) ;  
+  const G4double y = xyzb.at(1) ;  
+  const G4double z = xyzb.at(2) ; 
+  
+
   G4ThreeVector positionA(x,y,z);
 
   for (int ii =0; ii< n_particle; ii++) 
@@ -88,7 +89,8 @@ void PrimaryGenerator::GeneratePrimaryVertexOpt(G4Event* event, std::vector<doub
       G4PrimaryParticle* particle1 = new G4PrimaryParticle(particleDefinition);
       particle1->SetMomentumDirection(G4ThreeVector(ux,uy,uz));    
       //      std::cout << "PrimaryGenerator: Added " << n_particle << "  opticalphoton w ux,uy,uz " << ux <<", " << uy << ", " << uz << "."  << std::endl;
-      particle1->SetKineticEnergy(9.686 * eV); // 128nm
+      //      particle1->SetKineticEnergy(9.686 * eV); // 128nm
+      particle1->SetKineticEnergy(7.0 * eV); // 176nm
   //
       vertexA->SetPrimary(particle1);
       event->AddPrimaryVertex(vertexA);
