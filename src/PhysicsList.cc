@@ -153,6 +153,8 @@ void PhysicsList::ConstructPhys()
   std::cout << "PhysicsList::ConstructPhysics() registering optical Physics." << std::endl;
   // per https://indico.cern.ch/event/789510/contributions/3279418/attachments/1818134/2972494/AH_OpticalPhotons_slides.pdf
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(verb);
+  
+  /*      Take all these out for successful compilation in G4 11. EC, 20-Dec-2024.
   opticalPhysics->SetWLSTimeProfile("delta");
   opticalPhysics->SetMaxBetaChangePerStep(10.0);
   opticalPhysics->SetTrackSecondariesFirst(kCerenkov,true);
@@ -160,7 +162,7 @@ void PhysicsList::ConstructPhys()
   opticalPhysics->SetScintillationYieldFactor(1.);
   G4int fMaxNumPhotonStep(7000);
   opticalPhysics->SetMaxNumPhotonsPerStep(fMaxNumPhotonStep);
-
+  */
   // Consider putting a macro-driven switch to shut off next line, if optical physics not desired.
   RegisterPhysics(opticalPhysics);
 
@@ -239,7 +241,7 @@ void PhysicsList::ConstructOp()
   fCerenkovProcess->SetMaxBetaChangePerStep(10.0);
   fCerenkovProcess->SetTrackSecondariesFirst(false);
   fScintillationProcess = new G4Scintillation("Scintillation");
-  fScintillationProcess->SetScintillationYieldFactor(1.);
+  // comment out for G4 11, EC, 20-Dec-2024.  fScintillationProcess->SetScintillationYieldFactor(1.);
   fScintillationProcess->SetTrackSecondariesFirst(false);
   fAbsorptionProcess = new G4OpAbsorption();
   fRayleighScatteringProcess = new G4OpRayleigh();

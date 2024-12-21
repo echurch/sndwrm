@@ -37,6 +37,7 @@
 
 #include "G4ProcessTable.hh"
 #include "G4RadioactiveDecay.hh"
+#include "G4Radioactivation.hh"
 #include "G4TwoVector.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
@@ -397,8 +398,12 @@ void Run::EndOfRun()
 void Run::WriteActivity(G4int nevent)
 {
  G4ProcessTable *pTable = G4ProcessTable::GetProcessTable();
- G4RadioactiveDecay * rDecay = (G4RadioactiveDecay *)
-         pTable->FindProcess("RadioactiveDecay", "GenericIon");
+ 
+ // G4RadioactiveDecay * rDecay = (G4RadioactiveDecay *)
+ //        pTable->FindProcess("RadioactiveDecay", "GenericIon");
+ // Changed in G4 11, EC 20-Dec-2024.
+ G4Radioactivation* rDecay = (G4Radioactivation *)
+         pTable->FindProcess("Radioactivation", "GenericIon");
    
  // output the induced radioactivities (in VR mode only)
  //
@@ -416,8 +421,8 @@ void Run::WriteActivity(G4int nevent)
     outfile << "Z \tA \tE \tActivity (decays/window) \tError (decays/window) "
             << G4endl;
 
-    map<G4ThreeVector,G4TwoVector> *aMap = theTables[i]->GetTheMap();
-    map<G4ThreeVector,G4TwoVector>::iterator iter;
+    std::map<G4ThreeVector,G4TwoVector> *aMap = theTables[i]->GetTheMap();
+    std::map<G4ThreeVector,G4TwoVector>::iterator iter;
     for (iter=aMap->begin(); iter != aMap->end(); iter++) {
        rate = iter->second.x()/nevent;
        error = std::sqrt(iter->second.y())/nevent;

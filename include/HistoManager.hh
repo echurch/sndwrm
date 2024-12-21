@@ -37,7 +37,9 @@
 #include "PrimaryGeneratorAction.hh"
 #include "EventAction.hh"
 
-#include "g4root.hh"
+// #include "g4root.hh" gone in G4 11.x, EC, 19-Dec-2024. Instead use....
+#include "G4AnalysisManager.hh"
+
 //#include "g4xml.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

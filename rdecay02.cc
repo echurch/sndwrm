@@ -92,6 +92,7 @@ int main(int argc,char** argv) {
   runManager->SetUserInitialization(physlist);
   G4int verb(0);
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(verb);
+  /* Comment out all below for successful compilation in G4 11, EC, 20-Dec-2024.
   opticalPhysics->SetWLSTimeProfile("delta");
   opticalPhysics->SetMaxBetaChangePerStep(10.0);
   opticalPhysics->SetTrackSecondariesFirst(kCerenkov,true);
@@ -99,6 +100,7 @@ int main(int argc,char** argv) {
   opticalPhysics->SetScintillationYieldFactor(1.);
   G4int fMaxNumPhotonStep(7000);
   opticalPhysics->SetMaxNumPhotonsPerStep(fMaxNumPhotonStep);
+  */
   physlist->RegisterPhysics( opticalPhysics);
 
   runManager->SetUserInitialization( physlist );
