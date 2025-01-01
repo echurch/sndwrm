@@ -1,10 +1,11 @@
 #----------------------------------------------------------------------------
 # Setup the project
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(sndwrm)
 
 # Required by MARLEY
 set(CMAKE_CXX_STANDARD 14)
+
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -21,6 +22,7 @@ endif()
 message(STATUS "GEANT4 include dir: ${Geant4_INCLUDE_DIR}")
 message(STATUS "GEANT4 libraries dir: ${Geant4_LIBRARIES_DDIR}")
 message(STATUS "GEANT4 libraries libs: ${Geant4_LIBRARIES}")
+
 
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
@@ -40,8 +42,16 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
+# Add -DUSEG4MT=1 to cmake options to use multithreading
+option(USEG4MT "Compile with G4MULTITHREADing " OFF)
+if (USEG4MT)
+   add_compile_definitions(USEG4MT)
+endif()
+
 add_executable(sndwrm rdecay02.cc ${sources} ${headers})
-target_link_libraries(sndwrm  ${Geant4_LIBRARIES} $ENV{MARLEY}/build/libMARLEY.so)
+target_link_libraries(sndwrm  ${Geant4_LIBRARIES}  $ENV{MARLEY}/build/libMARLEY.so)
+
+message(STATUS "USEG4MT is ${USEG4MT}")
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we

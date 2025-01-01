@@ -59,12 +59,12 @@ void ActionInitialization::BuildForMaster() const
 
 void ActionInitialization::Build() const
 {
+
   PrimaryGeneratorAction* primary = new PrimaryGeneratorAction();
   SetUserAction(primary);
 
-  
   EventAction* event = new EventAction(primary);
-  SetUserAction(event);  
+  SetUserAction(event);
 
   RunAction* runAction = new RunAction(fDetector, primary, event );
   SetUserAction(runAction);

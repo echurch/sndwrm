@@ -1,4 +1,4 @@
-#
+
 # Macro file for the initialization phase of "TestEm6.cc"#
 # Sets some default verbose
 # and initializes the graphic.
@@ -9,7 +9,7 @@
 /run/initialize
 #
 # Use this open statement to create an OpenGL view:
-/vis/open OGL 600x600-0+0
+/vis/open OGL 900x900-0+0
 
 #
 # Use this open statement to create a .prim file suitable for

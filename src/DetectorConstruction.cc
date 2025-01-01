@@ -1,4 +1,3 @@
-
 // Module 3 light simulation
 // Authors: L. Paulucci & F. Marinho & E. Church
 // Date:  2024
@@ -16,10 +15,16 @@
 #include "G4Orb.hh"
 #include "G4Sphere.hh"
 #include "G4NistManager.hh"
-
+#include "G4MultiUnion.hh"
 #include "G4Color.hh"
+#include "G4Colour.hh"
 #include "G4VisAttributes.hh"
+
 #include <string>
+
+#include "globals.hh"
+#include <CLHEP/Geometry/Transform3D.h>
+
 
 DetectorConstruction::DetectorConstruction()
   
@@ -28,9 +33,9 @@ DetectorConstruction::DetectorConstruction()
    fPhysiVol(NULL),fLogicVol(NULL),fSolidVol(NULL)
   
 {
-  fWorldSizeX=30.0; //in meters
-  fWorldSizeY=40.0; //in meters
-  fWorldSizeZ=65.0;
+  fWorldSizeX=50.0; //in meters
+  fWorldSizeY=50.0; //in meters
+  fWorldSizeZ=75.0;
   
   fCryostat_x = 14.8; //in meters
   //fCryostat_y = 6.5; //in meters
@@ -65,6 +70,19 @@ DetectorConstruction::DetectorConstruction()
   fvert_bar_y = fFC_y/2-0.1;//making it slightly smaller to avoid overlap on cathode
   fvert_bar_z = 0.075;
 
+  // IBeams
+  fIFlangeWidth = 0.402; // all m here.
+  fIFlangeThick = 0.040;
+  fIFlangeWaist = 0.022;
+  fIFlangeHeight = 1108./1000.;
+  fITopLength = 17832./1000. + 2* (fIFlangeHeight/2.0);
+  fISideLength = 16732./1000. - 2* (fIFlangeHeight/2.0) ; // need a little space with these side beams
+
+  fIPortHoleRad = 0.800/2;
+  fISidePortLoc = 5907./1000. - fIFlangeHeight/2. ;
+  fIPortSpacing = 4000.0/1000.0 ;
+  fIBotPortLoc = 5000.0/1000.0;
+  
   fMPL = new MaterialPropertyLoader();  
 }
 
@@ -85,11 +103,398 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Must wait till this late, cuz MLP works by looping over all Logical Volumes which are only just now established.
   // Get the logical volume store and assign material properties. MaterialPropLoader() is borrowed, heavily-edited from LArSoft.   
 
-
-
   DefineMaterials();
   return ConstructLine();
 }
+
+
+// https://indico.cern.ch/event/698002/contributions/2868259/attachments/1591642/2519098/AC_introduction_to_the_cryostat_design_warm_vessel.pdf
+void DetectorConstruction::IBeams()
+{
+
+  G4double Offset(0.001*m);
+  G4Box* IBeamTopFlange = new G4Box("IBeamTopFlange",(fIFlangeWidth/2.0)*m, (fIFlangeThick/2.0)*m,(fITopLength/2.0)*m); 
+  G4Box* IBeamTopMid = new G4Box("IBeamTopMid",(fIFlangeWaist/2.0)*m, (fIFlangeHeight/2.)*m,(fITopLength/2.)*m);
+  G4Box* IBeamSideFlange = new G4Box("IBeamTopFlange",(fIFlangeWidth/2.0)*m, (fIFlangeThick/2.0)*m,(fISideLength/2.0)*m); 
+  G4Box* IBeamSideMidtmp0 = new G4Box("IBeamSideMid",(fIFlangeWaist/2.0)*m, (fIFlangeHeight/2.)*m,(fISideLength/2.)*m); 
+  G4Tubs* IBeamPort = new G4Tubs("IBeamPortHole",0.,fIPortHoleRad*m,(fIFlangeThick/2.0)*m,0.0,2.0*CLHEP::pi);
+  G4RotationMatrix* fc = new G4RotationMatrix();
+  G4ThreeVector* axisfc = new G4ThreeVector(0.0,1.0,0.0);
+  fc->rotate(CLHEP::pi/2.,axisfc);
+  G4RotationMatrix* fc2 = new G4RotationMatrix();
+  G4ThreeVector* axisfc2 = new G4ThreeVector(1.0,0.0,0.0);
+  G4ThreeVector* axisfc3 = new G4ThreeVector(0.0,0.0,1.0);
+  fc2->rotate(-CLHEP::pi/2,axisfc2);
+  fc2->rotate(CLHEP::pi/2,axisfc3);
+  G4RotationMatrix* fc3 = new G4RotationMatrix();
+  fc3->rotate(-CLHEP::pi/2,axisfc2);
+  
+  G4SubtractionSolid* IBeamBotMidtmp = new G4SubtractionSolid("IBeamBottomtmp", IBeamTopMid, IBeamPort,fc, G4ThreeVector(0.0,0.0,fIPortSpacing/2.*m));
+  G4SubtractionSolid* IBeamBotMid = new G4SubtractionSolid("IBeamBottom", IBeamBotMidtmp, IBeamPort,fc, G4ThreeVector(0.0,0.0,-fIPortSpacing/2.*m));
+  G4SubtractionSolid* IBeamSideMidtmp1 = new G4SubtractionSolid("IBeamSidetmp", IBeamSideMidtmp0, IBeamPort,fc, G4ThreeVector(0.0,0.0,(fISideLength/2.+fIFlangeHeight/2.-5907./1000.)*m));
+  G4SubtractionSolid* IBeamSideMidtmp2 = new G4SubtractionSolid("IBeamSidetmp2", IBeamSideMidtmp1, IBeamPort,fc, G4ThreeVector(0.0,0.0,(fISideLength/2.+fIFlangeHeight/2.-5907./1000.-fIPortSpacing)*m));
+  G4SubtractionSolid* IBeamSideMid = new G4SubtractionSolid("IBeamSide", IBeamSideMidtmp2, IBeamPort,fc, G4ThreeVector(0.0,0.0,(fISideLength/2.+fIFlangeHeight/2.-5907./1000.-2.0*fIPortSpacing)*m));
+
+  
+  HepGeom::Transform3D tnull, tr1, tr2;
+  tnull = HepGeom::TranslateY3D(0.0);
+  tr1 = HepGeom::TranslateY3D(( fIFlangeHeight/2.+fIFlangeThick/2.0)*m);
+  tr2 = HepGeom::TranslateY3D((-fIFlangeHeight/2.-fIFlangeThick/2.0)*m);
+
+  G4MultiUnion* fBeamTopVol = new G4MultiUnion("IBeamTopVol");
+  G4MultiUnion* fBeamBotVol = new G4MultiUnion("IBeamBotVol");
+  G4MultiUnion* fBeamSideVol = new G4MultiUnion("IBeamSideVol");
+
+  fBeamTopVol->AddNode(IBeamTopMid, tnull);
+  fBeamTopVol->AddNode(IBeamTopFlange,tr1);
+  fBeamTopVol->AddNode(IBeamTopFlange,tr2);
+  fBeamTopVol->Voxelize();
+  G4LogicalVolume* fIBeamTopLog = new G4LogicalVolume(fBeamTopVol, fDUNESteel, "IBeamTopLog");
+  fBeamBotVol->AddNode(IBeamBotMid, tnull);
+  fBeamBotVol->AddNode(IBeamTopFlange,tr1);
+  fBeamBotVol->AddNode(IBeamTopFlange,tr2);
+  fBeamBotVol->Voxelize();
+  G4LogicalVolume* fIBeamBotLog = new G4LogicalVolume(fBeamBotVol, fDUNESteel, "IBeamBotLog");
+  fBeamSideVol->AddNode(IBeamSideMid, tnull);
+  fBeamSideVol->AddNode(IBeamSideFlange,tr1);
+  fBeamSideVol->AddNode(IBeamSideFlange,tr2);
+  fBeamSideVol->Voxelize();
+  G4LogicalVolume* fIBeamSideLog = new G4LogicalVolume(fBeamSideVol, fDUNESteel, "IBeamSideLog");
+
+  G4VisAttributes* simpleBoxAtt= new G4VisAttributes(G4Colour::Green());
+  simpleBoxAtt->SetDaughtersInvisible(true);
+  simpleBoxAtt->SetForceSolid(true);
+  simpleBoxAtt->SetForceAuxEdgeVisible(true);
+  fIBeamTopLog->SetVisAttributes(simpleBoxAtt);
+  fIBeamBotLog->SetVisAttributes(simpleBoxAtt);
+  fIBeamSideLog->SetVisAttributes(simpleBoxAtt);
+
+  const double ht =  16732/1000./2 +0.045; //m
+  const double st =  17832/1000./2 +0.030 ; //m
+  std::cout << "DetectorConstruction::IBeams(): IBeam height/width is " << std::to_string(ht) << "/" << std::to_string(st) << std::endl;
+  const double zbsp = 64732./1000./41; //m
+    
+  //  Top, Bottom, sides
+  int cpIT(0), cpIB(0), cpIL(0), cpIR(0);
+  double zpl(0.0);
+
+  for (size_t ii=0;ii<=19;ii++) {
+    std::cout << "DetectorConstruction::IBeams(): ii is " << ii << std::endl;
+    std::cout << "DetectorConstruction::IBeams(): ht, zpl, fIBeamTopLog,fphysiWorld, cpIT is " << ht << "," << zpl << "," << fIBeamTopLog << "," <<fPhysiWorld <<"," <<cpIT << std::endl;    
+    
+     new G4PVPlacement(fc,G4ThreeVector(0,(ht)*m,(zpl)*m),"IBeamTop",
+							 fIBeamTopLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIT++, // copyNo
+							 true); //check for overlaps
+     new G4PVPlacement(fc,G4ThreeVector(0,(-ht)*m,(zpl)*m),"IBeamBot",
+							 fIBeamBotLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIB++, // copyNo
+							 true); //check for overlaps
+     new G4PVPlacement(fc2,G4ThreeVector((-st)*m,0,(zpl)*m),"IBeamLeft",
+							 fIBeamSideLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIL++, // copyNo
+							 true); //check for overlaps
+     new G4PVPlacement(fc2,G4ThreeVector((+st)*m,0,(zpl)*m),"IBeamRight",
+							 fIBeamSideLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIR++, // copyNo
+							 true); //check for overlaps
+
+    
+    if (ii==0) {  zpl+=zbsp; continue; }
+    new G4PVPlacement(fc,G4ThreeVector(0,(ht)*m,(-zpl)*m),"IBeamTop",
+							 fIBeamTopLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIT++, // copyNo
+							 true); //check for overlaps
+    new G4PVPlacement(fc,G4ThreeVector(0,(-ht)*m,(-zpl)*m),"IBeamBot",
+							 fIBeamBotLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIB++, // copyNo
+							 true); //check for overlaps
+    new G4PVPlacement(fc2,G4ThreeVector((-st)*m,0,(-zpl)*m),"IBeamLeft",
+							 fIBeamSideLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIL++, // copyNo
+							 true); //check for overlaps
+    new G4PVPlacement(fc2,G4ThreeVector((+st)*m,0,(-zpl)*m),"IBeamRight",
+							 fIBeamSideLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIR++, // copyNo
+							 true); //check for overlaps
+    
+    zpl+=zbsp;
+  }
+
+
+  // Front face, back face
+  int cpIF(0), cpIBk(0);
+  double xpl(0.0);
+  zpl = 64732./1000./2.; //m
+  for (size_t ii=0;ii<=4;ii++) {
+    std::cout << "DetectorConstruction::IBeams(): ii is " << ii << std::endl;
+    std::cout << "DetectorConstruction::IBeams(): zpl, xpl is " << zpl << "," << xpl << std::endl;    
+    // use zpl where it's finished at large +-ive value.
+     new G4PVPlacement(fc3,G4ThreeVector((+xpl)*m,0,(zpl)*m),"IBeamFront",
+							 fIBeamSideLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIF++, // copyNo
+							 true); //check for overlaps
+     new G4PVPlacement(fc3,G4ThreeVector((+xpl)*m,0,(-zpl)*m),"IBeamBack",
+							 fIBeamSideLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIBk++, // copyNo
+							 true); //check for overlaps
+
+    if (ii==0) {  xpl+=zbsp; continue; }
+     new G4PVPlacement(fc3,G4ThreeVector((-xpl)*m,0,(+zpl)*m),"IBeamFront",
+							 fIBeamSideLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIF++, // copyNo
+							 true); //check for overlaps
+     new G4PVPlacement(fc3,G4ThreeVector((-xpl)*m,0,(-zpl)*m),"IBeamBack",
+							 fIBeamSideLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIBk++, // copyNo
+							 true); //check for overlaps
+     xpl+=zbsp;
+  }
+  
+}
+
+void DetectorConstruction::Belts()
+{
+  // Just two belts, one with a hole, one without.
+
+  const double ht =  16732/1000./2 ; //m
+  const double st =  17832/1000./2 +0.030 ; //m
+  const double fSpacing = 64732./1000./41  ; //m 
+  G4Box* BeltFlange = new G4Box("BeltFlange", ((fIFlangeWidth-0.100)/2.0)*m, (fIFlangeWaist/2.0)*m, (fSpacing/2.-0.005)*m ); 
+  G4Box* BeltMid = new G4Box("IBeamTopMid",(fIFlangeWaist/2.0)*m, (fIFlangeHeight/4.)*m, (fSpacing/2.-0.005)*m);
+  G4Tubs* IBeamPort = new G4Tubs("IBeamPortHole",0.,0.6*m,(fIFlangeThick/2.0)*m,0.0,2.0*CLHEP::pi); // 0.6m??
+  G4RotationMatrix* fc = new G4RotationMatrix();
+  G4RotationMatrix* fc3 = new G4RotationMatrix();
+  G4ThreeVector* axisfc = new G4ThreeVector(0.0,0.0,1.0);
+  G4RotationMatrix* fc2 = new G4RotationMatrix();
+  G4ThreeVector* axisfc2 = new G4ThreeVector(0.0,1.0,0.0);
+  G4ThreeVector* axisfc3 = new G4ThreeVector(1.0,0.0,0.0);
+  fc->rotate(CLHEP::pi/2.,axisfc);
+  fc2->rotate(CLHEP::pi/2.,axisfc2);
+  fc3->rotate(CLHEP::pi/2.,axisfc);
+  fc3->rotate(CLHEP::pi/2.,axisfc3);
+  G4SubtractionSolid* BeltHole = new G4SubtractionSolid("BeltHole", BeltMid, IBeamPort, fc2, G4ThreeVector(0.0,0.0,0.0));
+
+  HepGeom::Transform3D tnull, tr1, tr2;
+  tnull = HepGeom::TranslateY3D(0.0);
+  tr1 = HepGeom::TranslateY3D( (fIFlangeHeight/2.+fIFlangeWaist/3.0)*m);
+  tr2 = HepGeom::TranslateY3D(-(fIFlangeHeight/2.+fIFlangeWaist/3.0)*m);
+
+  G4MultiUnion* BeltHoleUni = new G4MultiUnion("BeltHoleUni");
+  BeltHoleUni->AddNode(BeltHole, tnull);
+  BeltHoleUni->AddNode(BeltFlange,tr1);
+  BeltHoleUni->AddNode(BeltFlange,tr2);
+  BeltHoleUni->Voxelize();
+  G4LogicalVolume* BeltHoleUniLog = new G4LogicalVolume(BeltHoleUni, fDUNESteel, "BeltHoleUniLog");
+  G4MultiUnion* BeltUni = new G4MultiUnion("BeltUni");
+  BeltUni->AddNode(BeltMid, tnull);
+  BeltUni->AddNode(BeltFlange,tr1);
+  BeltUni->AddNode(BeltFlange,tr2);
+  BeltUni->Voxelize();
+  G4LogicalVolume* BeltUniLog = new G4LogicalVolume(BeltUni, fDUNESteel, "BeltUniLog");
+  G4VisAttributes* simpleBoxAtt= new G4VisAttributes(G4Colour::Cyan());
+  G4VisAttributes* simpleBoxHoleAtt= new G4VisAttributes(G4Colour::Brown());
+  simpleBoxAtt->SetDaughtersInvisible(true);
+  simpleBoxAtt->SetForceSolid(true);
+  simpleBoxAtt->SetForceAuxEdgeVisible(true);
+  simpleBoxHoleAtt->SetDaughtersInvisible(true);
+  simpleBoxHoleAtt->SetForceSolid(true);
+  simpleBoxHoleAtt->SetForceAuxEdgeVisible(true);
+  BeltUniLog->SetVisAttributes(simpleBoxAtt);
+  BeltHoleUniLog->SetVisAttributes(simpleBoxHoleAtt);
+
+  const double zbsp = 64732./1000./41; //m
+  double zpl(zbsp/2.);
+  double xpl(0.);
+  int cpIT(0), cpIB(0), cpIL(0), cpIR(0),cpBlt(0);  
+  // Top, bottom
+  for (size_t ii=0;ii<=20;ii++) {
+    // loop on x for top and bottom
+    for (int jj=-5;jj<=5;jj++) {
+
+
+      new G4PVPlacement(0,G4ThreeVector(jj*zbsp*m,(-ht)*m,(zpl)*m),"BeltBot",
+							 BeltHoleUniLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIB++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(0,G4ThreeVector(jj*zbsp*m,(-ht)*m,(-zpl)*m),"BeltBot",
+							 BeltHoleUniLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIB++, // copyNo
+							 true); //check for overlaps
+      // belts dodge the flanges on top
+      if (std::abs(jj)==1 || std::abs(jj)==2 || std::abs(jj)==4) { 
+	new G4PVPlacement(0,G4ThreeVector(jj*zbsp*m,(ht)*m,(zpl)*m),"BeltTop",
+							 BeltUniLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIT++, // copyNo
+							 true); //check for overlaps
+	new G4PVPlacement(0,G4ThreeVector(jj*zbsp*m,(ht)*m,(-zpl)*m),"BeltTop",
+							 BeltUniLog,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIT++, // copyNo
+							 true); //check for overlaps
+      }
+    }
+    // left and right sides. bot 3 y-levels just below the port hole heights, top one at the top
+    for (size_t jj=0;jj<4;jj++) {
+      double y;
+      G4LogicalVolume* belt = BeltHoleUniLog;
+     // loop on y bot to top for these  two side walls -- 2 of 3 is nohole
+      if (jj==3) { // top 
+	y = ht*m;
+	belt = BeltUniLog;
+	if (ii % 3)  belt = BeltHoleUniLog;
+      }
+      if (jj==2) { // bot hole
+	y = -(fISideLength/2.+fIFlangeHeight/2.-5907./1000.+0.0*fIPortSpacing + 9*fIPortHoleRad)/2.*m;
+      }
+      if (jj==1) { // up 1 hole
+	y = -(fISideLength/2.+fIFlangeHeight/2.-5907./1000.-2.0*fIPortSpacing + 9*fIPortHoleRad)/2.*m;
+	belt = BeltUniLog;
+	if ((ii+1) % 3)  belt = BeltHoleUniLog;
+      }
+      if (jj==0) { // top hole
+	y = -(fISideLength/2.+fIFlangeHeight/2.-5907./1000.-4.0*fIPortSpacing + 9*fIPortHoleRad)/2.*m;
+	belt = BeltUniLog;
+	if ((ii+2) % 3)  belt = BeltHoleUniLog;
+      }
+
+      if (ii==20) { // nohole on extreme ends for all four levels
+	belt = BeltUniLog;
+      }
+
+      new G4PVPlacement(fc,G4ThreeVector(-st*m,y,(-zpl)*m),"BeltLeft",
+							 belt,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBlt++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(fc,G4ThreeVector( st*m,y,(-zpl)*m),"BeltRight",
+							 belt,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBlt++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(fc,G4ThreeVector(-st*m,y,(+zpl)*m),"BeltLeft",
+							 belt,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBlt++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(fc,G4ThreeVector( st*m,y,(+zpl)*m),"BeltRight",
+							 belt,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBlt++, // copyNo
+							 true); //check for overlaps
+      
+    }
+    zpl+=zbsp;
+  }
+
+  
+  
+  // Front face, back face
+  int cpBF(0), cpBBk(0);
+  xpl = zbsp/2.; //m
+  zpl = 64732./1000./2.; //m
+  for (size_t ii=0;ii<5;ii++) {
+  for (size_t jj=0;jj<4;jj++) {
+      double y;
+      G4LogicalVolume* belt = BeltHoleUniLog;
+     // loop on y bot to top for these  two side walls -- 2 of 3 is nohole
+      if (jj==3) { // top 
+	y = ht*m;
+	belt = BeltUniLog;
+	if (ii % 3)  belt = BeltHoleUniLog;
+      }
+      if (jj==2) { // bot hole
+	y = -(fISideLength/2.+fIFlangeHeight/2.-5907./1000.+0.0*fIPortSpacing + 9*fIPortHoleRad)/2.*m;
+      }
+      if (jj==1) { // up 1 hole
+	y = -(fISideLength/2.+fIFlangeHeight/2.-5907./1000.-2.0*fIPortSpacing + 9*fIPortHoleRad)/2.*m;
+	belt = BeltUniLog;
+	if ((ii+1) % 3)  belt = BeltHoleUniLog;
+      }
+      if (jj==0) { // top hole
+	y = -(fISideLength/2.+fIFlangeHeight/2.-5907./1000.-4.0*fIPortSpacing + 9*fIPortHoleRad)/2.*m;
+	belt = BeltUniLog;
+	if ((ii+2) % 3)  belt = BeltHoleUniLog;
+      }
+
+      if (ii==20) { // nohole on extreme ends for all four levels
+	belt = BeltUniLog;
+      }
+
+      new G4PVPlacement(fc3,G4ThreeVector(-xpl*m,y,(-zpl)*m),"BeltBack",
+							 belt,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBBk++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(fc3,G4ThreeVector( xpl*m,y,(-zpl)*m),"BeltBack",
+							 belt,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBBk++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(fc3,G4ThreeVector(-xpl*m,y,(+zpl)*m),"BeltFront",
+							 belt,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBF++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(fc3,G4ThreeVector( xpl*m,y,(+zpl)*m),"BeltFront",
+							 belt,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBF++, // copyNo
+							 true); //check for overlaps
+      
+    }
+    xpl+=zbsp;
+  }
+
+
+
+}
+
+void DetectorConstruction::Shielding()
+{
+}
+
+
+
 
 void DetectorConstruction::DefineMaterials()
 {  
@@ -200,8 +605,8 @@ void DetectorConstruction::DefineMaterials()
 
   lAr_pt->AddProperty("RAYLEIGH", RayleighEnergies, RayleighSpectrum, 22);
   lAr_pt->AddProperty("ABSLENGTH", PhotonEnergy, l_lAr, nEntries);
-  lAr_pt->AddConstProperty("FASTTIMECONSTANT", 6. * ns);
-  lAr_pt->AddConstProperty("SLOWTIMECONSTANT", 1590. * ns);
+  lAr_pt->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 6. * ns);       // FASTTIMECONSTANT
+  lAr_pt->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 1590. * ns);//	  SLOWTIMECONSTANT
 
   std::vector<double> FastScintEnergies { 6.0*eV,  6.7*eV,  7.1*eV,  7.4*eV,  7.7*eV, 7.9*eV,  8.1*eV,  8.4*eV,  8.5*eV,  8.6*eV,  8.8*eV,  9.0*eV,  9.1*eV,  9.4*eV,  9.8*eV,  10.4*eV,  10.7*eV};
   std::vector<double> SlowScintEnergies { 6.0*eV,  6.7*eV,  7.1*eV,  7.4*eV,  7.7*eV, 7.9*eV,  8.1*eV,  8.4*eV,  8.5*eV,  8.6*eV,  8.8*eV,  9.0*eV,  9.1*eV,  9.4*eV,  9.8*eV,  10.4*eV,  10.7*eV};
@@ -209,10 +614,10 @@ void DetectorConstruction::DefineMaterials()
   // std::vector<double> SlowScintSpectrumloc { 0.0,  0.04, 0.12, 0.27, 0.44, 0.62, 0.80, 0.91, 0.92, 0.85, 0.70, 0.50, 0.31, 0.13, 0.04,  0.01, 0.0};
   std::vector<double> FastScintSpectrumloc { 0.0,  0.0, 1., 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 0.0};
   std::vector<double> SlowScintSpectrumloc { 0.0,  0.0, 1., 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 0.0};
-  lAr_pt->AddProperty("FASTCOMPONENT", FastScintEnergies, FastScintSpectrumloc);
-  lAr_pt->AddProperty("SLOWCOMPONENT", SlowScintEnergies, SlowScintSpectrumloc);
+  lAr_pt->AddProperty("SCINTILLATIONCOMPONENT1", FastScintEnergies, FastScintSpectrumloc); // FASTCOMPNENT
+  lAr_pt->AddProperty("SCINTILLATIONCOMPONENT2", SlowScintEnergies, SlowScintSpectrumloc); // SLOWCOMPONENT
   lAr_pt->AddConstProperty("SCINTILLATIONYIELD", 25000 / MeV );
-  lAr_pt->AddConstProperty("YIELDRATIO", 0.3 );
+  lAr_pt->AddConstProperty("SCINTILLATIONYIELD1", 0.3 ); // YIELDRATIO
   lAr_pt->AddConstProperty("RESOLUTIONSCALE", 1.0 );
   env_mat->GetIonisation()->SetBirksConstant(0.069 * cm / MeV);
 
@@ -393,13 +798,13 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
                                  fPhysiWorld,    	//its mother  volume
                                  false,			//no boolean operation
 						    0, true);
-    std::cout << "Checking units on warm CryoSkin. xout size [mm]: " << (fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m << std::endl;
+  std::cout << "Checking units on warm CryoSkin. xout size [mm]: " << (fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m << std::endl;
 
+  // Create and Place I-Beams and Belts.
+  IBeams();
+  Belts();
   
-
-
-
-	   //Bulk box for wls optical properties tests
+  //Bulk box for wls optical properties tests
 
   /*G4Box* bulk = new G4Box("bulk",1.0*um,0.5*m,0.5*m);
   G4LogicalVolume* lbulk = new G4LogicalVolume(bulk,fPTP,"bulk");

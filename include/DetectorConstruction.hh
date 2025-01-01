@@ -156,7 +156,18 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double fvert_bar_y;
   G4double fvert_bar_z;
 
-
+  // IBeams
+  G4double fIFlangeWidth;
+  G4double fIFlangeThick;
+  G4double fITopLength;
+  G4double fISideLength;
+  G4double fIFlangeWaist;
+  G4double fIFlangeHeight;
+  G4double fIPortHoleRad;
+  G4double fISidePortLoc;
+  G4double fIPortSpacing;
+  G4double fIBotPortLoc;
+  
 // Materials
 
    G4Material*   fDefaultMaterial;
@@ -187,6 +198,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4VPhysicalVolume* ConstructVolumes();        
     G4VPhysicalVolume* ConstructLine();
 
+    void IBeams();
+    void Belts();
+    void Shielding();
+  
     MaterialPropertyLoader* fMPL;
  
 };

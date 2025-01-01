@@ -46,6 +46,7 @@
 #include "marley/Event.hh"
 #include "marley/Particle.hh"
 #include "marley/JSONConfig.hh"
+#include "marley/RootJSONConfig.hh"
 
 class MarleyMessenger;
 class G4Event;

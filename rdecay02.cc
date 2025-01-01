@@ -33,6 +33,7 @@
 
 #include "G4Types.hh"
 
+#include "G4RunManagerFactory.hh"
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
 #else
@@ -66,15 +67,20 @@ int main(int argc,char** argv) {
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
 
   // Construct the default run manager
-#ifdef G4MULTITHREADED
+#if defined(G4MULTITHREADED) && defined(USEG4MT)
   G4MTRunManager* runManager = new G4MTRunManager;
   G4int nThreads = G4Threading::G4GetNumberOfCores();
   if (argc==3) nThreads = G4UIcommand::ConvertToInt(argv[2]);
   runManager->SetNumberOfThreads(nThreads);
+  std::cout << "sndwrm: RUNNING IN G4MULTITHREADED MODE." << std::endl;
 #else
   //my Verbose output class
   G4VSteppingVerbose::SetInstance(new SteppingVerbose);
-  G4RunManager* runManager = new G4RunManager;
+  // To fix big dump-out error about leaks upon exit. EC, 30-Dec-2024.
+  //G4RunManager* runManager = new G4RunManager
+  std::cout << "sndwrm: RUNNING in concurrent mode." << std::endl;
+  auto* runManager =
+    G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
 #endif
 
   //set mandatory initialization classes
