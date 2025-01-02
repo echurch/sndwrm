@@ -82,6 +82,11 @@ DetectorConstruction::DetectorConstruction()
   fISidePortLoc = 5907./1000. - fIFlangeHeight/2. ;
   fIPortSpacing = 4000.0/1000.0 ;
   fIBotPortLoc = 5000.0/1000.0;
+
+  fht = 16732/1000./2 + 0.045; // m, for beam and belt placement
+  fst = 17832/1000./2 + 0.030;
+  fzpl = 64732./1000.;
+  fSpacing = 64732./1000./41; // m
   
   fMPL = new MaterialPropertyLoader();  
 }
@@ -169,18 +174,16 @@ void DetectorConstruction::IBeams()
   fIBeamBotLog->SetVisAttributes(simpleBoxAtt);
   fIBeamSideLog->SetVisAttributes(simpleBoxAtt);
 
-  const double ht =  16732/1000./2 +0.045; //m
-  const double st =  17832/1000./2 +0.030 ; //m
-  std::cout << "DetectorConstruction::IBeams(): IBeam height/width is " << std::to_string(ht) << "/" << std::to_string(st) << std::endl;
-  const double zbsp = 64732./1000./41; //m
+  const double ht =  fht;  //m  
+  const double st =  fst;  //m
+
+  const double zbsp = fSpacing; //m
     
   //  Top, Bottom, sides
   int cpIT(0), cpIB(0), cpIL(0), cpIR(0);
   double zpl(0.0);
 
   for (size_t ii=0;ii<=19;ii++) {
-    std::cout << "DetectorConstruction::IBeams(): ii is " << ii << std::endl;
-    std::cout << "DetectorConstruction::IBeams(): ht, zpl, fIBeamTopLog,fphysiWorld, cpIT is " << ht << "," << zpl << "," << fIBeamTopLog << "," <<fPhysiWorld <<"," <<cpIT << std::endl;    
     
      new G4PVPlacement(fc,G4ThreeVector(0,(ht)*m,(zpl)*m),"IBeamTop",
 							 fIBeamTopLog,      //its logical volume   
@@ -233,18 +236,17 @@ void DetectorConstruction::IBeams()
 							 false,                 //no boolean operation
 							 cpIR++, // copyNo
 							 true); //check for overlaps
-    
+
     zpl+=zbsp;
   }
+
 
 
   // Front face, back face
   int cpIF(0), cpIBk(0);
   double xpl(0.0);
-  zpl = 64732./1000./2.; //m
+  zpl = fzpl/2.; //m
   for (size_t ii=0;ii<=4;ii++) {
-    std::cout << "DetectorConstruction::IBeams(): ii is " << ii << std::endl;
-    std::cout << "DetectorConstruction::IBeams(): zpl, xpl is " << zpl << "," << xpl << std::endl;    
     // use zpl where it's finished at large +-ive value.
      new G4PVPlacement(fc3,G4ThreeVector((+xpl)*m,0,(zpl)*m),"IBeamFront",
 							 fIBeamSideLog,      //its logical volume   
@@ -281,12 +283,12 @@ void DetectorConstruction::Belts()
 {
   // Just two belts, one with a hole, one without.
 
-  const double ht =  16732/1000./2 ; //m
-  const double st =  17832/1000./2 +0.030 ; //m
-  const double fSpacing = 64732./1000./41  ; //m 
-  G4Box* BeltFlange = new G4Box("BeltFlange", ((fIFlangeWidth-0.100)/2.0)*m, (fIFlangeWaist/2.0)*m, (fSpacing/2.-0.005)*m ); 
-  G4Box* BeltMid = new G4Box("IBeamTopMid",(fIFlangeWaist/2.0)*m, (fIFlangeHeight/4.)*m, (fSpacing/2.-0.005)*m);
-  G4Tubs* IBeamPort = new G4Tubs("IBeamPortHole",0.,0.6*m,(fIFlangeThick/2.0)*m,0.0,2.0*CLHEP::pi); // 0.6m??
+  const double ht =  fht ; //m
+  const double st =  fst ; //m
+
+  G4Box* BeltFlange = new G4Box("BeltFlange", ((0.200)/2.0)*m, (fIFlangeWaist/2.0)*m, (fSpacing/2.-fIFlangeWaist/2.-0.001)*m ); 
+  G4Box* BeltMid = new G4Box("BeltMid",(fIFlangeWaist/2.0)*m, (fIFlangeHeight/4.)*m, (fSpacing/2.-fIFlangeWaist/2.-0.001)*m);
+  G4Tubs* IBeamPort = new G4Tubs("BeltPortHole",0.,0.25*m,(fIFlangeThick/2.0)*m,0.0,2.0*CLHEP::pi); // 0.6m??
   G4RotationMatrix* fc = new G4RotationMatrix();
   G4RotationMatrix* fc3 = new G4RotationMatrix();
   G4ThreeVector* axisfc = new G4ThreeVector(0.0,0.0,1.0);
@@ -301,8 +303,8 @@ void DetectorConstruction::Belts()
 
   HepGeom::Transform3D tnull, tr1, tr2;
   tnull = HepGeom::TranslateY3D(0.0);
-  tr1 = HepGeom::TranslateY3D( (fIFlangeHeight/2.+fIFlangeWaist/3.0)*m);
-  tr2 = HepGeom::TranslateY3D(-(fIFlangeHeight/2.+fIFlangeWaist/3.0)*m);
+  tr1 = HepGeom::TranslateY3D( (fIFlangeHeight/4.0)*m);
+  tr2 = HepGeom::TranslateY3D(-(fIFlangeHeight/4.0)*m);
 
   G4MultiUnion* BeltHoleUni = new G4MultiUnion("BeltHoleUni");
   BeltHoleUni->AddNode(BeltHole, tnull);
@@ -327,23 +329,27 @@ void DetectorConstruction::Belts()
   BeltUniLog->SetVisAttributes(simpleBoxAtt);
   BeltHoleUniLog->SetVisAttributes(simpleBoxHoleAtt);
 
-  const double zbsp = 64732./1000./41; //m
+
+
+  const double zbsp = fSpacing; //m
   double zpl(zbsp/2.);
   double xpl(0.);
+  double eps(0.215);
   int cpIT(0), cpIB(0), cpIL(0), cpIR(0),cpBlt(0);  
   // Top, bottom
+
+ 
   for (size_t ii=0;ii<=20;ii++) {
     // loop on x for top and bottom
-    for (int jj=-5;jj<=5;jj++) {
+    for (int jj=-5;jj<5;jj++) {
 
-
-      new G4PVPlacement(0,G4ThreeVector(jj*zbsp*m,(-ht)*m,(zpl)*m),"BeltBot",
+      new G4PVPlacement(0,G4ThreeVector((jj+0.5)*zbsp*m,(-ht+eps)*m,(zpl)*m),"BeltBot",
 							 BeltHoleUniLog,      //its logical volume   
 							 fPhysiWorld,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIB++, // copyNo
 							 true); //check for overlaps
-      new G4PVPlacement(0,G4ThreeVector(jj*zbsp*m,(-ht)*m,(-zpl)*m),"BeltBot",
+      new G4PVPlacement(0,G4ThreeVector((jj+0.5)*zbsp*m,(-ht+eps)*m,(-zpl)*m),"BeltBot",
 							 BeltHoleUniLog,      //its logical volume   
 							 fPhysiWorld,           //its mother  volume
 							 false,                 //no boolean operation
@@ -351,19 +357,20 @@ void DetectorConstruction::Belts()
 							 true); //check for overlaps
       // belts dodge the flanges on top
       if (std::abs(jj)==1 || std::abs(jj)==2 || std::abs(jj)==4) { 
-	new G4PVPlacement(0,G4ThreeVector(jj*zbsp*m,(ht)*m,(zpl)*m),"BeltTop",
+	new G4PVPlacement(0,G4ThreeVector((jj+0.5)*zbsp*m,(ht-eps)*m,(zpl)*m),"BeltTop",
 							 BeltUniLog,      //its logical volume   
 							 fPhysiWorld,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIT++, // copyNo
 							 true); //check for overlaps
-	new G4PVPlacement(0,G4ThreeVector(jj*zbsp*m,(ht)*m,(-zpl)*m),"BeltTop",
+	new G4PVPlacement(0,G4ThreeVector((jj+0.5)*zbsp*m,(ht-eps)*m,(-zpl)*m),"BeltTop",
 							 BeltUniLog,      //its logical volume   
 							 fPhysiWorld,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIT++, // copyNo
 							 true); //check for overlaps
       }
+
     }
     // left and right sides. bot 3 y-levels just below the port hole heights, top one at the top
     for (size_t jj=0;jj<4;jj++) {
@@ -371,7 +378,7 @@ void DetectorConstruction::Belts()
       G4LogicalVolume* belt = BeltHoleUniLog;
      // loop on y bot to top for these  two side walls -- 2 of 3 is nohole
       if (jj==3) { // top 
-	y = ht*m;
+	y = (ht-eps)*m ;
 	belt = BeltUniLog;
 	if (ii % 3)  belt = BeltHoleUniLog;
       }
@@ -421,13 +428,13 @@ void DetectorConstruction::Belts()
     }
     zpl+=zbsp;
   }
-
+  
   
   
   // Front face, back face
   int cpBF(0), cpBBk(0);
   xpl = zbsp/2.; //m
-  zpl = 64732./1000./2.; //m
+  zpl = fzpl/2.; //m
   for (size_t ii=0;ii<5;ii++) {
   for (size_t jj=0;jj<4;jj++) {
       double y;

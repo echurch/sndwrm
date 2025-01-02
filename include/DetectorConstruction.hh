@@ -156,7 +156,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double fvert_bar_y;
   G4double fvert_bar_z;
 
-  // IBeams
+  // IBeamsn and belts
   G4double fIFlangeWidth;
   G4double fIFlangeThick;
   G4double fITopLength;
@@ -167,6 +167,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double fISidePortLoc;
   G4double fIPortSpacing;
   G4double fIBotPortLoc;
+
+  G4double fSpacing;
+  G4double fht;
+  G4double fst;
+  G4double fzpl;
   
 // Materials
 
