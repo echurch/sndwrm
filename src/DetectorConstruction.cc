@@ -339,7 +339,7 @@ void DetectorConstruction::Belts()
   // Top, bottom
 
  
-  for (size_t ii=0;ii<=20;ii++) {
+  for (size_t ii=0;ii<=19 /*20*/;ii++) {
     // loop on x for top and bottom
     for (int jj=-5;jj<5;jj++) {
 
@@ -434,7 +434,7 @@ void DetectorConstruction::Belts()
   // Front face, back face
   int cpBF(0), cpBBk(0);
   xpl = zbsp/2.; //m
-  zpl = fzpl/2.; //m
+  zpl = fzpl/2.+0.100; //m
   for (size_t ii=0;ii<5;ii++) {
   for (size_t jj=0;jj<4;jj++) {
       double y;
@@ -498,6 +498,174 @@ void DetectorConstruction::Belts()
 
 void DetectorConstruction::Shielding()
 {
+
+  double eps(0.215);
+  const double ht =  fht ; //m
+  const double st =  fst + 0.031 ; //m have to be out from the belts left, right
+
+  // These are the y-locations of centers of shield panels, not the actual holes.
+  const double yTopHole = -(fISideLength/2.+fIFlangeHeight/2.-5907./1000.-(4.0-1.)*fIPortSpacing + 9*fIPortHoleRad)/2.;
+  const double yBotHole = -(fISideLength/2.+fIFlangeHeight/2.-5907./1000.-(0.0-1.)*fIPortSpacing + 9*fIPortHoleRad)/2.;
+  const double y1HoleUp = -(fISideLength/2.+fIFlangeHeight/2.-5907./1000.-(2.0-1.)*fIPortSpacing + 9*fIPortHoleRad)/2.;;
+  const double yTop = (ht-eps);
+  
+  const double BlockWidth = fSpacing-fIFlangeWaist-0.001 - 0.050;
+  const double BlockHeight = fIPortSpacing - 0.050;
+  const double BlockHeightTop =  BlockHeight*0.63 ;
+  std::cout << "BlockHeight,Top are " << BlockHeight << ", " << BlockHeightTop << std::endl;
+  const double BlockHeightBot = BlockHeight*0.15;
+  
+  G4Box* ShieldBlock = new G4Box("ShieldBlock",(0.200/2.0)*m, (BlockHeight/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
+  G4Box* ShieldBlockTop = new G4Box("ShieldBlockTop",(0.320/2.0)*m, (BlockHeightTop/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
+  G4Box* ShieldBlockBot = new G4Box("ShieldBlockBot",(0.320/2.0)*m, (BlockHeightBot/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
+
+  G4RotationMatrix* fc = new G4RotationMatrix();
+  G4RotationMatrix* fc3 = new G4RotationMatrix();
+  G4ThreeVector* axisfc = new G4ThreeVector(0.0,0.0,1.0);
+  G4RotationMatrix* fc2 = new G4RotationMatrix();
+  G4ThreeVector* axisfc2 = new G4ThreeVector(0.0,1.0,0.0);
+  G4ThreeVector* axisfc3 = new G4ThreeVector(1.0,0.0,0.0);
+  fc->rotate(CLHEP::pi/2.,axisfc);
+  fc2->rotate(CLHEP::pi/2.,axisfc2);
+  fc3->rotate(CLHEP::pi/2.,axisfc);
+  fc3->rotate(CLHEP::pi/2.,axisfc3);
+
+  G4LogicalVolume* ShieldBlockLog = new G4LogicalVolume(ShieldBlock, fBP, "ShieldBlockLog");
+  G4VisAttributes* simpleShieldAtt= new G4VisAttributes(G4Colour::Blue());
+  simpleShieldAtt->SetDaughtersInvisible(true);
+  simpleShieldAtt->SetForceSolid(true);
+  simpleShieldAtt->SetForceAuxEdgeVisible(true);
+  ShieldBlockLog->SetVisAttributes(simpleShieldAtt);
+
+  G4LogicalVolume* ShieldBlockTopLog = new G4LogicalVolume(ShieldBlockTop, fBP, "ShieldBlockTopLog");
+  ShieldBlockTopLog->SetVisAttributes(simpleShieldAtt);
+  G4LogicalVolume* ShieldBlockBotLog = new G4LogicalVolume(ShieldBlockBot, fBP, "ShieldBlockBotLog");
+  ShieldBlockBotLog->SetVisAttributes(simpleShieldAtt);
+
+  const double zbsp = fSpacing; //m
+  double zpl(zbsp/2.);
+  double xpl(0.);
+
+  int cpIT(0), cpIB(0), cpIL(0), cpIR(0),cpBlt(0);  
+
+  for (size_t ii=0;ii<=19;ii++) {
+
+    // left and right sides. bot 3 y-levels just below the port hole heights, top one at the top
+       for (size_t jj=0;jj<5;jj++) {
+      double y;
+      G4LogicalVolume* shield = ShieldBlockLog ;
+     // loop on y bot to top for these  two side walls -- 2 of 3 is nohole
+      if (jj==3) { // top 
+	y = yTopHole + BlockHeight/2. + BlockHeightTop/2. + 0.050;
+	shield = ShieldBlockTopLog;
+
+      }
+      if (jj==2) { // bot hole
+	y = yBotHole;
+
+      }
+      if (jj==1) { // up 1 hole
+	y = y1HoleUp;
+      }
+      if (jj==0) { // top hole
+	y = yTopHole;
+      }
+      if (jj==4) { // bottom 
+	y = yBotHole - BlockHeight/2. - 0.5*BlockHeightBot - 0.050 ;
+	shield = ShieldBlockBotLog;
+
+      }
+
+      new G4PVPlacement(0,G4ThreeVector(-st*m,y*m,(-zpl)*m),"ShieldLeft",
+							 shield,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBlt++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(0,G4ThreeVector( st*m,y*m,(-zpl)*m),"ShieldRight",
+							 shield,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBlt++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(0,G4ThreeVector(-st*m,y*m,(+zpl)*m),"ShieldLeft",
+							 shield,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBlt++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(0,G4ThreeVector( st*m,y*m,(+zpl)*m),"ShieldRight",
+							 shield,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBlt++, // copyNo
+							 true); //check for overlaps
+      
+    }
+    zpl+=zbsp;
+  }
+
+
+  // Front face, back face
+  int cpBF(0), cpBBk(0);
+  xpl = zbsp/2.; //m
+  zpl = fzpl/2.; //m
+  for (size_t ii=0;ii<5;ii++) {
+
+       for (size_t jj=0;jj<5;jj++) {
+      double y;
+      G4LogicalVolume* shield = ShieldBlockLog ;
+     // loop on y bot to top for these  two side walls -- 2 of 3 is nohole
+      if (jj==3) { // top 
+	y = yTopHole + BlockHeight/2. + BlockHeightTop/2. + 0.050;
+	shield = ShieldBlockTopLog;
+
+      }
+      if (jj==2) { // bot hole
+	y = yBotHole;
+
+      }
+      if (jj==1) { // up 1 hole
+	y = y1HoleUp;
+      }
+      if (jj==0) { // top hole
+	y = yTopHole;
+      }
+      if (jj==4) { // bottom 
+	y = yBotHole - BlockHeight/2. - 0.5*BlockHeightBot - 0.050 ;
+	shield = ShieldBlockBotLog;
+      }
+
+      new G4PVPlacement(fc2,G4ThreeVector(-xpl*m,y*m,(-zpl)*m),"ShieldBack",
+							 shield,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBBk++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(fc2,G4ThreeVector( xpl*m,y*m,(-zpl)*m),"ShieldBack",
+							 shield,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBBk++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(fc2,G4ThreeVector(-xpl*m,y*m,(+zpl)*m),"ShieldFront",
+							 shield,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBF++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(fc2,G4ThreeVector( xpl*m,y*m,(+zpl)*m),"ShieldFront",
+							 shield,      //its logical volume   
+							 fPhysiWorld,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpBF++, // copyNo
+							 true); //check for overlaps
+      
+    }
+    
+    xpl+=zbsp;
+  }
+  
 }
 
 
@@ -524,7 +692,9 @@ void DetectorConstruction::DefineMaterials()
   G4Element* N  = new G4Element("Nitrogen", "N", 7, 14.01*g/mole);
   G4Element* Mn  = new G4Element("Manganese","Mn", 25, 54.94*g/mole);
   G4Element* Cu  = new G4Element("Copper","Cu", 29, 63.55*g/mole);
-  
+  G4Element* B10 = new G4Element (name="Boron10",symbol="B10",z=4.,10.00*g/mole);
+  G4Element* B11 = new G4Element (name="Boron11",symbol="B11",z=4.,11.00*g/mole);
+
   G4NistManager * man = G4NistManager::Instance();
 
   G4Material* StainlessSteel = new G4Material(name="StainlessSteel",7.93*g/cm3,nel=4);//STEEL_STAINLESS_Fe7Cr2Ni
@@ -579,6 +749,30 @@ void DetectorConstruction::DefineMaterials()
 
   fShieldMater =  foam ;
   fWoodMater =  wood ;
+
+  // Borated-Poly SE self-extinguishing, https://johncaunt.com/products/jc207-hd-hd5/, EC, 7-Jan-2025.
+  G4Material* fBP_SE = new G4Material (name="BP_SE", density= 1.60*g/cm3 /*0.95*/, ncomponents=5);
+  /*
+  "Borated Polyethyl."         5     0.95       #. 5%-borated polyethylene (BPE)
+          "Hydrogen"               11.6       #. C.R.Wuest  SSCL-GEM TN 92-172.
+          "Carbon"                 61.2       #.  composition of "Reactor Experiments, Inc."
+          "Bor 11"                  4.0       #. Weight fraction               GMIX
+          "Bor 10"                  1.0       #. Weight fraction               GMIX
+          "Oxygen"                 22.2       #. Weight fraction               GMIX
+  */
+  fBP_SE->AddElement(H,fractionmass=6.6*perCent);
+  fBP_SE->AddElement(C,fractionmass=66.5*perCent);
+  fBP_SE->AddElement(B11,fractionmass=3.76*perCent);
+  fBP_SE->AddElement(B10,fractionmass=0.94*perCent);
+  fBP_SE->AddElement(O,fractionmass=22.2*perCent);
+  G4Material* fBP_norm = new G4Material (name="BP_SE", density= 0.95*g/cm3 /*0.95*/, ncomponents=5);
+  fBP_norm->AddElement(H,fractionmass=11.6*perCent);
+  fBP_norm->AddElement(C,fractionmass=61.2*perCent);
+  fBP_norm->AddElement(B11,fractionmass=4.0*perCent);
+  fBP_norm->AddElement(B10,fractionmass=1.0*perCent);
+  fBP_norm->AddElement(O,fractionmass=22.2*perCent);
+
+  fBP = fBP_norm; //fBP_SE;
   
   /*const G4int nEntries = 6;
   G4double PhotonEnergy[nEntries] =
@@ -807,9 +1001,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
 						    0, true);
   std::cout << "Checking units on warm CryoSkin. xout size [mm]: " << (fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m << std::endl;
 
-  // Create and Place I-Beams and Belts.
+  // Create and Place I-Beams and Belts and Shielding panels.
   IBeams();
   Belts();
+  Shielding();
   
   //Bulk box for wls optical properties tests
 

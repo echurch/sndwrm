@@ -203,6 +203,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
     //    analysisManager->FillNtupleDColumn(id,12, length);
     analysisManager->FillNtupleDColumn(id,13, event);
     analysisManager->FillNtupleSColumn(id,14, processName);
+    analysisManager->FillNtupleSColumn(id,21, lVolume->GetName());
     //    analysisManager->AddNtupleRow(id); // Do this in PostUserTrackingAction() after I've gotten track length.
 
     if (tID == 1) {   // primaries

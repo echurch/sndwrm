@@ -224,6 +224,7 @@ void HistoManager::Book( )
   analysis->CreateNtupleSColumn("TProcess");         //column 18
   analysis->CreateNtupleSColumn("TVolume");         //column 19
   analysis->CreateNtupleSColumn("TMaterial");         //column 20
+  analysis->CreateNtupleSColumn("SVolume");         //column 21
   analysis->FinishNtuple();
 
   analysis->CreateNtuple("Steps", "Step Summaries"); 

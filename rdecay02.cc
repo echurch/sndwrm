@@ -80,7 +80,7 @@ int main(int argc,char** argv) {
   //G4RunManager* runManager = new G4RunManager
   std::cout << "sndwrm: RUNNING in concurrent mode." << std::endl;
   auto* runManager =
-    G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
+    G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);  // SerialOnly);  //Default);
 #endif
 
   //set mandatory initialization classes
