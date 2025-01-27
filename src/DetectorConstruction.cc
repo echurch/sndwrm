@@ -187,25 +187,25 @@ void DetectorConstruction::IBeams()
     
      new G4PVPlacement(fc,G4ThreeVector(0,(ht)*m,(zpl)*m),"IBeamTop",
 							 fIBeamTopLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIT++, // copyNo
 							 true); //check for overlaps
      new G4PVPlacement(fc,G4ThreeVector(0,(-ht)*m,(zpl)*m),"IBeamBot",
 							 fIBeamBotLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIB++, // copyNo
 							 true); //check for overlaps
      new G4PVPlacement(fc2,G4ThreeVector((-st)*m,0,(zpl)*m),"IBeamLeft",
 							 fIBeamSideLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIL++, // copyNo
 							 true); //check for overlaps
      new G4PVPlacement(fc2,G4ThreeVector((+st)*m,0,(zpl)*m),"IBeamRight",
 							 fIBeamSideLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIR++, // copyNo
 							 true); //check for overlaps
@@ -214,25 +214,25 @@ void DetectorConstruction::IBeams()
     if (ii==0) {  zpl+=zbsp; continue; }
     new G4PVPlacement(fc,G4ThreeVector(0,(ht)*m,(-zpl)*m),"IBeamTop",
 							 fIBeamTopLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIT++, // copyNo
 							 true); //check for overlaps
     new G4PVPlacement(fc,G4ThreeVector(0,(-ht)*m,(-zpl)*m),"IBeamBot",
 							 fIBeamBotLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIB++, // copyNo
 							 true); //check for overlaps
     new G4PVPlacement(fc2,G4ThreeVector((-st)*m,0,(-zpl)*m),"IBeamLeft",
 							 fIBeamSideLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIL++, // copyNo
 							 true); //check for overlaps
     new G4PVPlacement(fc2,G4ThreeVector((+st)*m,0,(-zpl)*m),"IBeamRight",
 							 fIBeamSideLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIR++, // copyNo
 							 true); //check for overlaps
@@ -250,13 +250,13 @@ void DetectorConstruction::IBeams()
     // use zpl where it's finished at large +-ive value.
      new G4PVPlacement(fc3,G4ThreeVector((+xpl)*m,0,(zpl)*m),"IBeamFront",
 							 fIBeamSideLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIF++, // copyNo
 							 true); //check for overlaps
      new G4PVPlacement(fc3,G4ThreeVector((+xpl)*m,0,(-zpl)*m),"IBeamBack",
 							 fIBeamSideLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIBk++, // copyNo
 							 true); //check for overlaps
@@ -264,13 +264,13 @@ void DetectorConstruction::IBeams()
     if (ii==0) {  xpl+=zbsp; continue; }
      new G4PVPlacement(fc3,G4ThreeVector((-xpl)*m,0,(+zpl)*m),"IBeamFront",
 							 fIBeamSideLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIF++, // copyNo
 							 true); //check for overlaps
      new G4PVPlacement(fc3,G4ThreeVector((-xpl)*m,0,(-zpl)*m),"IBeamBack",
 							 fIBeamSideLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIBk++, // copyNo
 							 true); //check for overlaps
@@ -345,13 +345,13 @@ void DetectorConstruction::Belts()
 
       new G4PVPlacement(0,G4ThreeVector((jj+0.5)*zbsp*m,(-ht+eps)*m,(zpl)*m),"BeltBot",
 							 BeltHoleUniLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIB++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(0,G4ThreeVector((jj+0.5)*zbsp*m,(-ht+eps)*m,(-zpl)*m),"BeltBot",
 							 BeltHoleUniLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIB++, // copyNo
 							 true); //check for overlaps
@@ -359,13 +359,13 @@ void DetectorConstruction::Belts()
       if (std::abs(jj)==1 || std::abs(jj)==2 || std::abs(jj)==4) { 
 	new G4PVPlacement(0,G4ThreeVector((jj+0.5)*zbsp*m,(ht-eps)*m,(zpl)*m),"BeltTop",
 							 BeltUniLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIT++, // copyNo
 							 true); //check for overlaps
 	new G4PVPlacement(0,G4ThreeVector((jj+0.5)*zbsp*m,(ht-eps)*m,(-zpl)*m),"BeltTop",
 							 BeltUniLog,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpIT++, // copyNo
 							 true); //check for overlaps
@@ -402,25 +402,25 @@ void DetectorConstruction::Belts()
 
       new G4PVPlacement(fc,G4ThreeVector(-st*m,y,(-zpl)*m),"BeltLeft",
 							 belt,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBlt++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(fc,G4ThreeVector( st*m,y,(-zpl)*m),"BeltRight",
 							 belt,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBlt++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(fc,G4ThreeVector(-st*m,y,(+zpl)*m),"BeltLeft",
 							 belt,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBlt++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(fc,G4ThreeVector( st*m,y,(+zpl)*m),"BeltRight",
 							 belt,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBlt++, // copyNo
 							 true); //check for overlaps
@@ -465,25 +465,25 @@ void DetectorConstruction::Belts()
 
       new G4PVPlacement(fc3,G4ThreeVector(-xpl*m,y,(-zpl)*m),"BeltBack",
 							 belt,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBBk++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(fc3,G4ThreeVector( xpl*m,y,(-zpl)*m),"BeltBack",
 							 belt,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBBk++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(fc3,G4ThreeVector(-xpl*m,y,(+zpl)*m),"BeltFront",
 							 belt,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBF++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(fc3,G4ThreeVector( xpl*m,y,(+zpl)*m),"BeltFront",
 							 belt,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBF++, // copyNo
 							 true); //check for overlaps
@@ -514,10 +514,11 @@ void DetectorConstruction::Shielding()
   const double BlockHeightTop =  BlockHeight*0.63 ;
   std::cout << "BlockHeight,Top are " << BlockHeight << ", " << BlockHeightTop << std::endl;
   const double BlockHeightBot = BlockHeight*0.15;
-  
-  G4Box* ShieldBlock = new G4Box("ShieldBlock",(0.200/2.0)*m, (BlockHeight/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
-  G4Box* ShieldBlockTop = new G4Box("ShieldBlockTop",(0.320/2.0)*m, (BlockHeightTop/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
-  G4Box* ShieldBlockBot = new G4Box("ShieldBlockBot",(0.320/2.0)*m, (BlockHeightBot/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
+
+  double fBlockThickness(0.45);
+  G4Box* ShieldBlock = new G4Box("ShieldBlock",(fBlockThickness/2.0)*m, (BlockHeight/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
+  G4Box* ShieldBlockTop = new G4Box("ShieldBlockTop",(fBlockThickness/2.0)*m, (BlockHeightTop/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
+  G4Box* ShieldBlockBot = new G4Box("ShieldBlockBot",(fBlockThickness/2.0)*m, (BlockHeightBot/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
 
   G4RotationMatrix* fc = new G4RotationMatrix();
   G4RotationMatrix* fc3 = new G4RotationMatrix();
@@ -578,25 +579,25 @@ void DetectorConstruction::Shielding()
 
       new G4PVPlacement(0,G4ThreeVector(-st*m,y*m,(-zpl)*m),"ShieldLeft",
 							 shield,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBlt++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(0,G4ThreeVector( st*m,y*m,(-zpl)*m),"ShieldRight",
 							 shield,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBlt++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(0,G4ThreeVector(-st*m,y*m,(+zpl)*m),"ShieldLeft",
 							 shield,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBlt++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(0,G4ThreeVector( st*m,y*m,(+zpl)*m),"ShieldRight",
 							 shield,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBlt++, // copyNo
 							 true); //check for overlaps
@@ -638,25 +639,25 @@ void DetectorConstruction::Shielding()
 
       new G4PVPlacement(fc2,G4ThreeVector(-xpl*m,y*m,(-zpl)*m),"ShieldBack",
 							 shield,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBBk++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(fc2,G4ThreeVector( xpl*m,y*m,(-zpl)*m),"ShieldBack",
 							 shield,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBBk++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(fc2,G4ThreeVector(-xpl*m,y*m,(+zpl)*m),"ShieldFront",
 							 shield,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBF++, // copyNo
 							 true); //check for overlaps
       new G4PVPlacement(fc2,G4ThreeVector( xpl*m,y*m,(+zpl)*m),"ShieldFront",
 							 shield,      //its logical volume   
-							 fPhysiWorld,           //its mother  volume
+							 fPhysOuterAir,           //its mother  volume
 							 false,                 //no boolean operation
 							 cpBF++, // copyNo
 							 true); //check for overlaps
@@ -723,6 +724,7 @@ void DetectorConstruction::DefineMaterials()
   G4Material* Aluminium = new G4Material(name="Aluminium",z=13.,26.98*g/mole,2.7*g/cm3);
   G4Material* base_mat = man->FindOrBuildMaterial("G4_TEFLON");
   G4Material* env_mat = man->FindOrBuildMaterial("G4_lAr");
+  G4Material* mAir = man->FindOrBuildMaterial("G4_AIR");
 
   G4Material* ptp_mat =  new G4Material(name = "ptp_mat", 1.079*g/cm3, nel = 2); //p-Terphenyl
   ptp_mat->AddElement (C, natoms=18);
@@ -750,6 +752,10 @@ void DetectorConstruction::DefineMaterials()
   fShieldMater =  foam ;
   fWoodMater =  wood ;
 
+
+  G4Material* H2O = new G4Material("Water",density= 1.0*g/cm3,ncomponents=2);
+  H2O->AddElement(H, number_of_atoms=2);
+  H2O->AddElement(O, number_of_atoms=1);
   // Borated-Poly SE self-extinguishing, https://johncaunt.com/products/jc207-hd-hd5/, EC, 7-Jan-2025.
   G4Material* fBP_SE = new G4Material (name="BP_SE", density= 1.60*g/cm3 /*0.95*/, ncomponents=5);
   /*
@@ -772,7 +778,7 @@ void DetectorConstruction::DefineMaterials()
   fBP_norm->AddElement(B10,fractionmass=1.0*perCent);
   fBP_norm->AddElement(O,fractionmass=22.2*perCent);
 
-  fBP = fBP_norm; //fBP_SE;
+  fBP = H2O; //fBP_norm; //fBP_SE;
   
   /*const G4int nEntries = 6;
   G4double PhotonEnergy[nEntries] =
@@ -902,6 +908,7 @@ void DetectorConstruction::DefineMaterials()
   ptp_mat->SetMaterialPropertiesTable(ptp_pt); 
   
   fDefaultMaterial = env_mat;
+  fmAir = mAir;
   fBase = base_mat; 
   facrylic = acrylic;
   fPTP = ptp_mat;
@@ -949,12 +956,15 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   G4Box* ShellOut = new G4Box("ShellOut",(fCryostat_x/2+fColdSkinThickness+Offset)*m, (fCryostat_y/2.0+fColdSkinThickness+Offset)*m,(fCryostat_z/2+fColdSkinThickness+Offset)*m);
   G4SubtractionSolid* fShell = new G4SubtractionSolid("ColdSkin", ShellOut, fSolidCryostat);
   G4LogicalVolume* fLogicShell = new G4LogicalVolume(fShell,fDUNESteel,"ColdSkin");
+
+  
   G4VPhysicalVolume* fPhysShell = new G4PVPlacement(0,G4ThreeVector(0,0,0),"ColdSkin",
                                  fLogicShell,     //its logical volume
                                  fPhysiWorld,    	//its mother  volume
                                  false,			//no boolean operation
-						    0, true);
+  						    0, true);
   
+						    
   // foam
   fShieldThickness = 0.776 ; //m 
   G4Box* sOutShield = new G4Box("InShield", (fCryostat_x/2+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_z/2.+fShieldThickness+fColdSkinThickness+Offset)*m);
@@ -963,16 +973,17 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   fLogicShield = new G4LogicalVolume(sShield,       //shape
                              fShieldMater,            //material
                              "Foam");               //name
-                               
+                                  
            new G4PVPlacement(0,                         //no rotation
 			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
-                           fLogicShield,              //logical volume
-                           "Foam",                  //name
-			     fLogicWorld,                      //mother  volume
+			     "Foam",                  //name
+			     fLogicShield,              //logical volume
+			     fPhysiWorld,                      //mother  volume
                            false,                       //no boolean operation
 			     0, true);                          //copy number
+  
 
-  // wood
+// wood
   fWoodThickness = 0.048; //m
   G4Box* sOutWood = new G4Box("InWood", (fCryostat_x/2+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_z/2.+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m);
   G4SubtractionSolid *sWood = new G4SubtractionSolid("Wood",sOutWood, sOutShield);  
@@ -980,31 +991,51 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   fLogicWood = new G4LogicalVolume(sWood,       //shape
                              fWoodMater,            //material
                              "Wood");               //name
-                               
+  
            new G4PVPlacement(0,                         //no rotation
 			     G4ThreeVector(0.,0.,0.),  // fWorldLength/2.-1*fDetectorLength/2.),             //at (0,0,0)
-                           fLogicWood,              //logical volume
-                           "Wood",                  //name
-			   fLogicWorld,                      //mother  volume
-                           false,                       //no boolean operation
+			     "Wood",                  //name
+			     fLogicWood,              //logical volume
+			     fPhysiWorld,                      //mother  volume
+			     false,                       //no boolean operation
 			     0, true);                          //copy number
+  
 
   // warmskin
   fWarmSkinThickness =  0.024 ; //m
   G4Box* ShellOutW = new G4Box("ShellOut",(fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2.0+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m,(fCryostat_z/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m);
   G4SubtractionSolid* fShellW = new G4SubtractionSolid("WarmSkin", ShellOutW, sOutWood);
   G4LogicalVolume* fLogicShellW = new G4LogicalVolume(fShellW,fDUNESteel,"WarmSkin");
-  G4VPhysicalVolume* fPhysShellW = new G4PVPlacement(0,G4ThreeVector(0,0,0),"WarmSkin",
-                                 fLogicShellW,     //its logical volume
-                                 fPhysiWorld,    	//its mother  volume
-                                 false,			//no boolean operation
-						    0, true);
+
+  
+  G4VPhysicalVolume* fPhysShellW = new G4PVPlacement(0,G4ThreeVector(0,0,0),
+						     "WarmSkin",
+						     fLogicShellW,     //its logical volume
+						     fPhysiWorld,    	//its mother  volume
+						     false,			//no boolean operation
+						     0, true);
+  
+  
+  // Now, need Air volume outside cryo, inside World. Otherwise this space will be G4_lAr
+  
+  G4SubtractionSolid* fOuterAir = new G4SubtractionSolid("OuterAir", fSolidWorld, ShellOutW);
+  G4LogicalVolume* fLogicOAir = new G4LogicalVolume(fOuterAir,fmAir,"OuterAir");
+  fPhysOuterAir = new G4PVPlacement(0,G4ThreeVector(0,0,0),
+				    "OuterAir",
+				    fLogicOAir,     //its logical volume
+				    fPhysiWorld,    	//its mother  volume
+				    false,			//no boolean operation
+				    0, true);
+  
+				    
+  
   std::cout << "Checking units on warm CryoSkin. xout size [mm]: " << (fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m << std::endl;
 
   // Create and Place I-Beams and Belts and Shielding panels.
-  IBeams();
-  Belts();
-  Shielding();
+  // All of this must have mother volume fPhysOuterAir
+   IBeams();
+   Belts();
+   Shielding();
   
   //Bulk box for wls optical properties tests
 

@@ -107,7 +107,8 @@ void RunAction::BeginOfRunAction(const G4Run*)
       std::cout << "AnalysisManager is NOT active." << std::endl;
     }
 
-  fRun->ReadPhotonsToMeV();
+  // Below is for converting Nph to MeV in rough x,y,z bins. Not using this these days; EC, 13-Jan-2024.
+  // fRun->ReadPhotonsToMeV();
 
 }
 

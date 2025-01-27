@@ -51,7 +51,11 @@
 #/gps/ang/maxtheta 90 deg
 
 #/analysis/setFileName ../ana/ExtNeutrons_20cmBPSE.root
-/analysis/setFileName ../ana/ExtNeutrons_32cmBP.root
+#/analysis/setFileName ../ana/ExtNeutrons_32cmH2O.root
+#/analysis/setFileName ../ana/ExtNeutrons_ns.root
+#/analysis/setFileName ../ana/ExtNeutrons_nstruct.root
+#/analysis/setFileName ../ana/ExtNeutrons_ncryo.root
+/analysis/setFileName ../ana/ExtNeutrons_ncryo_test.root
 
 /analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 2. MeV
@@ -61,7 +65,7 @@
 /analysis/ntuple/setActivation 1 true
 /analysis/ntuple/setActivation 2 true
 # tracks
-/analysis/ntuple/setActivation 3 true
+/analysis/ntuple/setActivation 3 false
 # stepping -- only captures Arapuca hits if fAPEX=true
 /analysis/ntuple/setActivation 4 false
 /run/printProgress 500
@@ -72,7 +76,7 @@
 
 ##/control/execute /Users/chur558/sndwrm/macros/vis.mac
 #/run/beamOn 700000 # 10 cores, ~8 hours
-/run/beamOn 7000
+/run/beamOn 500
 
 
 

@@ -178,6 +178,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 // Materials
 
    G4Material*   fDefaultMaterial;
+   G4Material*   fmAir;
    G4Material*   fSteel;
    G4Material*   fDUNESteel;
    G4Material*   fAluminium;
@@ -195,9 +196,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
    G4LogicalVolume*   fLogicVol;
    G4Box*             fSolidVol;
 
+   G4VPhysicalVolume* fPhysOuterAir;
 
-
-    DetectorMessenger* fDetectorMessenger;
+   DetectorMessenger* fDetectorMessenger;
 
   private:
     
