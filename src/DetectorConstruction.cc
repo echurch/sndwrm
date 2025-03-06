@@ -182,7 +182,8 @@ void DetectorConstruction::IBeams()
   //  Top, Bottom, sides
   int cpIT(0), cpIB(0), cpIL(0), cpIR(0);
   double zpl(0.0);
-
+  double mIL (0);
+  
   for (size_t ii=0;ii<=19;ii++) {
     
      new G4PVPlacement(fc,G4ThreeVector(0,(ht)*m,(zpl)*m),"IBeamTop",
@@ -203,6 +204,7 @@ void DetectorConstruction::IBeams()
 							 false,                 //no boolean operation
 							 cpIL++, // copyNo
 							 true); //check for overlaps
+     mIL += fIBeamSideLog->GetMass()/kg;
      new G4PVPlacement(fc2,G4ThreeVector((+st)*m,0,(zpl)*m),"IBeamRight",
 							 fIBeamSideLog,      //its logical volume   
 							 fPhysOuterAir,           //its mother  volume
@@ -276,6 +278,8 @@ void DetectorConstruction::IBeams()
 							 true); //check for overlaps
      xpl+=zbsp;
   }
+
+  std::cout << "DetectorConstruction::IBeams(): mass of Left IBeams [kg] " << mIL << std::endl;
   
 }
 
@@ -515,7 +519,7 @@ void DetectorConstruction::Shielding()
   std::cout << "BlockHeight,Top are " << BlockHeight << ", " << BlockHeightTop << std::endl;
   const double BlockHeightBot = BlockHeight*0.15;
 
-  double fBlockThickness(0.45);
+  double fBlockThickness(0.20);
   G4Box* ShieldBlock = new G4Box("ShieldBlock",(fBlockThickness/2.0)*m, (BlockHeight/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
   G4Box* ShieldBlockTop = new G4Box("ShieldBlockTop",(fBlockThickness/2.0)*m, (BlockHeightTop/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
   G4Box* ShieldBlockBot = new G4Box("ShieldBlockBot",(fBlockThickness/2.0)*m, (BlockHeightBot/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
@@ -771,14 +775,16 @@ void DetectorConstruction::DefineMaterials()
   fBP_SE->AddElement(B11,fractionmass=3.76*perCent);
   fBP_SE->AddElement(B10,fractionmass=0.94*perCent);
   fBP_SE->AddElement(O,fractionmass=22.2*perCent);
-  G4Material* fBP_norm = new G4Material (name="BP_SE", density= 0.95*g/cm3 /*0.95*/, ncomponents=5);
+
+  G4Material* fBP_norm = new G4Material (name="BP_norm", density= 0.95*g/cm3 , ncomponents=5);  
   fBP_norm->AddElement(H,fractionmass=11.6*perCent);
   fBP_norm->AddElement(C,fractionmass=61.2*perCent);
   fBP_norm->AddElement(B11,fractionmass=4.0*perCent);
   fBP_norm->AddElement(B10,fractionmass=1.0*perCent);
   fBP_norm->AddElement(O,fractionmass=22.2*perCent);
 
-  fBP = H2O; //fBP_norm; //fBP_SE;
+  
+  fBP = fBP_SE; // H2O; //fBP_norm; //fBP_SE;
   
   /*const G4int nEntries = 6;
   G4double PhotonEnergy[nEntries] =
@@ -987,7 +993,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   fWoodThickness = 0.048; //m
   G4Box* sOutWood = new G4Box("InWood", (fCryostat_x/2+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_y/2+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m, (fCryostat_z/2.+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m);
   G4SubtractionSolid *sWood = new G4SubtractionSolid("Wood",sOutWood, sOutShield);  
-
+  
   fLogicWood = new G4LogicalVolume(sWood,       //shape
                              fWoodMater,            //material
                              "Wood");               //name
@@ -1033,9 +1039,9 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
 
   // Create and Place I-Beams and Belts and Shielding panels.
   // All of this must have mother volume fPhysOuterAir
-   IBeams();
-   Belts();
-   Shielding();
+  IBeams();
+  Belts();
+  Shielding();
   
   //Bulk box for wls optical properties tests
 

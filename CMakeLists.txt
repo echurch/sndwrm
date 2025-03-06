@@ -49,7 +49,7 @@ if (USEG4MT)
 endif()
 
 add_executable(sndwrm rdecay02.cc ${sources} ${headers})
-target_link_libraries(sndwrm  ${Geant4_LIBRARIES}  $ENV{MARLEY}/build/libMARLEY.so)
+target_link_libraries(sndwrm  ${Geant4_LIBRARIES}  $ENV{MARLEY}/build/libMARLEY.dylib) ## .so for linux
 
 message(STATUS "USEG4MT is ${USEG4MT}")
 

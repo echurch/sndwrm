@@ -78,9 +78,9 @@ int main(int argc,char** argv) {
   G4VSteppingVerbose::SetInstance(new SteppingVerbose);
   // To fix big dump-out error about leaks upon exit. EC, 30-Dec-2024.
   //G4RunManager* runManager = new G4RunManager
-  std::cout << "sndwrm: RUNNING in concurrent mode." << std::endl;
+  std::cout << "sndwrm: RUNNING in single-threaded mode." << std::endl;
   auto* runManager =
-    G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);  // SerialOnly);  //Default);
+    G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);  // SerialOnly);  //Default);
 #endif
 
   //set mandatory initialization classes
