@@ -1,0 +1,75 @@
+#state that isotopes produced in hadronic processes
+# can be treated by RadioactiveDecay.
+#
+# To register hadronic processes, uncomment corresponding lines
+# in PhysicsList.cc
+#
+/control/verbose 2
+/run/verbose 0
+/tracking/verbose 0
+
+
+#
+/run/initialize
+#
+/process/list
+#
+# rdm is applied only to the target volume
+
+# Super important to not get E>9 MeV events in n capture (as would be unphysical, and yet is default G4 behavior)
+# https://geant4-forum.web.cern.ch/t/thermal-neutron-capture-gamma-spectra-give-major-disagreement-with-nndc-data-base-for-some-isotopes/6504/21
+/process/had/particle_hp/use_photo_evaporation true
+
+#/gps/particle gamma
+
+#/gps/ene/type Gauss
+#/gps/ene/mono 1.5 MeV
+##/gps/ene/sigma 0.5 MeV
+##/gps/ene/min 0.5 MeV
+##/gps/ene/max 3.1 MeV
+
+/gps/position 0 0 0 m
+/gps/pos/type Volume
+/gps/pos/shape Para
+/gps/pos/halfx 10. cm
+/gps/pos/halfy 0.1 m 
+/gps/pos/halfz 35. m
+
+# x=9.4m is outer edge of IBeams
+/gps/pos/centre -0 -10.0 0 m
+
+
+/gps/particle neutron
+/gps/ene/type Arb
+/gps/hist/type arb
+/gps/hist/file ../ana/neutron_distn.txt
+
+
+/gps/hist/inter Lin
+
+/gps/ang/type iso
+#/gps/ang/maxtheta 90 deg
+
+
+/analysis/setFileName ../ana/ExtNeutrons_floor_TEST.root
+
+
+/analysis/ntuple/setActivation 0 true
+/analysis/ntuple/setActivation 1 true
+/analysis/ntuple/setActivation 2 true
+# tracks
+/analysis/ntuple/setActivation 3 false
+# stepping -- only captures Arapuca hits if fAPEX=true
+/analysis/ntuple/setActivation 4 false
+/run/printProgress 10000
+/random/setSeeds 1 11
+
+# 1.05104 /cm2/sec gammas incident in narrow sliver plane of LAr, just in cryostat, so on x plane of 12*60 m2 this is 7567488.0/sec.
+# 75 jobs of 100000 evts is about 1 sec exposure.
+
+##/control/execute /Users/chur558/sndwrm/macros/vis.mac
+#/run/beamOn 30000000 # 15k: 10 cores, ~3 hours with 2/3 wall shielding and floor shielding.
+/run/beamOn 21000
+
+
+
