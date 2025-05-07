@@ -101,6 +101,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
   if ( analysisManager->IsActive() ) {
     std::cout << "AnalysisManager is active." << std::endl;
     analysisManager->OpenFile();
+    analysisManager->SetNtupleMerging(true);
   }  
   else
    {
@@ -123,6 +124,7 @@ void RunAction::EndOfRunAction(const G4Run*)
   if ( analysisManager->IsActive() ) {
     analysisManager->Write();
     analysisManager->CloseFile();
+
   }
       
   // show Rndm status

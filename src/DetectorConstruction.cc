@@ -333,8 +333,7 @@ void DetectorConstruction::Belts()
   BeltUniLog->SetVisAttributes(simpleBoxAtt);
   BeltHoleUniLog->SetVisAttributes(simpleBoxHoleAtt);
 
-
-
+  
   const double zbsp = fSpacing; //m
   double zpl(zbsp/2.);
   double xpl(0.);
@@ -500,7 +499,7 @@ void DetectorConstruction::Belts()
 
 }
 
-void DetectorConstruction::Shielding()
+void DetectorConstruction::ShieldingWalls()
 {
 
   double eps(0.215);
@@ -519,7 +518,7 @@ void DetectorConstruction::Shielding()
   std::cout << "BlockHeight,Top are " << BlockHeight << ", " << BlockHeightTop << std::endl;
   const double BlockHeightBot = BlockHeight*0.15;
 
-  double fBlockThickness(0.20);
+  double fBlockThickness(0.40);
   G4Box* ShieldBlock = new G4Box("ShieldBlock",(fBlockThickness/2.0)*m, (BlockHeight/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
   G4Box* ShieldBlockTop = new G4Box("ShieldBlockTop",(fBlockThickness/2.0)*m, (BlockHeightTop/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
   G4Box* ShieldBlockBot = new G4Box("ShieldBlockBot",(fBlockThickness/2.0)*m, (BlockHeightBot/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
@@ -581,6 +580,8 @@ void DetectorConstruction::Shielding()
 
       }
 
+      if (jj==0 || jj == 3) continue; // EC, 2-May-2025, drop upper shields.
+      
       new G4PVPlacement(0,G4ThreeVector(-st*m,y*m,(-zpl)*m),"ShieldLeft",
 							 shield,      //its logical volume   
 							 fPhysOuterAir,           //its mother  volume
@@ -784,7 +785,7 @@ void DetectorConstruction::DefineMaterials()
   fBP_norm->AddElement(O,fractionmass=22.2*perCent);
 
   
-  fBP = fBP_SE; // H2O; //fBP_norm; //fBP_SE;
+  fBP = H2O; // H2O; //fBP_norm; //fBP_SE;
   
   /*const G4int nEntries = 6;
   G4double PhotonEnergy[nEntries] =
@@ -1041,7 +1042,8 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   // All of this must have mother volume fPhysOuterAir
   IBeams();
   Belts();
-  Shielding();
+  ShieldingWalls();
+  //  ShieldingFloor();
   
   //Bulk box for wls optical properties tests
 
@@ -1540,3 +1542,45 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
 }
 
 
+void DetectorConstruction::ShieldingFloor()
+{
+
+  const double ht =  fht ; //m                                                                                                                                                                          
+  const double zbsp = fSpacing; //m                                                                                                                                                                      
+  double zpl(zbsp/2.);
+  double xpl(0.);
+  double eps(0.215);
+  int cpIT(0), cpIB(0), cpIL(0), cpIR(0),cpBlt(0);
+  double BlockThickness(0.40);
+  const double BlockWidth = fSpacing-fIFlangeWaist-0.001 - 0.050;
+
+  G4Box* ShieldBlock = new G4Box("ShieldBlock", (zbsp-0.050)/2.*m, (BlockThickness/2.0)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
+  G4LogicalVolume* ShieldBlockLog = new G4LogicalVolume(ShieldBlock, fBP, "ShieldBlockLog");
+  G4VisAttributes* simpleShieldAtt= new G4VisAttributes(G4Colour::Blue());
+  simpleShieldAtt->SetDaughtersInvisible(true);
+  simpleShieldAtt->SetForceSolid(true);
+  simpleShieldAtt->SetForceAuxEdgeVisible(true);
+  ShieldBlockLog->SetVisAttributes(simpleShieldAtt);
+  
+  // Top, bottom  
+  for (size_t ii=0;ii<=19 /*20*/;ii++) {
+    // loop on x for top and bottom                                                                                                                                                                     
+    for (int jj=-6;jj<6;jj++) {
+
+      new G4PVPlacement(0,G4ThreeVector((jj)*zbsp*m,(-ht+eps)*m,(zpl)*m),"ShieldBot",
+							 ShieldBlockLog,      //its logical volume   
+							 fPhysOuterAir,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIB++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(0,G4ThreeVector((jj)*zbsp*m,(-ht+eps)*m,(-zpl)*m),"ShieldBot",
+							 ShieldBlockLog,      //its logical volume   
+							 fPhysOuterAir,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIB++, // copyNo
+							 true); //check for overlaps
+    }
+    zpl+=zbsp;
+  }
+
+}

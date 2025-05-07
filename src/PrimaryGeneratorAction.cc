@@ -64,8 +64,9 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   */
 
   // now if user specifies a Marley config file in mac file, use that instead of annotated.js.
-   // Have not made Marley work in new G4v11 + new Marley world ..... EC, 26-Dec-2024.
-  
+   //  made Marley work in new G4v11 + new Marley world, but only single-threaded ..... EC, 29-Apr-2025.
+
+#if !defined(G4MULTITHREADED) || !defined(USEG4MT)
   fMarleyMessenger = new MarleyMessenger(this);
   marley::JSON jcfn = marley::JSON::load_file(config_file_name);
 
@@ -73,7 +74,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   std::cout << "PrimaryGenAction: Marley config file is " << config_file_name << std::endl;
   std::cout << "PrimaryGenAction: Unused if nu_e is not specified "  << std::endl;
   marley_generator_= config.create_generator();
-  
+#endif  
 
 }
 

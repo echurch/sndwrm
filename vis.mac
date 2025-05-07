@@ -46,16 +46,6 @@
 # To get nice view
 /vis/geometry/set/visibility World 0 false
 
-/vis/geometry/set/visibility Shield 1 true
-/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility Target 1 true
-/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility G10 1 true
-/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility SiPM 0 true
-/vis/viewer/set/style wireframe
-/vis/geometry/set/visibility Arapuca 1 true
-
 
 
 #

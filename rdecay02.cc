@@ -68,7 +68,8 @@ int main(int argc,char** argv) {
 
   // Construct the default run manager
 #if defined(G4MULTITHREADED) && defined(USEG4MT)
-  G4MTRunManager* runManager = new G4MTRunManager;
+  //G4MTRunManager* runManager = new G4MTRunManager;
+  auto runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default); // This, as opposed to above line, does not cause a million destructor complaints. EC, 6-May-2025.
   G4int nThreads = G4Threading::G4GetNumberOfCores();
   if (argc==3) nThreads = G4UIcommand::ConvertToInt(argv[2]);
   runManager->SetNumberOfThreads(nThreads);
@@ -135,7 +136,8 @@ int main(int argc,char** argv) {
   }
 
   //job termination
-  delete visManager;
+  if (visManager)
+    delete visManager;
   delete runManager;
 }
 

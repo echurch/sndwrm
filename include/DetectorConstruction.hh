@@ -208,7 +208,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     void IBeams();
     void Belts();
-    void Shielding();
+    void ShieldingWalls();
+    void ShieldingFloor();
   
     MaterialPropertyLoader* fMPL;
  
