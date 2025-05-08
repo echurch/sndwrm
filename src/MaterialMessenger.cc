@@ -52,7 +52,6 @@ MaterialMessenger::MaterialMessenger(MaterialPropertyLoader* MPL)
   fRdecayDir = new G4UIdirectory("/rdecay02/");
   fRdecayDir->SetGuidance("commands specific to this example");
 
-  std::cout << "MatMess:SetNewVal. ctor is " << std::endl;
   G4bool broadcast = false;
   fMaterialDir = new G4UIdirectory("/rdecay02/material/",broadcast);
   fMaterialDir->SetGuidance("material commands");

@@ -36,12 +36,15 @@
 #include "G4UImessenger.hh"
 #include "globals.hh"
 
+
 class DetectorConstruction;
 class G4UIdirectory;
 class G4UIcmdWithAString;
 class G4UIcmdWithABool;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithADouble;
+class G4UIcmdWith3Vector;
+class G4UIcmdWith3VectorAndUnit;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -60,6 +63,8 @@ class DetectorMessenger: public G4UImessenger
     
     G4UIdirectory*             fRdecayDir;
     G4UIdirectory*             fDetDir;
+    G4UIdirectory*             fDetDirsw;
+    G4UIcmdWith3VectorAndUnit* fFidVolumeCmd;
     G4UIcmdWithAString*        fTargMatCmd;
     G4UIcmdWithAString*        fDetectMatCmd;
     G4UIcmdWithADoubleAndUnit* fTargRadiusCmd;

@@ -163,9 +163,13 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track)
       } ;
   */
 
-  // no worky when launching n's, gammas from outside the fidv. Hard code it. EC, 4-Aug-2021.
-  const std::vector<double> fidv {6000,6000,30000};
-  if (abs(vtx[0])<fidv.at(0) && abs(vtx[1])<fidv.at(1) && abs(vtx[2])<fidv.at(2) && !fEventAction->GetFiducial())
+  // doesn't work when launching n's, gammas from outside the fidv. Hard code it. EC, 4-Aug-2021.
+  // FidVol now configured in DetectorMessenger. 8-May-2025.
+  //  std::vector<double> fidv {6000,6000,30000};
+
+  G4ThreeVector ffv = fDetector->GetFidVolume();
+  //  std::cout << "FidVol x,y,z from DetMessgr: " << ffv[0] << ", " << ffv[1] << ", " << ffv[2] <<  std::endl;
+  if (abs(vtx[0])<ffv[0] && abs(vtx[1])<ffv[1] && abs(vtx[2])<ffv[2] && !fEventAction->GetFiducial())
     {
       for (const auto& proc : procOfInterest) {
 	if (processName.find(proc) != std::string::npos) {

@@ -9,9 +9,10 @@
 /run/verbose 0
 /tracking/verbose 0
 
-
-
+### WARNING: this line not yet tested, EC, 8-May-2025.
+/sndwrm/det/setHalfFidVol 7. 7. 31 m
 #
+
 /run/initialize
 #
 /process/list

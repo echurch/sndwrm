@@ -19,6 +19,7 @@
 #include "G4Color.hh"
 #include "G4Colour.hh"
 #include "G4VisAttributes.hh"
+#include "G4RunManager.hh"
 
 #include <string>
 
@@ -87,7 +88,8 @@ DetectorConstruction::DetectorConstruction()
   fst = 17832/1000./2 + 0.030;
   fzpl = 64732./1000.;
   fSpacing = 64732./1000./41; // m
-  
+
+  fDetectorMessenger = new DetectorMessenger(this); // re-insert this to allow to set fFidVolume
   fMPL = new MaterialPropertyLoader();  
 }
 
@@ -580,6 +582,7 @@ void DetectorConstruction::ShieldingWalls()
 
       }
 
+      // This next line is doing a lot of work!! 
       if (jj==0 || jj == 3) continue; // EC, 2-May-2025, drop upper shields.
       
       new G4PVPlacement(0,G4ThreeVector(-st*m,y*m,(-zpl)*m),"ShieldLeft",
@@ -1043,7 +1046,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   IBeams();
   Belts();
   ShieldingWalls();
-  //  ShieldingFloor();
+  ShieldingFloor();
   
   //Bulk box for wls optical properties tests
 
@@ -1581,6 +1584,13 @@ void DetectorConstruction::ShieldingFloor()
 							 true); //check for overlaps
     }
     zpl+=zbsp;
-  }
+  }  
 
+}
+
+void DetectorConstruction::SetFidVolume(G4ThreeVector value)
+{
+  fFidVol = value;
+  // Do not need to re-initialize geom. This is strictly for analysis sake. EC, 8-May-2025.
+  //  G4RunManager::GetRunManager()->ReinitializeGeometry();
 }

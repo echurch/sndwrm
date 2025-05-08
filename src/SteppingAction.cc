@@ -123,10 +123,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   tprocess = aStep->GetPostStepPoint()->GetProcessDefinedStep();
   //  if (pID == 11)
   //    std::cout << "SteppingAction material in which e- step and x,y,z [mm]: " << lVolume->GetMaterial()->GetName()<< ", " << aStep->GetPreStepPoint()->GetPosition()[0] << ", " << aStep->GetPreStepPoint()->GetPosition()[1] << ", " << aStep->GetPreStepPoint()->GetPosition()[2] << std::endl;
-  const std::vector<double> fidv {6000,6000,30000};
+
+  //  const std::vector<double> fidv {6000,6000,30000};
+  // FidVol now configured in DetectorMessenger. 8-May-2025.
+  //  std::vector<double> fidv {6000,6000,30000};
+  G4ThreeVector ffv = fDetector->GetFidVolume();
+
   if (abs(pID) == 11 && lVolume->GetMaterial()->GetName().find("G4_lAr") != std::string::npos &&
       // also require deposit to be inside the instrumented region. Else, there will not be any charge measured for these event.
-      ( ( abs(pos[0]) < fidv.at(0) ) && ( abs(pos[1]) < fidv.at(1) ) && ( abs(pos[2]) < fidv.at(2) ) ) 
+      ( ( abs(pos[0]) < ffv[0] ) && ( abs(pos[1]) < ffv[1] ) && ( abs(pos[2]) < ffv[2] ) ) 
       )
 
     {

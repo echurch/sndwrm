@@ -61,7 +61,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   public:
   
     virtual G4VPhysicalVolume* Construct();
-    
+
+
+    void SetFidVolume (G4ThreeVector value);
     void SetTargetLength (G4double value);
     void SetTargetRadius (G4double value);
     void SetShieldThickness (G4double value);
@@ -72,7 +74,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetDetectorThickness(G4double value);  
     void SetDetectorRadius(G4double value);  
     void SetDetectorMaterial(G4String);               
-                   
+
+    G4ThreeVector GetFidVolume() {return fFidVol;};
     void PrintParameters();
     
   public:
@@ -205,6 +208,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void               DefineMaterials();
     G4VPhysicalVolume* ConstructVolumes();        
     G4VPhysicalVolume* ConstructLine();
+
+    G4ThreeVector fFidVol;  
 
     void IBeams();
     void Belts();

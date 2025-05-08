@@ -135,10 +135,12 @@ int main(int argc,char** argv) {
    UImanager->ApplyCommand(command+fileName);
   }
 
+  std::cout << "sndwrm: About to call destructors, which might complain. Not calling 'em would dump a __ton__ of complaints." << std::endl;
   //job termination
   if (visManager)
     delete visManager;
-  delete runManager;
+  if (runManager)
+    delete runManager;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

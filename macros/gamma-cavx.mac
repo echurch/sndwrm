@@ -9,7 +9,7 @@
 /run/verbose 0
 /tracking/verbose 0
 
-
+/sndwrm/det/setHalfFidVol 7. 7. 31 m
 #
 /run/initialize
 #
