@@ -64,6 +64,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
 
     void SetFidVolume (G4ThreeVector value);
+    void SetFloorShield(G4double value); 
+    void SetGDMLfile(G4String value);
     void SetTargetLength (G4double value);
     void SetTargetRadius (G4double value);
     void SetShieldThickness (G4double value);
@@ -76,6 +78,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetDetectorMaterial(G4String);               
 
     G4ThreeVector GetFidVolume() {return fFidVol;};
+    G4double GetFloorShield() {return fFloorShield;};
+    G4String GetGDMLfile() {return fGDMLfile;};
     void PrintParameters();
     
   public:
@@ -177,6 +181,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double fzpl;
 
   G4Material* fBP;
+  G4Material* fPb;
+  G4Material* fRock;
   
 // Materials
 
@@ -210,7 +216,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4VPhysicalVolume* ConstructLine();
 
     G4ThreeVector fFidVol;  
-
+    G4double fFloorShield;
+    G4String fGDMLfile;
     void IBeams();
     void Belts();
     void ShieldingWalls();

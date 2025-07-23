@@ -1,3 +1,8 @@
+###################
+##### Issue the following cmake command from ./build/ for Xerxes (GDML support). Drop all flags if GDML not needed.
+## cmake -DUSEG4MT=1 -DXercesC_INCLUDE_DIR=/Users/chur558/xerces-c-3.3.0/src -DXercesC_LIBRARY=/Users/chur558/xerces-c-3.3.0/build/src/libxerces-c-3.3.dylib -DXercesC_VERSION=3.3.0 ../
+###################
+
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
@@ -16,11 +21,11 @@ option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 REQUIRED ui_all vis_all)
 else()
-  find_package(Geant4 REQUIRED)
+  find_package(Geant4 REQUIRED gdml)
 endif()
 
 message(STATUS "GEANT4 include dir: ${Geant4_INCLUDE_DIR}")
-message(STATUS "GEANT4 libraries dir: ${Geant4_LIBRARIES_DDIR}")
+message(STATUS "GEANT4 libraries dir: ${Geant4_LIBRARIES_DIR}")
 message(STATUS "GEANT4 libraries libs: ${Geant4_LIBRARIES}")
 
 
@@ -28,12 +33,13 @@ message(STATUS "GEANT4 libraries libs: ${Geant4_LIBRARIES}")
 # Setup Geant4 include directories and compile definitions
 #
 include(${Geant4_USE_FILE})
-
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
 #
 include_directories(${PROJECT_SOURCE_DIR}/include 
-                    ${Geant4_INCLUDE_DIR} $ENV{MARLEY}/include/ )
+                    ${Geant4_INCLUDE_DIR} $ENV{MARLEY}/include/
+		    $ENV{XERCESROOT}/../../src/
+		    )
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 ##file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cxx)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
@@ -49,7 +55,7 @@ if (USEG4MT)
 endif()
 
 add_executable(sndwrm rdecay02.cc ${sources} ${headers})
-target_link_libraries(sndwrm  ${Geant4_LIBRARIES}  $ENV{MARLEY}/build/libMARLEY.dylib) ## .so for linux
+target_link_libraries(sndwrm  ${Geant4_LIBRARIES}  $ENV{MARLEY}/build/libMARLEY.dylib $ENV{XERCESROOT}/libxerces-c-3.3.dylib) ## .so for linux
 
 message(STATUS "USEG4MT is ${USEG4MT}")
 

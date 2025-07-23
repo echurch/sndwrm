@@ -13,6 +13,7 @@
 
 /sndwrm/det/setHalfFidVol 7. 7. 31 m
 /sndwrm/det/setFloorShield {FLOOR} cm
+/sndwrm/det/setGDMLfile ../macros/dunevd_v11.gdml
 #
 /run/initialize
 #
@@ -33,21 +34,24 @@
 ##/gps/ene/max 3.1 MeV
 
 ### Cavern
-##/gps/pos/type Surface
-##/gps/pos/shape Cylinder
-##/gps/pos/radius 16. m
-##/gps/pos/halfz 35. m
-##/gps/pos/centre 0. -3.0  0. m
-##/gps/pos/confine OuterAir
+/gps/pos/type Surface
+/gps/pos/shape Cylinder
+/gps/pos/radius 16. m
+/gps/pos/halfz 35. m
+/gps/pos/centre 0. -3.0  0. m
+/gps/pos/confine OuterAir
 
 ## Floor
-/gps/pos/type Volume
-/gps/pos/shape Para
-/gps/pos/halfx 10.0 m
-/gps/pos/halfy 0.1 m  ## 0.1
-/gps/pos/halfz 35. m
-/gps/pos/centre 0. -9.2  0. m
-/gps/pos/confine OuterAir
+##/gps/pos/type Volume
+##/gps/pos/shape Para
+##/gps/pos/halfx 10.0 m
+##/gps/pos/halfy 0.1 m 
+##/gps/pos/halfz 35. m
+##/gps/pos/centre 0. -9.2  0. m
+##/gps/pos/confine OuterAir
+
+# x=9.4m is outer edge of IBeams
+
 
 
 /gps/particle neutron
@@ -62,7 +66,9 @@
 #/gps/ang/maxtheta 90 deg
 
 
-/analysis/setFileName ../ana/cavneutrFLR_{FLOOR}cmfl_25cmPbfl_23cmwalls.root
+
+## /analysis/setFileName ../ana/cavneutrCAV_{FLOOR}cmfl_25cmPbfl_23cmwalls.root
+/analysis/setFileName ../ana/cavneutrCAV_{FLOOR}cmfl_25cmPbfl_23cmwalls_TEST.root
 
 
 /analysis/ntuple/setActivation 0 true
@@ -79,8 +85,8 @@
 # 75 jobs of 100000 evts is about 1 sec exposure.
 
 ##/control/execute /Users/chur558/sndwrm/macros/vis.mac
-/run/beamOn 800000 # 15k: 10 cores, ~3 hours with 2/3 wall shielding and floor shielding.
-#/run/beamOn 2100
+## /run/beamOn 5000000 # 15k: 10 cores, ~3 hours with 2/3 wall shielding and floor shielding.
+/run/beamOn 2100
 
 
 

@@ -1,4 +1,4 @@
- //
+//
 // ********************************************************************
 // * License and Disclaimer                                           *
 // *                                                                  *
@@ -68,7 +68,24 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Det)
   fFidVolumeCmd->SetDefaultValue(fFidVolumeCmd->GetNew3VectorValue("6. 6. 30. m"));
   fFidVolumeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   fDetector->SetFidVolume(fFidVolumeCmd->GetNew3VectorValue("6. 6. 30. m"));
-  std::cout << "DetMess::pre-SNV()  " << fDetector->GetFidVolume() << std::endl;
+  std::cout << "DetMess::pre-SetNewVal() FidVol " << fDetector->GetFidVolume() << std::endl;
+
+  fFloorShieldCmd = new G4UIcmdWithADoubleAndUnit("/sndwrm/det/setFloorShield", this);
+  fFloorShieldCmd->SetGuidance("Set the FloorShield thickiness.");
+  fFloorShieldCmd->SetParameterName("FloorShield",true);
+  fFloorShieldCmd->SetDefaultUnit("m");
+  fFloorShieldCmd->SetDefaultValue(fFloorShieldCmd->GetNewDoubleValue("0. m"));
+  fFloorShieldCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fDetector->SetFloorShield(fFloorShieldCmd->GetNewDoubleValue("0. m"));
+  std::cout << "DetMess::pre-SetNewVal() FloorShield " << fDetector->GetFloorShield() << std::endl;
+
+  fGDMLCmd = new G4UIcmdWithAString("/sndwrm/det/setGDMLfile", this);
+  fGDMLCmd->SetGuidance("Set the GDML file name.");
+  fGDMLCmd->SetParameterName("GDMLfile",true);
+  fGDMLCmd->SetDefaultValue("");
+  fGDMLCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fDetector->SetGDMLfile("");
+  std::cout << "DetMess::pre-SetNewVal() GDML: " << fDetector->GetGDMLfile() << std::endl;
 
 }
 
@@ -80,7 +97,17 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
   if (command == fFidVolumeCmd )
     {
       fDetector->SetFidVolume(fFidVolumeCmd->GetNew3VectorValue(newValue));
-      std::cout << "DetMess::SNV()  " << fFidVolumeCmd->GetNew3VectorValue(newValue) << std::endl;
+      std::cout << "DetMess::SNV() FidVolume " << fFidVolumeCmd->GetNew3VectorValue(newValue) << std::endl;
+    }
+  if (command == fFloorShieldCmd )
+    {
+      fDetector->SetFloorShield(fFloorShieldCmd->GetNewDoubleValue(newValue));
+      std::cout << "DetMess::SNV() FloorShield " << fFloorShieldCmd->GetNewDoubleValue(newValue) << std::endl;
+    }
+  if (command == fGDMLCmd )
+    {
+      fDetector->SetGDMLfile(newValue);
+      std::cout << "DetMess::SNV() GDML file " << newValue << std::endl;
     }
   
 }

@@ -20,6 +20,7 @@
 #include "G4Colour.hh"
 #include "G4VisAttributes.hh"
 #include "G4RunManager.hh"
+#include "G4GDMLParser.hh"
 
 #include <string>
 
@@ -89,7 +90,7 @@ DetectorConstruction::DetectorConstruction()
   fzpl = 64732./1000.;
   fSpacing = 64732./1000./41; // m
 
-  fDetectorMessenger = new DetectorMessenger(this); // re-insert this to allow to set fFidVolume
+  fDetectorMessenger = new DetectorMessenger(this); // re-insert this to allow to set fFidVolume,fFloorShield
   fMPL = new MaterialPropertyLoader();  
 }
 
@@ -110,8 +111,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Must wait till this late, cuz MLP works by looping over all Logical Volumes which are only just now established.
   // Get the logical volume store and assign material properties. MaterialPropLoader() is borrowed, heavily-edited from LArSoft.   
 
-  DefineMaterials();
-  return ConstructLine();
+  
+  if (!GetGDMLfile().length())
+    {
+      DefineMaterials();
+      return ConstructLine();
+    }
+  
+  G4GDMLParser* parser = new G4GDMLParser();
+  parser->Read(GetGDMLfile(), false);  
+  fPhysiWorld = parser->GetWorldVolume();
+  return fPhysiWorld;
+  
 }
 
 
@@ -520,7 +531,8 @@ void DetectorConstruction::ShieldingWalls()
   std::cout << "BlockHeight,Top are " << BlockHeight << ", " << BlockHeightTop << std::endl;
   const double BlockHeightBot = BlockHeight*0.15;
 
-  double fBlockThickness(0.40);
+  double fBlockThickness(0.23); // weird canonical 9" that Juergen advocates.
+  //  fBlockThickness = GetFloorShield()/1000. ; // use same thickness as Floor. EC, 1-July-2025.
   G4Box* ShieldBlock = new G4Box("ShieldBlock",(fBlockThickness/2.0)*m, (BlockHeight/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
   G4Box* ShieldBlockTop = new G4Box("ShieldBlockTop",(fBlockThickness/2.0)*m, (BlockHeightTop/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
   G4Box* ShieldBlockBot = new G4Box("ShieldBlockBot",(fBlockThickness/2.0)*m, (BlockHeightBot/2.)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 32cm for fBP density 1.0
@@ -700,6 +712,12 @@ void DetectorConstruction::DefineMaterials()
   G4Element*  Cr = new G4Element(name="Chromium",symbol="Cr",z=24.,51.9961*g/mole);
   G4Element* N  = new G4Element("Nitrogen", "N", 7, 14.01*g/mole);
   G4Element* Mn  = new G4Element("Manganese","Mn", 25, 54.94*g/mole);
+
+  G4Element* Mg  = new G4Element("Magnesium","Mg", 12, 24.3*g/mole);
+  G4Element* Na  = new G4Element("Sodium","Na", 11, 22.99*g/mole);
+  G4Element* Ca  = new G4Element("Calcium","Ca", 20, 40.08*g/mole);
+  G4Element* S  = new G4Element("Sulphur","S",  16, 32.06*g/mole);
+  
   G4Element* Cu  = new G4Element("Copper","Cu", 29, 63.55*g/mole);
   G4Element* B10 = new G4Element (name="Boron10",symbol="B10",z=4.,10.00*g/mole);
   G4Element* B11 = new G4Element (name="Boron11",symbol="B11",z=4.,11.00*g/mole);
@@ -730,10 +748,14 @@ void DetectorConstruction::DefineMaterials()
   G10->AddElement(H, 0.0251);
 
   G4Material* Aluminium = new G4Material(name="Aluminium",z=13.,26.98*g/mole,2.7*g/cm3);
+
   G4Material* base_mat = man->FindOrBuildMaterial("G4_TEFLON");
   G4Material* env_mat = man->FindOrBuildMaterial("G4_lAr");
   G4Material* mAir = man->FindOrBuildMaterial("G4_AIR");
+  //  fPb = man->FindOrBuildMaterial("G4_LEAD");
+  fPb = new G4Material(name="Lead", z=82., 207*g/mole,11.348*g/cm3);
 
+  
   G4Material* ptp_mat =  new G4Material(name = "ptp_mat", 1.079*g/cm3, nel = 2); //p-Terphenyl
   ptp_mat->AddElement (C, natoms=18);
   ptp_mat->AddElement (H, natoms=14);
@@ -761,7 +783,7 @@ void DetectorConstruction::DefineMaterials()
   fWoodMater =  wood ;
 
 
-  G4Material* H2O = new G4Material("Water",density= 1.0*g/cm3,ncomponents=2);
+  G4Material* H2O = new G4Material("Water",density= 1.0*g/cm3,ncomponents=2, kStateSolid, 293.15*kelvin);
   H2O->AddElement(H, number_of_atoms=2);
   H2O->AddElement(O, number_of_atoms=1);
   // Borated-Poly SE self-extinguishing, https://johncaunt.com/products/jc207-hd-hd5/, EC, 7-Jan-2025.
@@ -780,16 +802,50 @@ void DetectorConstruction::DefineMaterials()
   fBP_SE->AddElement(B10,fractionmass=0.94*perCent);
   fBP_SE->AddElement(O,fractionmass=22.2*perCent);
 
-  G4Material* fBP_norm = new G4Material (name="BP_norm", density= 0.95*g/cm3 , ncomponents=5);  
+  G4Material* fBP_norm = new G4Material (name="BP_norm", density= 0.95*g/cm3 , ncomponents=5, kStateSolid, 293.15*kelvin);  
   fBP_norm->AddElement(H,fractionmass=11.6*perCent);
   fBP_norm->AddElement(C,fractionmass=61.2*perCent);
   fBP_norm->AddElement(B11,fractionmass=4.0*perCent);
   fBP_norm->AddElement(B10,fractionmass=1.0*perCent);
   fBP_norm->AddElement(O,fractionmass=22.2*perCent);
 
-  
-  fBP = H2O; // H2O; //fBP_norm; //fBP_SE;
-  
+
+  G4Material* SiO2 = new G4Material(name="SiO2", density = 2.2*g/cm3, ncomponents=2);
+  SiO2->AddElement(Si,number_of_atoms=1);
+  SiO2->AddElement(O,number_of_atoms=2);
+  G4Material* FeO = new G4Material(name="FeO", density = 5.745*g/cm3, ncomponents=2);
+  FeO->AddElement(Fe,number_of_atoms=1);
+  FeO->AddElement(O,number_of_atoms=1);
+  G4Material* Al2O3 = new G4Material(name="Al2O3", density = 3.97*g/cm3, ncomponents=2);
+  Al2O3->AddElement(Al,number_of_atoms=2);
+  Al2O3->AddElement(O,number_of_atoms=3);
+  G4Material* MgO = new G4Material(name="MgO", density = 3.58 *g/cm3, ncomponents=2);
+  MgO->AddElement(Mg,number_of_atoms=1);
+  MgO->AddElement(O,number_of_atoms=1);
+  G4Material* CO2 = new G4Material(name="CO2", density = 1.562 *g/cm3, ncomponents=2);
+  CO2->AddElement(C,number_of_atoms=1);
+  CO2->AddElement(O,number_of_atoms=2);
+  G4Material* CaO = new G4Material(name="CaO", density = 3.35 *g/cm3, ncomponents=2);
+  CaO->AddElement(Ca,number_of_atoms=1);
+  CaO->AddElement(O,number_of_atoms=1);
+  G4Material* Na2O = new G4Material(name="Na2O", density = 2.27 *g/cm3, ncomponents=2);
+  Na2O->AddElement(Na,number_of_atoms=2);
+  Na2O->AddElement(O,number_of_atoms=1);
+
+  G4Material* DUNERock = new G4Material("DUNERock", density = 2.82 *g/cm3, ncomponents=9);
+  DUNERock->AddMaterial(SiO2,fractionmass=0.5267);
+  DUNERock->AddMaterial(FeO,fractionmass=0.1174);
+  DUNERock->AddMaterial(Al2O3,fractionmass=0.1025);
+  DUNERock->AddMaterial(MgO,fractionmass=0.0473);
+  DUNERock->AddMaterial(CO2,fractionmass=0.0422);
+  DUNERock->AddMaterial(CaO,fractionmass=0.0382);
+  DUNERock->AddElement(C,fractionmass=0.0240);
+  DUNERock->AddElement(S,fractionmass=0.0186);
+  DUNERock->AddMaterial(Na2O,fractionmass=0.0053);
+  fRock = DUNERock;
+		       
+  fBP = fBP_norm; // H2O; //fBP_norm; //fBP_SE; // Lead
+
   /*const G4int nEntries = 6;
   G4double PhotonEnergy[nEntries] =
     { 2.0*eV, 2.341*eV, 2.757*eV, 3.353*eV, 4.136*eV, 10.0*eV };
@@ -1036,7 +1092,17 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
 				    fPhysiWorld,    	//its mother  volume
 				    false,			//no boolean operation
 				    0, true);
-  
+
+  // Make it 6m thick
+  double rockThick(10);
+  G4Box* RockFloor = new G4Box("RockFloor",fst*1.5*m,rockThick*m/2.,fzpl/2.*1.1*m);
+  G4LogicalVolume* fLogicRockFloor = new G4LogicalVolume(RockFloor,fRock,"LRockFloor");
+  G4VPhysicalVolume* fPhysRockFloor = new G4PVPlacement(0,G4ThreeVector(0, -(fht+1.1+rockThick/2)*m,0),
+				    "RockFloor",
+				    fLogicRockFloor,     //its logical volume
+				    fPhysOuterAir,    	//its mother  volume
+				    false,			//no boolean operation
+				    0, true);
 				    
   
   std::cout << "Checking units on warm CryoSkin. xout size [mm]: " << (fCryostat_x/2+fWarmSkinThickness+fWoodThickness+fShieldThickness+fColdSkinThickness+Offset)*m << std::endl;
@@ -1045,8 +1111,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   // All of this must have mother volume fPhysOuterAir
   IBeams();
   Belts();
-  ShieldingWalls();
-  ShieldingFloor();
+  if (GetFloorShield()>0.)
+    ShieldingWalls();
+  if (GetFloorShield()>0.)
+    ShieldingFloor();
   
   //Bulk box for wls optical properties tests
 
@@ -1548,24 +1616,31 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
 void DetectorConstruction::ShieldingFloor()
 {
 
-  const double ht =  fht ; //m                                                                                                                                                                          
+  const double ht =  fht ; //m
   const double zbsp = fSpacing; //m                                                                                                                                                                      
   double zpl(zbsp/2.);
   double xpl(0.);
   double eps(0.215);
-  int cpIT(0), cpIB(0), cpIL(0), cpIR(0),cpBlt(0);
-  double BlockThickness(0.40);
+  int cpIT(0), cpIB(0), cpIL(0), cpIR(0),cpBlt(0), cpIBPb(0);
+  double BlockThickness(0.60);
+
+  BlockThickness = GetFloorShield()/1000. ;
+  double BlockThicknessPb(2.5/100.); // likely allowed amount. EC, 1-July-2025.
+  std::cout << "ShieldingFloor(): ShieldBlocks thickiness [m]: " << BlockThickness << std::endl;
   const double BlockWidth = fSpacing-fIFlangeWaist-0.001 - 0.050;
 
   G4Box* ShieldBlock = new G4Box("ShieldBlock", (zbsp-0.050)/2.*m, (BlockThickness/2.0)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
+  G4Box* ShieldBlockPb = new G4Box("ShieldBlockPb", (zbsp-0.050)/2.*m, (BlockThicknessPb/2.0)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
   G4LogicalVolume* ShieldBlockLog = new G4LogicalVolume(ShieldBlock, fBP, "ShieldBlockLog");
+  G4LogicalVolume* ShieldBlockPbLog = new G4LogicalVolume(ShieldBlockPb, fPb, "ShieldBlockLogPb");
   G4VisAttributes* simpleShieldAtt= new G4VisAttributes(G4Colour::Blue());
   simpleShieldAtt->SetDaughtersInvisible(true);
   simpleShieldAtt->SetForceSolid(true);
   simpleShieldAtt->SetForceAuxEdgeVisible(true);
   ShieldBlockLog->SetVisAttributes(simpleShieldAtt);
+  ShieldBlockPbLog->SetVisAttributes(simpleShieldAtt);
   
-  // Top, bottom  
+  //  bottom  
   for (size_t ii=0;ii<=19 /*20*/;ii++) {
     // loop on x for top and bottom                                                                                                                                                                     
     for (int jj=-6;jj<6;jj++) {
@@ -1582,6 +1657,20 @@ void DetectorConstruction::ShieldingFloor()
 							 false,                 //no boolean operation
 							 cpIB++, // copyNo
 							 true); //check for overlaps
+      // Put the Lead on top of the BP bricks.
+      new G4PVPlacement(0,G4ThreeVector((jj)*zbsp*m,(-ht+eps+BlockThickness/2.+BlockThicknessPb/2.)*m,(zpl)*m),"ShieldBotPb",
+							 ShieldBlockPbLog,      //its logical volume   
+							 fPhysOuterAir,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIBPb++, // copyNo
+							 true); //check for overlaps
+      new G4PVPlacement(0,G4ThreeVector((jj)*zbsp*m,(-ht+eps+BlockThickness/2.+BlockThicknessPb/2.)*m,(-zpl)*m),"ShieldBotPb",
+							 ShieldBlockPbLog,      //its logical volume   
+							 fPhysOuterAir,           //its mother  volume
+							 false,                 //no boolean operation
+							 cpIBPb++, // copyNo
+							 true); //check for overlaps
+
     }
     zpl+=zbsp;
   }  
@@ -1593,4 +1682,14 @@ void DetectorConstruction::SetFidVolume(G4ThreeVector value)
   fFidVol = value;
   // Do not need to re-initialize geom. This is strictly for analysis sake. EC, 8-May-2025.
   //  G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void DetectorConstruction::SetFloorShield(G4double value)
+{
+  fFloorShield = value;
+}
+
+void DetectorConstruction::SetGDMLfile(G4String value)
+{
+  fGDMLfile = value;
 }

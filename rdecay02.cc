@@ -49,6 +49,7 @@
 #include "SteppingVerbose.hh"
 
 #include "Shielding.hh"
+#include "G4ThermalNeutrons.hh"
 
 #include "G4UIExecutive.hh"
 #include "G4VisExecutive.hh"
@@ -59,6 +60,9 @@
 
 int main(int argc,char** argv) {
 
+  std::cout << "Run interactively as ./sndwrm ../macros/mymacro.mac FloorShieldThicknessIntegerIncm Nthr." << std::endl;
+  std::cout << "Can leave off last two arguments and use defaults." << std::endl;
+  
   //detect interactive mode (if no arguments) and define UI session
   G4UIExecutive* ui = 0;
   if (argc == 1) ui = new G4UIExecutive(argc,argv);
@@ -71,7 +75,7 @@ int main(int argc,char** argv) {
   //G4MTRunManager* runManager = new G4MTRunManager;
   auto runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default); // This, as opposed to above line, does not cause a million destructor complaints. EC, 6-May-2025.
   G4int nThreads = G4Threading::G4GetNumberOfCores();
-  if (argc==3) nThreads = G4UIcommand::ConvertToInt(argv[2]);
+  if (argc==4) nThreads = G4UIcommand::ConvertToInt(argv[3]);
   runManager->SetNumberOfThreads(nThreads);
   std::cout << "sndwrm: RUNNING IN G4MULTITHREADED MODE." << std::endl;
 #else
@@ -94,8 +98,8 @@ int main(int argc,char** argv) {
   */
 
   
-  // EC, 30-Apr-2024. Replace longstanding use of crafting my own physics list.
-  G4VModularPhysicsList* physlist = new Shielding;
+  // EC, 30-Apr-2024. Replace longstanding use of crafting my own physics list. ... tacking on args that should enforce LIQMD_HPT, 23-June-2025
+  G4VModularPhysicsList* physlist = new Shielding(1,"HP","",true); // 1 for verbose.
   runManager->SetUserInitialization(physlist);
   G4int verb(0);
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(verb);
@@ -132,6 +136,12 @@ int main(int argc,char** argv) {
    //batch mode
    G4String command = "/control/execute ";
    G4String fileName = argv[1];
+   if (argc>=3)
+     {
+       std::stringstream alias;
+       alias<<"ARG"<< 1 <<" "<< argv[2];	
+       UImanager->SetAlias(alias.str().c_str());
+     }
    UImanager->ApplyCommand(command+fileName);
   }
 
