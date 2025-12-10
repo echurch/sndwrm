@@ -55,7 +55,19 @@ if (USEG4MT)
 endif()
 
 add_executable(sndwrm rdecay02.cc ${sources} ${headers})
-target_link_libraries(sndwrm  ${Geant4_LIBRARIES}  $ENV{MARLEY}/build/libMARLEY.dylib $ENV{XERCESROOT}/libxerces-c-3.3.dylib) ## .so for linux
+#target_link_libraries(sndwrm  ${Geant4_LIBRARIES}  $ENV{MARLEY}/build/libMARLEY.so $ENV{XERCESROOT}/libxerces-c-3.3.so) ## .so for linux
+# Find Xerces-C library
+find_package(XercesC REQUIRED)
+
+# Link libraries
+target_link_libraries(sndwrm
+    ${Geant4_LIBRARIES}
+    $ENV{MARLEY}/build/libMARLEY.so
+    ${XercesC_LIBRARIES}
+)
+
+# Include directories for Xerces-C
+target_include_directories(sndwrm PRIVATE ${XercesC_INCLUDE_DIRS})
 
 message(STATUS "USEG4MT is ${USEG4MT}")
 
