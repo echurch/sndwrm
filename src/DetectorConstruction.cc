@@ -175,7 +175,7 @@ void DetectorConstruction::IBeams()
     // Vertical frame half-height for placement
     const G4double fst_local = 16.732 * m / 2.;     // = 8.920 m
     const G4double sidePosX   = 17.832 * m / 2.;     // = half width
-    const G4double sidePosZ   = 65.84 * m / 2. - beamDepth/2 + 25*cm;     // = half width
+    const G4double sidePosZ   = 65.84 * m / 2. - beamDepth/2 + 25*cm;     // need ~25 cm extra since last belt is a bit different from others
     const G4double PitchIBeams = 1.6*m;
     const G4int nIBeamsLongSide = 39;
     const G4int nIBeamsShortSide = 9;
@@ -352,7 +352,7 @@ void DetectorConstruction::Belts()
     const G4double fst_local = 16.732 * m / 2.;     // = 8.920 m
     const G4double sidePosX   = 17.832 * m / 2.;     // = half width
     //const G4double sidePosZ   = 65.84 * m / 2. - beamDepth/2;     // = half width
-    const G4double sidePosZ   = 65.84 * m / 2. - beamDepth/2 +25*cm;     // = half width
+    const G4double sidePosZ   = 65.84 * m / 2. - beamDepth/2 + 25*cm;     // need ~25 cm extra since last belt is a bit different from others
     const G4double PitchIBeams = 1.6*m;
     const G4int nIBeamsLongSide = 39;
     const G4int nIBeamsShortSide = 9;
