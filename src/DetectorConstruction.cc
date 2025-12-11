@@ -179,7 +179,7 @@ void DetectorConstruction::IBeams()
     const G4double PitchIBeams = 1.6*m;
     const G4int nIBeamsLongSide = 39;
     const G4int nIBeamsShortSide = 9;
-    G4double origin_z = -19*PitchIBeams;
+    G4double origin_z = -19*PitchIBeams ;
     G4double origin_x = -4*PitchIBeams;
 
     G4cout << "Corrected I-beam: webHeight=" << webHeight/m
@@ -282,7 +282,7 @@ void DetectorConstruction::IBeams()
     G4double zpos = 0. *m;
     G4double xpos = 0. *m;
 
-    // === Placements short side===
+    // === Placements IBeams short side===
     for(int i = 1 ; i <= nIBeamsShortSide ; i++){
 	    xpos = origin_x + (i-1)*PitchIBeams;
 	    new G4PVPlacement(rotShortSide,
@@ -300,16 +300,17 @@ void DetectorConstruction::IBeams()
     }
 
 
-    // === Placements long side===
+    // === Placements IBeams long side===
     for(int i = 1 ; i <= nIBeamsLongSide ; i++){
 	    zpos = origin_z + (i-1)*PitchIBeams;
+	    //Top
     	    new G4PVPlacement(rotTopBottom,
                       G4ThreeVector(0.,  fst_local, zpos),
                       "IBeamTop",
                       logTop,
                       fPhysOuterAir,
                       false, 0, true);
-
+	    //Bottom
 	    new G4PVPlacement(rotTopBottom,
                       G4ThreeVector(0., -fst_local, zpos),
                       "IBeamBottom",
@@ -351,7 +352,6 @@ void DetectorConstruction::Belts()
     const G4double beamDepth     = flangeThick*2. + webHeight;  // = 1.108 m
     const G4double fst_local = 16.732 * m / 2.;     // = 8.920 m
     const G4double sidePosX   = 17.832 * m / 2.;     // = half width
-    //const G4double sidePosZ   = 65.84 * m / 2. - beamDepth/2;     // = half width
     const G4double sidePosZ   = 65.84 * m / 2. - beamDepth/2 + 25*cm;     // need ~25 cm extra since last belt is a bit different from others
     const G4double PitchIBeams = 1.6*m;
     const G4int nIBeamsLongSide = 39;
@@ -373,7 +373,7 @@ void DetectorConstruction::Belts()
     G4Box* BeltFlange = new G4Box("BeltFlange", flangeWidth/2.0, fIFlangeWaist/2.0, halfSpacingZ - flangeWidth/2.0);
     G4Box* BeltFlangeTop = new G4Box("BeltFlangeTop", flangeWidth/3.0, fIFlangeWaist/2.0, halfSpacingZ);
     // Hole (one side belts)
-    G4Tubs* BeltPort =  new G4Tubs("BeltPortHole", 0.0, 0.25*m, fIFlangeThick/2.0, 0.0, 2.0*CLHEP::pi);
+    G4Tubs* BeltPort =  new G4Tubs("BeltPortHole", 0.0, holeR, fIFlangeThick/2.0, 0.0, 2.0*CLHEP::pi);
 
     // Rotate hole so it's aligned along Z
     G4RotationMatrix* rotY = new G4RotationMatrix();
@@ -450,7 +450,7 @@ void DetectorConstruction::Belts()
     fBeltWithoutHoleLog->SetVisAttributes(beltVis);
 
     
-    // === Placements long side===
+    // === Placements Belts long side===
     G4double xpos = 0. *m;
     G4double ypos = 0. *m;
     G4double zpos = 0. *m;
@@ -805,10 +805,10 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   // All of this must have mother volume fPhysOuterAir
   IBeams();
   Belts();
+  ShieldingFloor();
   //if (GetFloorShield()>0.)
    // ShieldingWalls();
   //if (GetFloorShield()>0.)
-   // ShieldingFloor();
   
   //Bulk box for wls optical properties tests
 
@@ -835,69 +835,84 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   return fPhysiWorld;
 }
 
-
 void DetectorConstruction::ShieldingFloor()
 {
+    // === PARAMETERS ===
+    const double ht = fht;                  // detector half-height (meters)
+    const G4double fst_local = 16.732 * m / 2.;     // = 8.920 m
+    const G4double webHeight     = fIFlangeHeight;      // 1.028 m
+    const double eps = 0.215;               // floor clearance
+    const double BlockThickness = 30*cm;   // mm -> m
+    const double BlockThicknessPb = 2.5*cm;                //  
+    const G4double PitchIBeams = 1.6*m;
+    const G4int nIBeamsLongSide = 39;
+    const G4int nIBeamsShortSide = 9;
 
-  const double ht =  fht ; //m
-  const double zbsp = fSpacing; //m                                                                                                                                                                      
-  double zpl(zbsp/2.);
-  double xpl(0.);
-  double eps(0.215);
-  int cpIT(0), cpIB(0), cpIL(0), cpIR(0),cpBlt(0), cpIBPb(0);
-  double BlockThickness(0.60);
+    const int nZ = nIBeamsLongSide;         // number of rows in z
+    const int nX = nIBeamsShortSide;        // number of columns in x
 
-  BlockThickness = GetFloorShield()/1000. ;
-  double BlockThicknessPb(2.5/100.); // likely allowed amount. EC, 1-July-2025.
-  std::cout << "ShieldingFloor(): ShieldBlocks thickiness [m]: " << BlockThickness << std::endl;
-  const double BlockWidth = fSpacing-fIFlangeWaist-0.001 - 0.050;
+    // block width between beams
+    const double clearance = 2. *mm; //assume there will be always a small space between shielding and beams/belts
+    const double BlockWidth = PitchIBeams - fIFlangeWaist - clearance;
 
-  G4Box* ShieldBlock = new G4Box("ShieldBlock", (zbsp-0.050)/2.*m, (BlockThickness/2.0)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
-  G4Box* ShieldBlockPb = new G4Box("ShieldBlockPb", (zbsp-0.050)/2.*m, (BlockThicknessPb/2.0)*m, (BlockWidth/2.)*m); // 20cm for the fBPSE density 1.60, 30cm for fBP density 1.0
-  G4LogicalVolume* ShieldBlockLog = new G4LogicalVolume(ShieldBlock, fBP, "ShieldBlockLog");
-  G4LogicalVolume* ShieldBlockPbLog = new G4LogicalVolume(ShieldBlockPb, fPb, "ShieldBlockLogPb");
-  G4VisAttributes* simpleShieldAtt= new G4VisAttributes(G4Colour::Blue());
-  simpleShieldAtt->SetDaughtersInvisible(true);
-  simpleShieldAtt->SetForceSolid(true);
-  simpleShieldAtt->SetForceAuxEdgeVisible(true);
-  ShieldBlockLog->SetVisAttributes(simpleShieldAtt);
-  ShieldBlockPbLog->SetVisAttributes(simpleShieldAtt);
-  
-  //  bottom  
-  for (size_t ii=0;ii<=19 /*20*/;ii++) {
-    // loop on x for top and bottom                                                                                                                                                                     
-    for (int jj=-6;jj<6;jj++) {
+    std::cout << "ShieldingFloor(): ShieldBlockNeutrons thickness [m]: "
+              << BlockThickness << std::endl;
 
-      new G4PVPlacement(0,G4ThreeVector((jj)*zbsp*m,(-ht+eps)*m,(zpl)*m),"ShieldBot",
-							 ShieldBlockLog,      //its logical volume   
-							 fPhysOuterAir,           //its mother  volume
-							 false,                 //no boolean operation
-							 cpIB++, // copyNo
-							 true); //check for overlaps
-      new G4PVPlacement(0,G4ThreeVector((jj)*zbsp*m,(-ht+eps)*m,(-zpl)*m),"ShieldBot",
-							 ShieldBlockLog,      //its logical volume   
-							 fPhysOuterAir,           //its mother  volume
-							 false,                 //no boolean operation
-							 cpIB++, // copyNo
-							 true); //check for overlaps
-      // Put the Lead on top of the BP bricks.
-      new G4PVPlacement(0,G4ThreeVector((jj)*zbsp*m,(-ht+eps+BlockThickness/2.+BlockThicknessPb/2.)*m,(zpl)*m),"ShieldBotPb",
-							 ShieldBlockPbLog,      //its logical volume   
-							 fPhysOuterAir,           //its mother  volume
-							 false,                 //no boolean operation
-							 cpIBPb++, // copyNo
-							 true); //check for overlaps
-      new G4PVPlacement(0,G4ThreeVector((jj)*zbsp*m,(-ht+eps+BlockThickness/2.+BlockThicknessPb/2.)*m,(-zpl)*m),"ShieldBotPb",
-							 ShieldBlockPbLog,      //its logical volume   
-							 fPhysOuterAir,           //its mother  volume
-							 false,                 //no boolean operation
-							 cpIBPb++, // copyNo
-							 true); //check for overlaps
+    // === SOLIDS ===
+    G4Box* ShieldBlockNeutron = new G4Box("ShieldBlockNeutron", BlockWidth / 2.0, BlockThickness / 2.0, BlockWidth / 2.0);
 
+    G4Box* ShieldBlockPb = new G4Box("ShieldBlockPb", BlockWidth / 2.0, BlockThicknessPb / 2.0, BlockWidth / 2.0);
+
+    // === LOGICAL VOLUMES ===
+    G4LogicalVolume* ShieldBlockNeutronLog = new G4LogicalVolume(ShieldBlockNeutron, fBP, "ShieldBlockNeutronLog");
+
+    G4LogicalVolume* ShieldBlockPbLog = new G4LogicalVolume(ShieldBlockPb, fPb, "ShieldBlockPbLog");
+
+    // === VISUALIZATION ===
+    auto* visShieldNeutron = new G4VisAttributes(G4Colour::Blue());
+    visShieldNeutron->SetDaughtersInvisible(true);
+    visShieldNeutron->SetForceSolid(true);
+    visShieldNeutron->SetForceAuxEdgeVisible(true);
+    ShieldBlockNeutronLog->SetVisAttributes(visShieldNeutron);
+    auto* visShieldGammas = new G4VisAttributes(G4Colour::Grey());
+    visShieldGammas->SetDaughtersInvisible(true);
+    visShieldGammas->SetForceSolid(true);
+    visShieldGammas->SetForceAuxEdgeVisible(true);
+    ShieldBlockPbLog->SetVisAttributes(visShieldGammas);
+
+    // === PLACEMENT SHIELDING===
+    // Y-positions
+    const double origin_z = -19 * PitchIBeams + PitchIBeams/2;    // same logic as belts
+    const double origin_x = -4 * PitchIBeams + PitchIBeams/2;
+    double yPbBlock  = -fst_local - webHeight/2 + BlockThicknessPb/2.0;
+    double yNeutronBlock = yPbBlock + BlockThicknessPb + BlockThickness/2;
+    int cpSteel = 0, cpLead = 0;
+
+    for (int i = 0; i <= nZ; i++)
+    {
+        double zpos = origin_z + (i - 1) * PitchIBeams;
+
+        for (int j = 0; j <= nX; j++)
+        {
+            double xpos = origin_x + (j - 1) * PitchIBeams ;
+
+            // === BLOCKS (bottom rows) ===
+            new G4PVPlacement(0,
+                G4ThreeVector(xpos, yNeutronBlock, zpos),
+                "ShieldBotNeutron",
+                ShieldBlockNeutronLog,
+                fPhysOuterAir,
+                false, cpSteel++, true);
+
+            new G4PVPlacement(0,
+                G4ThreeVector(xpos, yPbBlock, zpos),
+                "ShieldBotPb",
+                ShieldBlockPbLog,
+                fPhysOuterAir,
+                false, cpSteel++, true);
+
+        }
     }
-    zpl+=zbsp;
-  }  
-
 }
 
 void DetectorConstruction::SetFidVolume(G4ThreeVector value)
