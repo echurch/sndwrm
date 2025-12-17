@@ -182,6 +182,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
   G4Material* fBP;
   G4Material* fPb;
+  G4Material* fWater;
   G4Material* fRock;
   
 // Materials

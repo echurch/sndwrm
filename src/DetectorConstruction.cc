@@ -646,6 +646,7 @@ void DetectorConstruction::DefineMaterials()
   G4Material* base_mat = man->FindOrBuildMaterial("G4_TEFLON");
   G4Material* env_mat = man->FindOrBuildMaterial("G4_lAr");
   G4Material* mAir = man->FindOrBuildMaterial("G4_AIR");
+  fWater = man->FindOrBuildMaterial("G4_WATER");
   //  fPb = man->FindOrBuildMaterial("G4_LEAD");
   fPb = new G4Material(name="Lead", z=82., 207*g/mole,11.348*g/cm3);
 
@@ -807,7 +808,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructLine()
   Belts();
   ShieldingFloor();
   //if (GetFloorShield()>0.)
-   // ShieldingWalls();
+  ShieldingWalls();
   //if (GetFloorShield()>0.)
   
   //Bulk box for wls optical properties tests
@@ -914,6 +915,101 @@ void DetectorConstruction::ShieldingFloor()
         }
     }
 }
+
+void DetectorConstruction::ShieldingWalls()
+{
+    // === PARAMETERS ===
+    const double ht = fht;                  // detector half-height (meters)
+    const G4double flangeThick   = fIFlangeThick;       // 0.040 m
+    const G4double fst_local = 16.732 * m / 2.;     // = 8.920 m
+    const G4double webHeight     = fIFlangeHeight;      // 1.028 m
+    const G4double beamDepth     = flangeThick*2. + webHeight;  // = 1.108 m
+    const G4double topLength  = fITopLength;    // 18.940 m
+    const double BlockThickness = 23*cm;   // mm -> m
+    const double BlockHeight = 100*cm;                //  
+    const double BlockWidth = 100*cm;                //  
+    const G4double ContainerThickness = 2.0*mm;
+    const double WaterThickness = BlockThickness - 2*ContainerThickness;
+    const double WaterHeight = BlockHeight - 2*ContainerThickness;
+    const double WaterWidth = BlockWidth - 2*ContainerThickness;
+    const G4int nBlocksLongSide = 64;
+    const G4int nBlocksShortSide = 14;
+    const G4int nBlocksStack = 10;
+
+    const int nZ = nBlocksLongSide;         // number of rows in z
+    const int nX = nBlocksShortSide;        // number of columns in x
+    const int nY = nBlocksStack;        // number of columns in x
+
+
+    std::cout << "ShieldingFloor(): ShieldBlockNeutrons thickness [m]: "
+              << BlockThickness << std::endl;
+
+    // === SOLIDS ===
+    G4Box* ShieldBlockContainer = new G4Box("ShieldBlockContainer", BlockThickness / 2.0, BlockHeight / 2.0, BlockWidth / 2.0);
+
+    G4Box* ShieldBlockWater = new G4Box("ShieldBlockWater", WaterThickness / 2.0, WaterHeight / 2.0, WaterWidth / 2.0);
+
+    // === LOGICAL VOLUMES ===
+    G4LogicalVolume* ShieldBlockContainerLog = new G4LogicalVolume(ShieldBlockContainer, fBP, "ShieldBlockContainerLog");
+
+    G4LogicalVolume* ShieldBlockWaterLog = new G4LogicalVolume(ShieldBlockWater, fWater, "ShieldBlockWaterLog");
+
+    //place the water inside the container  
+    new G4PVPlacement(0,
+                G4ThreeVector(0, 0, 0),
+                ShieldBlockWaterLog,
+                "ShieldLatWater",
+                ShieldBlockContainerLog,
+                false, 0, true);
+              
+    // === VISUALIZATION ===
+    auto* visShieldNeutron = new G4VisAttributes(G4Colour::Blue());
+    visShieldNeutron->SetDaughtersInvisible(true);
+    visShieldNeutron->SetForceSolid(true);
+    visShieldNeutron->SetForceAuxEdgeVisible(true);
+    ShieldBlockContainerLog->SetVisAttributes(visShieldNeutron);
+    //auto* visShieldGammas = new G4VisAttributes(G4Colour::Grey());
+    //visShieldGammas->SetDaughtersInvisible(true);
+    //visShieldGammas->SetForceSolid(true);
+    //visShieldGammas->SetForceAuxEdgeVisible(true);
+    //ShieldBlockWaterLog->SetVisAttributes(visShieldGammas);
+
+    // === PLACEMENT SHIELDING===
+    // Y-positions
+    const double origin_z = -nZ * BlockWidth/2 + BlockWidth/2;    // same logic as belts
+    const double origin_x = -4 * BlockWidth + BlockWidth/2;
+    const double origin_y = -fst_local - beamDepth + BlockHeight/2;
+    const double xLatWall = topLength/2 + BlockThickness/2;
+    int cpContainer = 0, cpWater = 0;
+
+    for (int i = 0; i <= nZ; i++)
+    {
+        double zpos = origin_z + (i - 1) * BlockWidth;
+
+        for (int j = 0; j <= nY; j++)
+        {
+            double ypos = origin_y + (j - 1) * BlockHeight ;
+
+            // === BLOCKS (+x) ===
+            new G4PVPlacement(0,
+                G4ThreeVector(xLatWall, ypos, zpos),
+                "ShieldLatContainerX+",
+                ShieldBlockContainerLog,
+                fPhysOuterAir,
+                false, cpContainer++, true);
+
+            // === BLOCKS (-x) ===
+            new G4PVPlacement(0,
+                G4ThreeVector(-xLatWall, ypos, zpos),
+                "ShieldLatContainerX-",
+                ShieldBlockContainerLog,
+                fPhysOuterAir,
+                false, cpContainer++, true);
+
+        }
+    }
+}
+
 
 void DetectorConstruction::SetFidVolume(G4ThreeVector value)
 {
