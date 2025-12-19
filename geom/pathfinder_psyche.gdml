@@ -1,0 +1,1929 @@
+<?xml version='1.0' encoding='ASCII'?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+  <define>
+    <constant name="HALFPI" value="pi/2."/>
+  <constant name="PI" value="1.*pi"/>
+  <constant name="TWOPI" value="2.*pi"/>
+  <position name="center" x="0" y="0" z="0" unit="mm"/>
+  <rotation name="identity" x="0" y="0" z="0"/>
+  <position name="P-LV_mount_ring1" unit="mm" z="754.5"/>
+  <position name="P-solar_assemb0002" unit="mm" x="1482.0"/>
+  <position name="P-LV_Box0273" unit="mm" z="-14.5"/>
+  <position name="P-LV_Box0284" unit="mm" z="-1.5"/>
+  <position name="P-LV_Box0295" unit="mm" z="11.5"/>
+  <position name="P-LV_Box0306" unit="mm" z="12.5"/>
+  <position name="P-LV_Box0317" unit="mm" z="13.5"/>
+  <position name="P-LV_Box0328" unit="mm" z="14.5"/>
+  <position name="P-solar_assemb0019" unit="mm" x="2662.0"/>
+  <position name="P-LV_Box07910" unit="mm" z="-14.5"/>
+  <position name="P-LV_Box08011" unit="mm" z="-1.5"/>
+  <position name="P-LV_Box08112" unit="mm" z="11.5"/>
+  <position name="P-LV_Box08213" unit="mm" z="12.5"/>
+  <position name="P-LV_Box08314" unit="mm" z="13.5"/>
+  <position name="P-LV_Box08415" unit="mm" z="14.5"/>
+  <position name="P-solar_assemb00216" unit="mm" x="3842.0"/>
+  <position name="P-LV_Box08617" unit="mm" z="-14.5"/>
+  <position name="P-LV_Box08718" unit="mm" z="-1.5"/>
+  <position name="P-LV_Box08819" unit="mm" z="11.5"/>
+  <position name="P-LV_Box08920" unit="mm" z="12.5"/>
+  <position name="P-LV_Box09021" unit="mm" z="13.5"/>
+  <position name="P-LV_Box09122" unit="mm" z="14.5"/>
+  <position name="P-solar_assemb00323" unit="mm" x="-1482.0"/>
+  <position name="P-LV_Box09324" unit="mm" z="-14.5"/>
+  <position name="P-LV_Box09425" unit="mm" z="-1.5"/>
+  <position name="P-LV_Box09526" unit="mm" z="11.5"/>
+  <position name="P-LV_Box09627" unit="mm" z="12.5"/>
+  <position name="P-LV_Box09728" unit="mm" z="13.5"/>
+  <position name="P-LV_Box09829" unit="mm" z="14.5"/>
+  <position name="P-solar_assemb00430" unit="mm" x="-2662.0"/>
+  <position name="P-LV_Box10031" unit="mm" z="-14.5"/>
+  <position name="P-LV_Box10132" unit="mm" z="-1.5"/>
+  <position name="P-LV_Box10233" unit="mm" z="11.5"/>
+  <position name="P-LV_Box10334" unit="mm" z="12.5"/>
+  <position name="P-LV_Box10435" unit="mm" z="13.5"/>
+  <position name="P-LV_Box10536" unit="mm" z="14.5"/>
+  <position name="P-solar_assemb00537" unit="mm" x="-3842.0"/>
+  <position name="P-LV_Box10738" unit="mm" z="-14.5"/>
+  <position name="P-LV_Box10839" unit="mm" z="-1.5"/>
+  <position name="P-LV_Box10940" unit="mm" z="11.5"/>
+  <position name="P-LV_Box11041" unit="mm" z="12.5"/>
+  <position name="P-LV_Box11142" unit="mm" z="13.5"/>
+  <position name="P-LV_Box11243" unit="mm" z="14.5"/>
+  <position name="P-GDMLTube02044" unit="mm" x="-305.75" y="-243.25" z="-0.75"/>
+  <position name="P-LV_bay00145" unit="mm" x="305.75" y="243.25" z="-368.25"/>
+  <position name="P-GDMLTube01946" unit="mm" x="-305.75" y="-243.25" z="-0.75"/>
+  <position name="P-LV_bay001_ebox00147" unit="mm" x="-129.08" y="62.839999999999975" z="244.25"/>
+  <rotation name="R-LV_bay001_ebox0011" unit="deg" x="-180.0"/>
+  <position name="P-LV_Box06348" unit="mm" z="-107.5"/>
+  <position name="P-LV_Box06449" unit="mm" z="-7.5"/>
+  <position name="P-LV_Box06550" unit="mm" z="0.5"/>
+  <position name="P-LV_bay001_ebox00251" unit="mm" x="134.07999999999998" y="0.25" z="244.25"/>
+  <rotation name="R-LV_bay001_ebox0022" unit="deg" x="-180.0"/>
+  <position name="P-LV_Box06752" unit="mm" z="-107.5"/>
+  <position name="P-LV_Box06853" unit="mm" z="-7.5"/>
+  <position name="P-LV_Box06954" unit="mm" z="0.5"/>
+  <position name="P-LV_bay001_ebox0355" unit="mm" x="114.25" y="-119.25" z="-100.0"/>
+  <rotation name="R-LV_bay001_ebox033" unit="deg" x="90.00000000000001"/>
+  <position name="P-LV_Box07156" unit="mm" z="-107.5"/>
+  <position name="P-LV_Box07257" unit="mm" z="-7.5"/>
+  <position name="P-LV_Box07358" unit="mm" z="0.5"/>
+  <position name="P-LV_bay001_ebox0459" unit="mm" x="-181.75" y="25.0" z="-189.25"/>
+  <rotation name="R-LV_bay001_ebox044" unit="deg" y="-90.0"/>
+  <position name="P-LV_Box07560" unit="mm" z="-107.5"/>
+  <position name="P-LV_Box07661" unit="mm" z="-7.5"/>
+  <position name="P-LV_Box07762" unit="mm" z="0.5"/>
+  <position name="P-GDMLTube00463" unit="mm" x="-305.75" y="243.25" z="-0.75"/>
+  <position name="P-LV_bay00264" unit="mm" x="305.75" y="-243.25" z="-368.25"/>
+  <position name="P-GDMLTube00365" unit="mm" x="-305.75" y="243.25"/>
+  <position name="P-GDMLTube01866" unit="mm" x="305.75" y="243.25" z="-0.75"/>
+  <position name="P-LV_bay00367" unit="mm" x="-305.75" y="-243.25" z="-368.25"/>
+  <position name="P-GDMLTube01768" unit="mm" x="305.75" y="243.25"/>
+  <position name="P-GDMLTube00769" unit="mm" x="305.75" y="-243.25" z="-0.75"/>
+  <position name="P-LV_bay00470" unit="mm" x="-305.75" y="243.25" z="-368.25"/>
+  <position name="P-GDMLTube00671" unit="mm" x="305.75" y="-243.25" z="-0.75"/>
+  <position name="P-LV_Ebox00272" unit="mm" x="129.08" y="62.839999999999975" z="244.25"/>
+  <rotation name="R-LV_Ebox0025" unit="deg" x="-180.0"/>
+  <position name="P-LV_Box03873" unit="mm" z="-107.5"/>
+  <position name="P-LV_Box03974" unit="mm" z="-7.5"/>
+  <position name="P-LV_Box04075" unit="mm" z="0.5"/>
+  <position name="P-LV_Ebox00476" unit="mm" x="-134.07999999999998" y="0.25" z="244.25"/>
+  <rotation name="R-LV_Ebox0046" unit="deg" x="-180.0"/>
+  <position name="P-LV_Box04777" unit="mm" z="-107.5"/>
+  <position name="P-LV_Box04878" unit="mm" z="-7.5"/>
+  <position name="P-LV_Box04979" unit="mm" z="0.5"/>
+  <position name="P-LV_Ebox00580" unit="mm" x="-114.25" y="-119.25" z="-100.0"/>
+  <rotation name="R-LV_Ebox0057" unit="deg" x="90.00000000000001"/>
+  <position name="P-LV_Box05181" unit="mm" z="-107.5"/>
+  <position name="P-LV_Box05282" unit="mm" z="-7.5"/>
+  <position name="P-LV_Box05383" unit="mm" z="0.5"/>
+  <position name="P-LV_Ebox00784" unit="mm" x="181.75" y="25.0" z="-189.25"/>
+  <rotation name="R-LV_Ebox0078" unit="deg" x="180.0" y="90.0" z="180.0"/>
+  <position name="P-LV_Box05985" unit="mm" z="-107.5"/>
+  <position name="P-LV_Box06086" unit="mm" z="-7.5"/>
+  <position name="P-LV_Box06187" unit="mm" z="0.5"/>
+  <position name="P-GDMLTube01688" unit="mm" x="305.75" y="243.25" z="-0.75"/>
+  <position name="P-LV_bay10189" unit="mm" x="305.75000000000006" y="243.24999999999997" z="204.75"/>
+  <rotation name="R-LV_bay1019" unit="deg" z="-180.0"/>
+  <position name="P-GDMLTube01590" unit="mm" x="305.75" y="243.25" z="-0.75"/>
+  <position name="P-GDMLTube01291" unit="mm" x="305.75" y="-243.25" z="-0.75"/>
+  <position name="P-LV_bay10292" unit="mm" x="305.74999999999994" y="-243.25000000000003" z="204.75"/>
+  <rotation name="R-LV_bay10210" unit="deg" z="-180.0"/>
+  <position name="P-GDMLTube01193" unit="mm" x="305.75" y="-243.25" z="-0.75"/>
+  <position name="P-GDMLTube01494" unit="mm" x="305.75" y="243.25" z="-0.75"/>
+  <position name="P-LV_bay10395" unit="mm" x="-305.75" y="-243.25" z="204.75"/>
+  <position name="P-GDMLTube01396" unit="mm" x="305.75" y="243.25" z="-0.75"/>
+  <position name="P-GDMLTube00997" unit="mm" x="305.75" y="-243.25" z="-0.75"/>
+  <position name="P-LV_bay10498" unit="mm" x="-305.75" y="243.25" z="204.75"/>
+  <position name="P-GDMLTube00899" unit="mm" x="305.75" y="-243.25" z="-0.75"/>
+  <position name="P-GDMLCone003100" unit="mm" x="-305.75" y="-243.25" z="12.5"/>
+  <position name="P-LV_bay201101" unit="mm" x="305.75" y="243.25" z="573.0"/>
+  <position name="P-GDMLCone004102" unit="mm" x="-305.75" y="-243.25" z="12.5"/>
+  <position name="P-GDMLCone008103" unit="mm" x="-305.75" y="243.25" z="12.5"/>
+  <position name="P-LV_bay202104" unit="mm" x="305.75" y="-243.25" z="573.0"/>
+  <position name="P-GDMLCone009105" unit="mm" x="-305.75" y="243.25" z="12.5"/>
+  <position name="P-GDMLCone006106" unit="mm" x="-305.75" y="-243.25" z="12.5"/>
+  <position name="P-LV_bay203107" unit="mm" x="-305.75000000000006" y="-243.24999999999997" z="573.0"/>
+  <rotation name="R-LV_bay20311" unit="deg" z="-180.0"/>
+  <position name="P-GDMLCone007108" unit="mm" x="-305.75" y="-243.25" z="12.5"/>
+  <position name="P-GDMLCone010109" unit="mm" x="-305.75" y="243.25" z="12.5"/>
+  <position name="P-LV_bay204110" unit="mm" x="-305.74999999999994" y="243.25000000000003" z="573.0"/>
+  <rotation name="R-LV_bay20412" unit="deg" z="-180.0"/>
+  <position name="P-GDMLCone011111" unit="mm" x="-305.75" y="243.25" z="12.5"/>
+  <position name="P-LV_hcomb_center_tube112" unit="mm" z="-163.5"/>
+  <position name="P-LV_hcomb_center_cone113" unit="mm" z="585.5"/>
+  <position name="P-LV_hcomb_Tube_void114" unit="mm" z="-163.5"/>
+  <position name="P-LV_hcomb_Cone_void115" unit="mm" z="585.5"/>
+  <position name="P-LV_ext_center_tube116" unit="mm" z="-749.5"/>
+  <position name="P-LV_ext_tube_void117" unit="mm" z="-749.5"/>
+  <position name="P-LV_ext_center_cone118" unit="mm" z="749.5"/>
+  <position name="P-LV_ext_cone_void119" unit="mm" z="749.5"/>
+  <position name="P-LV_radiator000120" unit="mm" x="-312.5" y="501.0" z="270.25"/>
+  <position name="P-LV_radiator001121" unit="mm" x="312.5" y="501.0" z="270.25"/>
+  <position name="P-LV_radiator002122" unit="mm" x="-312.5" y="-501.0" z="270.25"/>
+  <position name="P-LV_radiator003123" unit="mm" x="312.5" y="-501.0" z="270.25"/>
+  <position name="P-LV_mli_center_cone124" unit="mm" z="751.0"/>
+  <position name="P-LV_mli_cone_void125" unit="mm" z="751.0"/>
+  <position name="P-LV_mli_void126" unit="mm" z="-751.0"/>
+  <position name="P-LV_psyche_mount127" unit="mm" x="400.0" y="-300.0" z="-751.0"/>
+  <position name="P-LV_psyche128" unit="mm" x="400.0" y="-300.0" z="-834.45"/>
+  <rotation name="R-LV_psyche13" unit="deg" x="180.0" y="-7.016709298534876e-15" z="-180.0"/>
+  <position name="P-LV_housing129" unit="mm" z="-60.45"/>
+  <position name="P-LV_housing001130" unit="mm" z="-37.95"/>
+  <position name="P-LV_housing002131" unit="mm" z="-35.080000000000005"/>
+  <position name="P-LV_housing003132" unit="mm" z="-30.13000000000001"/>
+  <position name="P-LV_housing004133" unit="mm" z="-0.00500000000001"/>
+  <position name="P-LV_housing005134" unit="mm" z="31.514999999999993"/>
+  <position name="P-LV_housing006135" unit="mm" z="39.52499999999999"/>
+  <position name="P-LV_housing_cap_top136" unit="mm" z="42.55999999999999"/>
+  <position name="P-LV_housing_cap_bot137" unit="mm" z="-81.45"/>
+  </define>
+<materials>
+    <element name="H" Z="1" formula="H">
+      <atom value="1.00794"/>
+    </element>
+  <element name="He" Z="2" formula="He">
+      <atom value="4.002602"/>
+    </element>
+  <element name="Li" Z="3" formula="Li">
+      <atom value="6.941"/>
+    </element>
+  <element name="B" Z="5" formula="B">
+      <atom value="10.811"/>
+    </element>
+  <element name="C" Z="6" formula="C">
+      <atom value="12.0107"/>
+    </element>
+  <element name="N" Z="7" formula="N">
+      <atom value="14.0067"/>
+    </element>
+  <element name="O" Z="8" formula="O">
+      <atom value="15.9994"/>
+    </element>
+  <element name="F" Z="9" formula="O">
+      <atom value="18.9984032"/>
+    </element>
+  <element name="Mg" Z="12" formula="Mg">
+      <atom value="24.305"/>
+    </element>
+  <element name="Al" Z="13" formula="Al">
+      <atom value="26.981538"/>
+    </element>
+  <element name="Si" Z="14" formula="Si">
+      <atom value="28.0855"/>
+    </element>
+  <element name="P" Z="15" formula="P">
+      <atom value="30.973761"/>
+    </element>
+  <element name="S" Z="16" formula="S">
+      <atom value="32.065"/>
+    </element>
+  <element name="Cl" Z="17" formula="Cl">
+      <atom value="35.453"/>
+    </element>
+  <element name="Ca" Z="20" formula="Ca">
+      <atom value="40.078"/>
+    </element>
+  <element name="Ti" Z="22" formula="Ti">
+      <atom value="47.867"/>
+    </element>
+  <element name="V" Z="23" formula="V">
+      <atom value="50.9415"/>
+    </element>
+  <element name="Cr" Z="24" formula="Cr">
+      <atom value="51.9961"/>
+    </element>
+  <element name="Mn" Z="25" formula="Mn">
+      <atom value="54.938049"/>
+    </element>
+  <element name="Fe" Z="26" formula="Fe">
+      <atom value="55.845"/>
+    </element>
+  <element name="Ni" Z="28" formula="Ni">
+      <atom value="58.6934"/>
+    </element>
+  <element name="Co" Z="27" formula="Co">
+      <atom value="58.9332"/>
+    </element>
+  <element name="Cu" Z="29" formula="Cu">
+      <atom value="63.546"/>
+    </element>
+  <element name="Zn" Z="30" formula="Zn">
+      <atom value="65.409"/>
+    </element>
+  <element name="Br" Z="35" formula="Br">
+      <atom value="79.904"/>
+    </element>
+  <element name="Zr" Z="40" formula="Zr">
+      <atom value="91.224"/>
+    </element>
+  <element name="Pd" Z="46" formula="Pd">
+      <atom value="106.42"/>
+    </element>
+  <element name="Ag" Z="47" formula="Ag">
+      <atom value="107.8682"/>
+    </element>
+  <element name="Cd" Z="48" formula="Cd">
+      <atom value="112.411"/>
+    </element>
+  <element name="Sn" Z="50" formula="Sn">
+      <atom value="118.71"/>
+    </element>
+  <element name="Sb" Z="51" formula="Sb">
+      <atom value="121.76"/>
+    </element>
+  <element name="Pt" Z="78" formula="Pt">
+      <atom value="195.078"/>
+    </element>
+  <element name="Au" Z="79" formula="Au">
+      <atom value="196.96655"/>
+    </element>
+  <element name="Pb" Z="82" formula="Pb">
+      <atom value="207.2"/>
+    </element>
+  <element name="Ge" Z="32" formula="Ge">
+      <atom value="72.64"/>
+    </element>
+  <material name="vacuum" formula="vacuum">
+      <D unit="g/cm3" value="1e-12"/>
+    <fraction n="0.9268" ref="He"/>
+    <fraction n="0.024" ref="O"/>
+    <fraction n="0.0492" ref="H"/>
+    </material>
+  <material name="Al6061" formula="Al6061">
+      <D unit="g/cm3" value="2.7"/>
+    <fraction n="0.0015" ref="Mn"/>
+    <fraction n="0.006" ref="Si"/>
+    <fraction n="0.002" ref="Cr"/>
+    <fraction n="0.0025" ref="Zr"/>
+    <fraction n="0.0015" ref="Ti"/>
+    <fraction n="0.01" ref="Mg"/>
+    <fraction n="0.0027" ref="Cu"/>
+    <fraction n="0.9703" ref="Al"/>
+    <fraction n="0.0035" ref="Fe"/>
+    </material>
+  <material name="hcomb_Al" formula="hcomb_Al">
+      <D unit="g/cm3" value="0.056"/>
+    <fraction n="0.0015" ref="Mn"/>
+    <fraction n="0.006" ref="Si"/>
+    <fraction n="0.002" ref="Cr"/>
+    <fraction n="0.0025" ref="Zr"/>
+    <fraction n="0.0015" ref="Ti"/>
+    <fraction n="0.01" ref="Mg"/>
+    <fraction n="0.0027" ref="Cu"/>
+    <fraction n="0.9703" ref="Al"/>
+    <fraction n="0.0035" ref="Fe"/>
+    </material>
+  <material name="mli" formula="mli">
+      <D unit="g/cm3" value="1.4242"/>
+    <fraction n="0.686795" ref="C"/>
+    <fraction n="0.026198" ref="H"/>
+    <fraction n="0.07278" ref="N"/>
+    <fraction n="0.207927" ref="O"/>
+    <fraction n="0.0063" ref="Al"/>
+    </material>
+  <material name="electronics" formula="electronics">
+      <D unit="g/cm3" value="0.8"/>
+    <fraction n="0.0033" ref="Ag"/>
+    <fraction n="0.05176" ref="Al"/>
+    <fraction n="0.001" ref="Au"/>
+    <fraction n="0.02523" ref="Br"/>
+    <fraction n="0.192" ref="C"/>
+    <fraction n="0.04091" ref="Ca"/>
+    <fraction n="0.01361" ref="Cl"/>
+    <fraction n="0.2" ref="Cu"/>
+    <fraction n="0.01824" ref="F"/>
+    <fraction n="0.08" ref="Fe"/>
+    <fraction n="0.03003" ref="H"/>
+    <fraction n="0.00167" ref="Mg"/>
+    <fraction n="0.00114" ref="N"/>
+    <fraction n="0.02" ref="Ni"/>
+    <fraction n="0.15868" ref="O"/>
+    <fraction n="0.02" ref="Pb"/>
+    <fraction n="0.0003" ref="Pd"/>
+    <fraction n="3e-05" ref="Pt"/>
+    <fraction n="0.004" ref="Sb"/>
+    <fraction n="0.07012" ref="Si"/>
+    <fraction n="0.04" ref="Sn"/>
+    <fraction n="0.01798" ref="Ti"/>
+    <fraction n="0.01" ref="Zn"/>
+    </material>
+  <material name="Li_battery" formula="Li_battery">
+      <D unit="g/cm3" value="1.4242"/>
+    <fraction n="0.2395" ref="Al"/>
+    <fraction n="0.01417" ref="B"/>
+    <fraction n="0.03523" ref="C"/>
+    <fraction n="0.089" ref="Co"/>
+    <fraction n="0.175" ref="Cu"/>
+    <fraction n="0.10835" ref="F"/>
+    <fraction n="0.0926" ref="Fe"/>
+    <fraction n="0.00545" ref="H"/>
+    <fraction n="0.0226" ref="Li"/>
+    <fraction n="0.0617" ref="Mn"/>
+    <fraction n="0.1564" ref="Ni"/>
+    </material>
+  <material name="HPGe" formula="HPGe">
+      <D unit="g/cm3" value="5.323"/>
+    <fraction n="1.0" ref="Ge"/>
+    </material>
+  </materials>
+<solids>
+    <box name="WorldBox" x="24802.372400000004" y="12993.834356273755" z="13000.0" lunit="mm"/>
+  <box name="container" x="9000.0" y="1300.0" z="1900.0" lunit="mm"/>
+  <tube name="mount_ring" rmin="224.0" rmax="242.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="5.0" lunit="mm"/>
+  <box name="Box034" x="1000.0" y="500.0" z="30.0" lunit="mm"/>
+  <box name="Box035" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box041" x="1000.0" y="500.0" z="25.0" lunit="mm"/>
+  <box name="Box042" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box043" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box044" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box045" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box107" x="1000.0" y="500.0" z="30.0" lunit="mm"/>
+  <box name="Box108" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box109" x="1000.0" y="500.0" z="25.0" lunit="mm"/>
+  <box name="Box110" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box111" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box112" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box113" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box114" x="1000.0" y="500.0" z="30.0" lunit="mm"/>
+  <box name="Box115" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box116" x="1000.0" y="500.0" z="25.0" lunit="mm"/>
+  <box name="Box117" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box118" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box119" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box120" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box121" x="1000.0" y="500.0" z="30.0" lunit="mm"/>
+  <box name="Box122" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box123" x="1000.0" y="500.0" z="25.0" lunit="mm"/>
+  <box name="Box124" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box125" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box126" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box127" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box128" x="1000.0" y="500.0" z="30.0" lunit="mm"/>
+  <box name="Box129" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box130" x="1000.0" y="500.0" z="25.0" lunit="mm"/>
+  <box name="Box131" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box132" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box133" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box134" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box135" x="1000.0" y="500.0" z="30.0" lunit="mm"/>
+  <box name="Box136" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box137" x="1000.0" y="500.0" z="25.0" lunit="mm"/>
+  <box name="Box138" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box139" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box140" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="Box141" x="1000.0" y="500.0" z="1.0" lunit="mm"/>
+  <box name="ext_mli" x="1254.0" y="1004.0" z="1504.0" lunit="mm"/>
+  <box name="ext_panel" x="1250.0" y="1000.0" z="1500.0" lunit="mm"/>
+  <box name="hcomb" x="1248.0" y="998.0" z="1498.0" lunit="mm"/>
+  <box name="Box089" x="586.5" y="461.5" z="711.5" lunit="mm"/>
+  <tube name="GDMLTube020" rmin="0.0" rmax="150.0" startphi="0.0" deltaphi="90.0" aunit="deg" z="715.0" lunit="mm"/>
+  <subtraction name="bay001">
+      <first ref="Box089"/>
+    <second ref="GDMLTube020"/>
+    <positionref ref="P-GDMLTube02044"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box090" x="584.5" y="459.5" z="709.5" lunit="mm"/>
+  <tube name="GDMLTube019" rmin="0.0" rmax="150.0" startphi="0.0" deltaphi="90.0" aunit="deg" z="715.0" lunit="mm"/>
+  <subtraction name="bay001_void">
+      <first ref="Box090"/>
+    <second ref="GDMLTube019"/>
+    <positionref ref="P-GDMLTube01946"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="bay001_ebox001" x="220.0" y="320.0" z="220.0" lunit="mm"/>
+  <box name="Box092" x="220.0" y="320.0" z="5.0" lunit="mm"/>
+  <box name="Box093" x="200.0" y="300.0" z="195.0" lunit="mm"/>
+  <box name="Box094" x="182.0" y="277.4" z="182.45" lunit="mm"/>
+  <box name="bay001_ebox002" x="220.0" y="320.0" z="220.0" lunit="mm"/>
+  <box name="Box096" x="220.0" y="320.0" z="5.0" lunit="mm"/>
+  <box name="Box097" x="200.0" y="300.0" z="195.0" lunit="mm"/>
+  <box name="Box098" x="182.0" y="277.4" z="182.45" lunit="mm"/>
+  <box name="bay001_ebox03" x="320.0" y="220.0" z="220.0" lunit="mm"/>
+  <box name="Box100" x="320.0" y="220.0" z="5.0" lunit="mm"/>
+  <box name="Box101" x="300.0" y="200.0" z="195.0" lunit="mm"/>
+  <box name="Box102" x="277.4" y="182.0" z="182.45" lunit="mm"/>
+  <box name="bay001_ebox04" x="320.0" y="220.0" z="220.0" lunit="mm"/>
+  <box name="Box104" x="320.0" y="220.0" z="5.0" lunit="mm"/>
+  <box name="Box105" x="300.0" y="200.0" z="195.0" lunit="mm"/>
+  <box name="Box106" x="277.4" y="182.0" z="182.45" lunit="mm"/>
+  <box name="Box021" x="586.5" y="461.5" z="711.5" lunit="mm"/>
+  <tube name="GDMLTube004" rmin="0.0" rmax="150.0" startphi="270.0" deltaphi="90.0" aunit="deg" z="715.0" lunit="mm"/>
+  <subtraction name="bay002">
+      <first ref="Box021"/>
+    <second ref="GDMLTube004"/>
+    <positionref ref="P-GDMLTube00463"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box033" x="584.5" y="459.5" z="709.5" lunit="mm"/>
+  <tube name="GDMLTube003" rmin="0.0" rmax="150.0" startphi="270.0" deltaphi="90.0" aunit="deg" z="711.5" lunit="mm"/>
+  <subtraction name="bay002_void">
+      <first ref="Box033"/>
+    <second ref="GDMLTube003"/>
+    <positionref ref="P-GDMLTube00365"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box087" x="586.5" y="461.5" z="711.5" lunit="mm"/>
+  <tube name="GDMLTube018" rmin="0.0" rmax="150.0" startphi="180.0" deltaphi="90.0" aunit="deg" z="715.0" lunit="mm"/>
+  <subtraction name="bay003">
+      <first ref="Box087"/>
+    <second ref="GDMLTube018"/>
+    <positionref ref="P-GDMLTube01866"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box088" x="584.5" y="459.5" z="709.5" lunit="mm"/>
+  <tube name="GDMLTube017" rmin="0.0" rmax="150.0" startphi="180.0" deltaphi="90.0" aunit="deg" z="711.5" lunit="mm"/>
+  <subtraction name="bay003_void">
+      <first ref="Box088"/>
+    <second ref="GDMLTube017"/>
+    <positionref ref="P-GDMLTube01768"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box019" x="586.5" y="461.5" z="711.5" lunit="mm"/>
+  <tube name="GDMLTube007" rmin="0.0" rmax="150.0" startphi="90.0" deltaphi="90.0" aunit="deg" z="715.0" lunit="mm"/>
+  <subtraction name="bay004">
+      <first ref="Box019"/>
+    <second ref="GDMLTube007"/>
+    <positionref ref="P-GDMLTube00769"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box031" x="584.5" y="459.5" z="709.5" lunit="mm"/>
+  <tube name="GDMLTube006" rmin="0.0" rmax="150.0" startphi="90.0" deltaphi="90.0" aunit="deg" z="715.0" lunit="mm"/>
+  <subtraction name="bay004_void">
+      <first ref="Box031"/>
+    <second ref="GDMLTube006"/>
+    <positionref ref="P-GDMLTube00671"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Ebox002" x="220.0" y="320.0" z="220.0" lunit="mm"/>
+  <box name="Box051" x="220.0" y="320.0" z="5.0" lunit="mm"/>
+  <box name="Box052" x="200.0" y="300.0" z="195.0" lunit="mm"/>
+  <box name="Box053" x="182.0" y="277.4" z="182.45" lunit="mm"/>
+  <box name="LV_Ebox008" x="220.0" y="320.0" z="220.0" lunit="mm"/>
+  <box name="Box060" x="220.0" y="320.0" z="5.0" lunit="mm"/>
+  <box name="Box061" x="200.0" y="300.0" z="195.0" lunit="mm"/>
+  <box name="Box062" x="182.0" y="277.4" z="182.45" lunit="mm"/>
+  <box name="LV_Ebox009" x="320.0" y="220.0" z="220.0" lunit="mm"/>
+  <box name="Box064" x="320.0" y="220.0" z="5.0" lunit="mm"/>
+  <box name="Box065" x="300.0" y="200.0" z="195.0" lunit="mm"/>
+  <box name="Box066" x="277.4" y="182.0" z="182.45" lunit="mm"/>
+  <box name="LV_Ebox010" x="320.0" y="220.0" z="220.0" lunit="mm"/>
+  <box name="Box072" x="320.0" y="220.0" z="5.0" lunit="mm"/>
+  <box name="Box073" x="300.0" y="200.0" z="195.0" lunit="mm"/>
+  <box name="Box074" x="277.4" y="182.0" z="182.45" lunit="mm"/>
+  <box name="Box085" x="586.5" y="461.5" z="384.5" lunit="mm"/>
+  <tube name="GDMLTube016" rmin="0.0" rmax="150.0" startphi="180.0" deltaphi="90.0" aunit="deg" z="388.0" lunit="mm"/>
+  <subtraction name="bay101">
+      <first ref="Box085"/>
+    <second ref="GDMLTube016"/>
+    <positionref ref="P-GDMLTube01688"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box086" x="584.5" y="458.5" z="382.5" lunit="mm"/>
+  <tube name="GDMLTube015" rmin="0.0" rmax="150.0" startphi="180.0" deltaphi="90.0" aunit="deg" z="388.0" lunit="mm"/>
+  <subtraction name="bay101_void">
+      <first ref="Box086"/>
+    <second ref="GDMLTube015"/>
+    <positionref ref="P-GDMLTube01590"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box081" x="586.5" y="461.5" z="384.5" lunit="mm"/>
+  <tube name="GDMLTube012" rmin="0.0" rmax="150.0" startphi="90.0" deltaphi="90.0" aunit="deg" z="388.0" lunit="mm"/>
+  <subtraction name="bay102">
+      <first ref="Box081"/>
+    <second ref="GDMLTube012"/>
+    <positionref ref="P-GDMLTube01291"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box082" x="584.5" y="459.5" z="382.5" lunit="mm"/>
+  <tube name="GDMLTube011" rmin="0.0" rmax="150.0" startphi="90.0" deltaphi="90.0" aunit="deg" z="388.0" lunit="mm"/>
+  <subtraction name="bay102_void">
+      <first ref="Box082"/>
+    <second ref="GDMLTube011"/>
+    <positionref ref="P-GDMLTube01193"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box083" x="586.5" y="461.5" z="384.5" lunit="mm"/>
+  <tube name="GDMLTube014" rmin="0.0" rmax="150.0" startphi="180.0" deltaphi="90.0" aunit="deg" z="388.0" lunit="mm"/>
+  <subtraction name="bay103">
+      <first ref="Box083"/>
+    <second ref="GDMLTube014"/>
+    <positionref ref="P-GDMLTube01494"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box084" x="584.5" y="458.5" z="382.5" lunit="mm"/>
+  <tube name="GDMLTube013" rmin="0.0" rmax="150.0" startphi="180.0" deltaphi="90.0" aunit="deg" z="388.0" lunit="mm"/>
+  <subtraction name="bay103_void">
+      <first ref="Box084"/>
+    <second ref="GDMLTube013"/>
+    <positionref ref="P-GDMLTube01396"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box010" x="586.5" y="461.5" z="384.5" lunit="mm"/>
+  <tube name="GDMLTube009" rmin="0.0" rmax="150.0" startphi="90.0" deltaphi="90.0" aunit="deg" z="388.0" lunit="mm"/>
+  <subtraction name="bay104">
+      <first ref="Box010"/>
+    <second ref="GDMLTube009"/>
+    <positionref ref="P-GDMLTube00997"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box026" x="584.5" y="459.5" z="382.5" lunit="mm"/>
+  <tube name="GDMLTube008" rmin="0.0" rmax="150.0" startphi="90.0" deltaphi="90.0" aunit="deg" z="388.0" lunit="mm"/>
+  <subtraction name="bay104_void">
+      <first ref="Box026"/>
+    <second ref="GDMLTube008"/>
+    <positionref ref="P-GDMLTube00899"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box002" x="586.5" y="461.5" z="302.0" lunit="mm"/>
+  <cone name="GDMLCone003" rmin1="0.0" rmin2="0.0" rmax1="150.0" rmax2="234.0" startphi="0.0" deltaphi="90.0" aunit="deg" z="327.0" lunit="mm"/>
+  <subtraction name="bay201">
+      <first ref="Box002"/>
+    <second ref="GDMLCone003"/>
+    <positionref ref="P-GDMLCone003100"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box022" x="584.5" y="459.5" z="300.0" lunit="mm"/>
+  <cone name="GDMLCone004" rmin1="0.0" rmin2="0.0" rmax1="150.0" rmax2="234.0" startphi="0.0" deltaphi="90.0" aunit="deg" z="327.0" lunit="mm"/>
+  <subtraction name="bay201_void">
+      <first ref="Box022"/>
+    <second ref="GDMLCone004"/>
+    <positionref ref="P-GDMLCone004102"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box077" x="586.5" y="461.5" z="302.0" lunit="mm"/>
+  <cone name="GDMLCone008" rmin1="0.0" rmin2="0.0" rmax1="150.0" rmax2="234.0" startphi="270.0" deltaphi="90.0" aunit="deg" z="327.0" lunit="mm"/>
+  <subtraction name="bay202">
+      <first ref="Box077"/>
+    <second ref="GDMLCone008"/>
+    <positionref ref="P-GDMLCone008103"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box078" x="584.5" y="459.5" z="300.0" lunit="mm"/>
+  <cone name="GDMLCone009" rmin1="0.0" rmin2="0.0" rmax1="150.0" rmax2="234.0" startphi="270.0" deltaphi="90.0" aunit="deg" z="327.0" lunit="mm"/>
+  <subtraction name="bay205">
+      <first ref="Box078"/>
+    <second ref="GDMLCone009"/>
+    <positionref ref="P-GDMLCone009105"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box075" x="586.5" y="461.5" z="302.0" lunit="mm"/>
+  <cone name="GDMLCone006" rmin1="0.0" rmin2="0.0" rmax1="150.0" rmax2="234.0" startphi="0.0" deltaphi="90.0" aunit="deg" z="327.0" lunit="mm"/>
+  <subtraction name="bay203">
+      <first ref="Box075"/>
+    <second ref="GDMLCone006"/>
+    <positionref ref="P-GDMLCone006106"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box076" x="584.5" y="459.5" z="300.0" lunit="mm"/>
+  <cone name="GDMLCone007" rmin1="0.0" rmin2="0.0" rmax1="150.0" rmax2="234.0" startphi="0.0" deltaphi="90.0" aunit="deg" z="327.0" lunit="mm"/>
+  <subtraction name="bay203_void">
+      <first ref="Box076"/>
+    <second ref="GDMLCone007"/>
+    <positionref ref="P-GDMLCone007108"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box079" x="586.5" y="461.5" z="302.0" lunit="mm"/>
+  <cone name="GDMLCone010" rmin1="0.0" rmin2="0.0" rmax1="150.0" rmax2="234.0" startphi="270.0" deltaphi="90.0" aunit="deg" z="327.0" lunit="mm"/>
+  <subtraction name="bay204">
+      <first ref="Box079"/>
+    <second ref="GDMLCone010"/>
+    <positionref ref="P-GDMLCone010109"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <box name="Box080" x="584.5" y="459.5" z="300.0" lunit="mm"/>
+  <cone name="GDMLCone011" rmin1="0.0" rmin2="0.0" rmax1="150.0" rmax2="234.0" startphi="270.0" deltaphi="90.0" aunit="deg" z="327.0" lunit="mm"/>
+  <subtraction name="bay204_void">
+      <first ref="Box080"/>
+    <second ref="GDMLCone011"/>
+    <positionref ref="P-GDMLCone011111"/>
+    <rotationref ref="identity"/>
+    </subtraction>
+  <tube name="hcomb_center_tube" rmin="148.0" rmax="150.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="1171.0" lunit="mm"/>
+  <cone name="hcomb_center_cone" rmin1="148.0" rmin2="232.0" rmax1="150.0" rmax2="234.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="327.0" lunit="mm"/>
+  <tube name="hcomb_Tube_void" rmin="0.0" rmax="148.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="1171.0" lunit="mm"/>
+  <cone name="hcomb_Cone_void" rmin1="0.0" rmin2="0.0" rmax1="148.0" rmax2="232.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="327.0" lunit="mm"/>
+  <tube name="ext_center_tube" rmin="148.0" rmax="150.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="1.0" lunit="mm"/>
+  <tube name="ext_tube_void" rmin="0.0" rmax="148.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="1.0" lunit="mm"/>
+  <tube name="ext_center_cone" rmin="232.0" rmax="234.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="1.0" lunit="mm"/>
+  <tube name="ext_cone_void" rmin="0.0" rmax="232.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="1.0" lunit="mm"/>
+  <box name="radiator000" x="325.0" y="2.0" z="859.5" lunit="mm"/>
+  <box name="radiator001" x="325.0" y="2.0" z="859.5" lunit="mm"/>
+  <box name="radiator002" x="325.0" y="2.0" z="859.5" lunit="mm"/>
+  <box name="radiator003" x="325.0" y="2.0" z="859.5" lunit="mm"/>
+  <tube name="mli_center_cone" rmin="232.0" rmax="234.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="2.0" lunit="mm"/>
+  <tube name="mli_cone_void" rmin="0.0" rmax="232.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="2.0" lunit="mm"/>
+  <tube name="mli_void" rmin="0.0" rmax="376.87" startphi="0.0" deltaphi="360.0" aunit="deg" z="2.0" lunit="mm"/>
+  <tube name="mli_center_tube" rmin="148.0" rmax="150.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="2.0" lunit="mm"/>
+  <tube name="psyche_mount" rmin="0.0" rmax="59.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="2.0" lunit="mm"/>
+  <box name="psyche" x="142.0" y="142.0" z="164.9" lunit="mm"/>
+  <tube name="housing" rmin="25.0" rmax="59.0" startphi="0.52" deltaphi="360.0" aunit="deg" z="40.0" lunit="mm"/>
+  <tube name="housing001" rmin="25.0" rmax="71.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="5.0" lunit="mm"/>
+  <tube name="housing002" rmin="25.0" rmax="51.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="0.74" lunit="mm"/>
+  <tube name="housing003" rmin="25.0" rmax="44.01" startphi="0.0" deltaphi="360.0" aunit="deg" z="9.16" lunit="mm"/>
+  <tube name="housing004" rmin="25.0" rmax="37.019999999999996" startphi="0.0" deltaphi="360.0" aunit="deg" z="51.09" lunit="mm"/>
+  <tube name="housing005" rmin="25.0" rmax="52.16" startphi="0.52" deltaphi="360.0" aunit="deg" z="11.95" lunit="mm"/>
+  <tube name="housing006" rmin="25.0" rmax="58.019999999999996" startphi="0.0" deltaphi="360.0" aunit="deg" z="4.07" lunit="mm"/>
+  <tube name="housing_cap_top" rmin="0.0" rmax="58.019999999999996" startphi="0.0" deltaphi="360.0" aunit="deg" z="2.0" lunit="mm"/>
+  <tube name="housing_cap_bot" rmin="0.0" rmax="59.0" startphi="0.0" deltaphi="360.0" aunit="deg" z="2.0" lunit="mm"/>
+  <tube name="detector" rmin="0.0" rmax="25.0" startphi="0.52" deltaphi="360.0" aunit="deg" z="50.0" lunit="mm"/>
+  </solids>
+<structure>
+    <volume name="LV_mount_ring">
+      <materialref ref="G4_STAINLESS-STEEL"/>
+    <solidref ref="mount_ring"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box027">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box035"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box028">
+      <materialref ref="hcomb_Al"/>
+    <solidref ref="Box041"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box029">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box042"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box030">
+      <materialref ref="electronics"/>
+    <solidref ref="Box043"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box031">
+      <materialref ref="electronics"/>
+    <solidref ref="Box044"/>
+    <auxiliary auxtype="Color" auxvalue="#0000ff00"/>
+    </volume>
+  <volume name="LV_Box032">
+      <materialref ref="G4_Pyrex_Glass"/>
+    <solidref ref="Box045"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="solar_assemb000">
+      <materialref ref="vacuum"/>
+    <solidref ref="Box034"/>
+    <physvol name="PV-LV_Box027">
+        <volumeref ref="LV_Box027"/>
+      <positionref ref="P-LV_Box0273"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box028">
+        <volumeref ref="LV_Box028"/>
+      <positionref ref="P-LV_Box0284"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box029">
+        <volumeref ref="LV_Box029"/>
+      <positionref ref="P-LV_Box0295"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box030">
+        <volumeref ref="LV_Box030"/>
+      <positionref ref="P-LV_Box0306"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box031">
+        <volumeref ref="LV_Box031"/>
+      <positionref ref="P-LV_Box0317"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box032">
+        <volumeref ref="LV_Box032"/>
+      <positionref ref="P-LV_Box0328"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box079">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box108"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box080">
+      <materialref ref="hcomb_Al"/>
+    <solidref ref="Box109"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box081">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box110"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box082">
+      <materialref ref="electronics"/>
+    <solidref ref="Box111"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box083">
+      <materialref ref="electronics"/>
+    <solidref ref="Box112"/>
+    <auxiliary auxtype="Color" auxvalue="#0000ff00"/>
+    </volume>
+  <volume name="LV_Box084">
+      <materialref ref="G4_Pyrex_Glass"/>
+    <solidref ref="Box113"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="solar_assemb001">
+      <materialref ref="vacuum"/>
+    <solidref ref="Box107"/>
+    <physvol name="PV-LV_Box079">
+        <volumeref ref="LV_Box079"/>
+      <positionref ref="P-LV_Box07910"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box080">
+        <volumeref ref="LV_Box080"/>
+      <positionref ref="P-LV_Box08011"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box081">
+        <volumeref ref="LV_Box081"/>
+      <positionref ref="P-LV_Box08112"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box082">
+        <volumeref ref="LV_Box082"/>
+      <positionref ref="P-LV_Box08213"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box083">
+        <volumeref ref="LV_Box083"/>
+      <positionref ref="P-LV_Box08314"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box084">
+        <volumeref ref="LV_Box084"/>
+      <positionref ref="P-LV_Box08415"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box086">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box115"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box087">
+      <materialref ref="hcomb_Al"/>
+    <solidref ref="Box116"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box088">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box117"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box089">
+      <materialref ref="electronics"/>
+    <solidref ref="Box118"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box090">
+      <materialref ref="electronics"/>
+    <solidref ref="Box119"/>
+    <auxiliary auxtype="Color" auxvalue="#0000ff00"/>
+    </volume>
+  <volume name="LV_Box091">
+      <materialref ref="G4_Pyrex_Glass"/>
+    <solidref ref="Box120"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="solar_assemb002">
+      <materialref ref="vacuum"/>
+    <solidref ref="Box114"/>
+    <physvol name="PV-LV_Box086">
+        <volumeref ref="LV_Box086"/>
+      <positionref ref="P-LV_Box08617"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box087">
+        <volumeref ref="LV_Box087"/>
+      <positionref ref="P-LV_Box08718"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box088">
+        <volumeref ref="LV_Box088"/>
+      <positionref ref="P-LV_Box08819"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box089">
+        <volumeref ref="LV_Box089"/>
+      <positionref ref="P-LV_Box08920"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box090">
+        <volumeref ref="LV_Box090"/>
+      <positionref ref="P-LV_Box09021"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box091">
+        <volumeref ref="LV_Box091"/>
+      <positionref ref="P-LV_Box09122"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box093">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box122"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box094">
+      <materialref ref="hcomb_Al"/>
+    <solidref ref="Box123"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box095">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box124"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box096">
+      <materialref ref="electronics"/>
+    <solidref ref="Box125"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box097">
+      <materialref ref="electronics"/>
+    <solidref ref="Box126"/>
+    <auxiliary auxtype="Color" auxvalue="#0000ff00"/>
+    </volume>
+  <volume name="LV_Box098">
+      <materialref ref="G4_Pyrex_Glass"/>
+    <solidref ref="Box127"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="solar_assemb003">
+      <materialref ref="vacuum"/>
+    <solidref ref="Box121"/>
+    <physvol name="PV-LV_Box093">
+        <volumeref ref="LV_Box093"/>
+      <positionref ref="P-LV_Box09324"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box094">
+        <volumeref ref="LV_Box094"/>
+      <positionref ref="P-LV_Box09425"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box095">
+        <volumeref ref="LV_Box095"/>
+      <positionref ref="P-LV_Box09526"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box096">
+        <volumeref ref="LV_Box096"/>
+      <positionref ref="P-LV_Box09627"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box097">
+        <volumeref ref="LV_Box097"/>
+      <positionref ref="P-LV_Box09728"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box098">
+        <volumeref ref="LV_Box098"/>
+      <positionref ref="P-LV_Box09829"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box100">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box129"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box101">
+      <materialref ref="hcomb_Al"/>
+    <solidref ref="Box130"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box102">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box131"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box103">
+      <materialref ref="electronics"/>
+    <solidref ref="Box132"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box104">
+      <materialref ref="electronics"/>
+    <solidref ref="Box133"/>
+    <auxiliary auxtype="Color" auxvalue="#0000ff00"/>
+    </volume>
+  <volume name="LV_Box105">
+      <materialref ref="G4_Pyrex_Glass"/>
+    <solidref ref="Box134"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="solar_assemb004">
+      <materialref ref="vacuum"/>
+    <solidref ref="Box128"/>
+    <physvol name="PV-LV_Box100">
+        <volumeref ref="LV_Box100"/>
+      <positionref ref="P-LV_Box10031"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box101">
+        <volumeref ref="LV_Box101"/>
+      <positionref ref="P-LV_Box10132"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box102">
+        <volumeref ref="LV_Box102"/>
+      <positionref ref="P-LV_Box10233"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box103">
+        <volumeref ref="LV_Box103"/>
+      <positionref ref="P-LV_Box10334"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box104">
+        <volumeref ref="LV_Box104"/>
+      <positionref ref="P-LV_Box10435"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box105">
+        <volumeref ref="LV_Box105"/>
+      <positionref ref="P-LV_Box10536"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box107">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box136"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box108">
+      <materialref ref="hcomb_Al"/>
+    <solidref ref="Box137"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box109">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box138"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box110">
+      <materialref ref="electronics"/>
+    <solidref ref="Box139"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box111">
+      <materialref ref="electronics"/>
+    <solidref ref="Box140"/>
+    <auxiliary auxtype="Color" auxvalue="#0000ff00"/>
+    </volume>
+  <volume name="LV_Box112">
+      <materialref ref="G4_Pyrex_Glass"/>
+    <solidref ref="Box141"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="solar_assemb005">
+      <materialref ref="vacuum"/>
+    <solidref ref="Box135"/>
+    <physvol name="PV-LV_Box107">
+        <volumeref ref="LV_Box107"/>
+      <positionref ref="P-LV_Box10738"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box108">
+        <volumeref ref="LV_Box108"/>
+      <positionref ref="P-LV_Box10839"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box109">
+        <volumeref ref="LV_Box109"/>
+      <positionref ref="P-LV_Box10940"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box110">
+        <volumeref ref="LV_Box110"/>
+      <positionref ref="P-LV_Box11041"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box111">
+        <volumeref ref="LV_Box111"/>
+      <positionref ref="P-LV_Box11142"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box112">
+        <volumeref ref="LV_Box112"/>
+      <positionref ref="P-LV_Box11243"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box063">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box092"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box065">
+      <materialref ref="electronics"/>
+    <solidref ref="Box094"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box064">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box093"/>
+    <physvol name="PV-LV_Box065">
+        <volumeref ref="LV_Box065"/>
+      <positionref ref="P-LV_Box06550"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay001_ebox001">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay001_ebox001"/>
+    <physvol name="PV-LV_Box063">
+        <volumeref ref="LV_Box063"/>
+      <positionref ref="P-LV_Box06348"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box064">
+        <volumeref ref="LV_Box064"/>
+      <positionref ref="P-LV_Box06449"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box067">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box096"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box069">
+      <materialref ref="Li_battery"/>
+    <solidref ref="Box098"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box068">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box097"/>
+    <physvol name="PV-LV_Box069">
+        <volumeref ref="LV_Box069"/>
+      <positionref ref="P-LV_Box06954"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay001_ebox002">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay001_ebox002"/>
+    <physvol name="PV-LV_Box067">
+        <volumeref ref="LV_Box067"/>
+      <positionref ref="P-LV_Box06752"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box068">
+        <volumeref ref="LV_Box068"/>
+      <positionref ref="P-LV_Box06853"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box071">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box100"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box073">
+      <materialref ref="electronics"/>
+    <solidref ref="Box102"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box072">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box101"/>
+    <physvol name="PV-LV_Box073">
+        <volumeref ref="LV_Box073"/>
+      <positionref ref="P-LV_Box07358"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay001_ebox03">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay001_ebox03"/>
+    <physvol name="PV-LV_Box071">
+        <volumeref ref="LV_Box071"/>
+      <positionref ref="P-LV_Box07156"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box072">
+        <volumeref ref="LV_Box072"/>
+      <positionref ref="P-LV_Box07257"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box075">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box104"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box077">
+      <materialref ref="electronics"/>
+    <solidref ref="Box106"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box076">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box105"/>
+    <physvol name="PV-LV_Box077">
+        <volumeref ref="LV_Box077"/>
+      <positionref ref="P-LV_Box07762"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay001_ebox04">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay001_ebox04"/>
+    <physvol name="PV-LV_Box075">
+        <volumeref ref="LV_Box075"/>
+      <positionref ref="P-LV_Box07560"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box076">
+        <volumeref ref="LV_Box076"/>
+      <positionref ref="P-LV_Box07661"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay001_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay001_void"/>
+    <physvol name="PV-LV_bay001_ebox001">
+        <volumeref ref="LV_bay001_ebox001"/>
+      <positionref ref="P-LV_bay001_ebox00147"/>
+      <rotationref ref="R-LV_bay001_ebox0011"/>
+      </physvol>
+    <physvol name="PV-LV_bay001_ebox002">
+        <volumeref ref="LV_bay001_ebox002"/>
+      <positionref ref="P-LV_bay001_ebox00251"/>
+      <rotationref ref="R-LV_bay001_ebox0022"/>
+      </physvol>
+    <physvol name="PV-LV_bay001_ebox03">
+        <volumeref ref="LV_bay001_ebox03"/>
+      <positionref ref="P-LV_bay001_ebox0355"/>
+      <rotationref ref="R-LV_bay001_ebox033"/>
+      </physvol>
+    <physvol name="PV-LV_bay001_ebox04">
+        <volumeref ref="LV_bay001_ebox04"/>
+      <positionref ref="P-LV_bay001_ebox0459"/>
+      <rotationref ref="R-LV_bay001_ebox044"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay001">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay001"/>
+    <physvol name="PV-LV_bay001_void">
+        <volumeref ref="LV_bay001_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay002_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay002_void"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay002">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay002"/>
+    <physvol name="PV-LV_bay002_void">
+        <volumeref ref="LV_bay002_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay003_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay003_void"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay003">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay003"/>
+    <physvol name="PV-LV_bay003_void">
+        <volumeref ref="LV_bay003_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box038">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box051"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box040">
+      <materialref ref="electronics"/>
+    <solidref ref="Box053"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box039">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box052"/>
+    <physvol name="PV-LV_Box040">
+        <volumeref ref="LV_Box040"/>
+      <positionref ref="P-LV_Box04075"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Ebox002">
+      <materialref ref="vacuum"/>
+    <solidref ref="Ebox002"/>
+    <physvol name="PV-LV_Box038">
+        <volumeref ref="LV_Box038"/>
+      <positionref ref="P-LV_Box03873"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box039">
+        <volumeref ref="LV_Box039"/>
+      <positionref ref="P-LV_Box03974"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box047">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box060"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box049">
+      <materialref ref="Li_battery"/>
+    <solidref ref="Box062"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box048">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box061"/>
+    <physvol name="PV-LV_Box049">
+        <volumeref ref="LV_Box049"/>
+      <positionref ref="P-LV_Box04979"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Ebox004">
+      <materialref ref="vacuum"/>
+    <solidref ref="LV_Ebox008"/>
+    <physvol name="PV-LV_Box047">
+        <volumeref ref="LV_Box047"/>
+      <positionref ref="P-LV_Box04777"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box048">
+        <volumeref ref="LV_Box048"/>
+      <positionref ref="P-LV_Box04878"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box051">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box064"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box053">
+      <materialref ref="electronics"/>
+    <solidref ref="Box066"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box052">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box065"/>
+    <physvol name="PV-LV_Box053">
+        <volumeref ref="LV_Box053"/>
+      <positionref ref="P-LV_Box05383"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Ebox005">
+      <materialref ref="vacuum"/>
+    <solidref ref="LV_Ebox009"/>
+    <physvol name="PV-LV_Box051">
+        <volumeref ref="LV_Box051"/>
+      <positionref ref="P-LV_Box05181"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box052">
+        <volumeref ref="LV_Box052"/>
+      <positionref ref="P-LV_Box05282"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Box059">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box072"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box061">
+      <materialref ref="electronics"/>
+    <solidref ref="Box074"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_Box060">
+      <materialref ref="Al6061"/>
+    <solidref ref="Box073"/>
+    <physvol name="PV-LV_Box061">
+        <volumeref ref="LV_Box061"/>
+      <positionref ref="P-LV_Box06187"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_Ebox007">
+      <materialref ref="vacuum"/>
+    <solidref ref="LV_Ebox010"/>
+    <physvol name="PV-LV_Box059">
+        <volumeref ref="LV_Box059"/>
+      <positionref ref="P-LV_Box05985"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_Box060">
+        <volumeref ref="LV_Box060"/>
+      <positionref ref="P-LV_Box06086"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay004_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay004_void"/>
+    <physvol name="PV-LV_Ebox002">
+        <volumeref ref="LV_Ebox002"/>
+      <positionref ref="P-LV_Ebox00272"/>
+      <rotationref ref="R-LV_Ebox0025"/>
+      </physvol>
+    <physvol name="PV-LV_Ebox004">
+        <volumeref ref="LV_Ebox004"/>
+      <positionref ref="P-LV_Ebox00476"/>
+      <rotationref ref="R-LV_Ebox0046"/>
+      </physvol>
+    <physvol name="PV-LV_Ebox005">
+        <volumeref ref="LV_Ebox005"/>
+      <positionref ref="P-LV_Ebox00580"/>
+      <rotationref ref="R-LV_Ebox0057"/>
+      </physvol>
+    <physvol name="PV-LV_Ebox007">
+        <volumeref ref="LV_Ebox007"/>
+      <positionref ref="P-LV_Ebox00784"/>
+      <rotationref ref="R-LV_Ebox0078"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay004">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay004"/>
+    <physvol name="PV-LV_bay004_void">
+        <volumeref ref="LV_bay004_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay101_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay101_void"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay101">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay101"/>
+    <physvol name="PV-LV_bay101_void">
+        <volumeref ref="LV_bay101_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay102_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay102_void"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay102">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay102"/>
+    <physvol name="PV-LV_bay102_void">
+        <volumeref ref="LV_bay102_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay103_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay103_void"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay103">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay103"/>
+    <physvol name="PV-LV_bay103_void">
+        <volumeref ref="LV_bay103_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay104_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay104_void"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay104">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay104"/>
+    <physvol name="PV-LV_bay104_void">
+        <volumeref ref="LV_bay104_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay201_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay201_void"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay201">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay201"/>
+    <physvol name="PV-LV_bay201_void">
+        <volumeref ref="LV_bay201_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay202_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay205"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay202">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay202"/>
+    <physvol name="PV-LV_bay202_void">
+        <volumeref ref="LV_bay202_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay203_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay203_void"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay203">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay203"/>
+    <physvol name="PV-LV_bay203_void">
+        <volumeref ref="LV_bay203_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_bay204_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="bay204_void"/>
+    <auxiliary auxtype="Color" auxvalue="#cccccc00"/>
+    </volume>
+  <volume name="LV_bay204">
+      <materialref ref="Al6061"/>
+    <solidref ref="bay204"/>
+    <physvol name="PV-LV_bay204_void">
+        <volumeref ref="LV_bay204_void"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_hcomb_center_tube">
+      <materialref ref="G4_STAINLESS-STEEL"/>
+    <solidref ref="hcomb_center_tube"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_hcomb_center_cone">
+      <materialref ref="G4_STAINLESS-STEEL"/>
+    <solidref ref="hcomb_center_cone"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_hcomb_Tube_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="hcomb_Tube_void"/>
+    <auxiliary auxtype="Color" auxvalue="#ff000000"/>
+    </volume>
+  <volume name="LV_hcomb_Cone_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="hcomb_Cone_void"/>
+    <auxiliary auxtype="Color" auxvalue="#ff000000"/>
+    </volume>
+  <volume name="LV_hcomb">
+      <materialref ref="hcomb_Al"/>
+    <solidref ref="hcomb"/>
+    <physvol name="PV-LV_bay001">
+        <volumeref ref="LV_bay001"/>
+      <positionref ref="P-LV_bay00145"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_bay002">
+        <volumeref ref="LV_bay002"/>
+      <positionref ref="P-LV_bay00264"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_bay003">
+        <volumeref ref="LV_bay003"/>
+      <positionref ref="P-LV_bay00367"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_bay004">
+        <volumeref ref="LV_bay004"/>
+      <positionref ref="P-LV_bay00470"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_bay101">
+        <volumeref ref="LV_bay101"/>
+      <positionref ref="P-LV_bay10189"/>
+      <rotationref ref="R-LV_bay1019"/>
+      </physvol>
+    <physvol name="PV-LV_bay102">
+        <volumeref ref="LV_bay102"/>
+      <positionref ref="P-LV_bay10292"/>
+      <rotationref ref="R-LV_bay10210"/>
+      </physvol>
+    <physvol name="PV-LV_bay103">
+        <volumeref ref="LV_bay103"/>
+      <positionref ref="P-LV_bay10395"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_bay104">
+        <volumeref ref="LV_bay104"/>
+      <positionref ref="P-LV_bay10498"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_bay201">
+        <volumeref ref="LV_bay201"/>
+      <positionref ref="P-LV_bay201101"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_bay202">
+        <volumeref ref="LV_bay202"/>
+      <positionref ref="P-LV_bay202104"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_bay203">
+        <volumeref ref="LV_bay203"/>
+      <positionref ref="P-LV_bay203107"/>
+      <rotationref ref="R-LV_bay20311"/>
+      </physvol>
+    <physvol name="PV-LV_bay204">
+        <volumeref ref="LV_bay204"/>
+      <positionref ref="P-LV_bay204110"/>
+      <rotationref ref="R-LV_bay20412"/>
+      </physvol>
+    <physvol name="PV-LV_hcomb_center_tube">
+        <volumeref ref="LV_hcomb_center_tube"/>
+      <positionref ref="P-LV_hcomb_center_tube112"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_hcomb_center_cone">
+        <volumeref ref="LV_hcomb_center_cone"/>
+      <positionref ref="P-LV_hcomb_center_cone113"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_hcomb_Tube_void">
+        <volumeref ref="LV_hcomb_Tube_void"/>
+      <positionref ref="P-LV_hcomb_Tube_void114"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_hcomb_Cone_void">
+        <volumeref ref="LV_hcomb_Cone_void"/>
+      <positionref ref="P-LV_hcomb_Cone_void115"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_ext_center_tube">
+      <materialref ref="G4_STAINLESS-STEEL"/>
+    <solidref ref="ext_center_tube"/>
+    <auxiliary auxtype="Color" auxvalue="#ffca0000"/>
+    </volume>
+  <volume name="LV_ext_tube_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="ext_tube_void"/>
+    <auxiliary auxtype="Color" auxvalue="#ff000000"/>
+    </volume>
+  <volume name="LV_ext_center_cone">
+      <materialref ref="G4_STAINLESS-STEEL"/>
+    <solidref ref="ext_center_cone"/>
+    <auxiliary auxtype="Color" auxvalue="#ffca0000"/>
+    </volume>
+  <volume name="LV_ext_cone_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="ext_cone_void"/>
+    <auxiliary auxtype="Color" auxvalue="#ff000000"/>
+    </volume>
+  <volume name="LV_ext_panel">
+      <materialref ref="Al6061"/>
+    <solidref ref="ext_panel"/>
+    <physvol name="PV-LV_hcomb">
+        <volumeref ref="LV_hcomb"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_ext_center_tube">
+        <volumeref ref="LV_ext_center_tube"/>
+      <positionref ref="P-LV_ext_center_tube116"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_ext_tube_void">
+        <volumeref ref="LV_ext_tube_void"/>
+      <positionref ref="P-LV_ext_tube_void117"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_ext_center_cone">
+        <volumeref ref="LV_ext_center_cone"/>
+      <positionref ref="P-LV_ext_center_cone118"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_ext_cone_void">
+        <volumeref ref="LV_ext_cone_void"/>
+      <positionref ref="P-LV_ext_cone_void119"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_radiator000">
+      <materialref ref="G4_Cu"/>
+    <solidref ref="radiator000"/>
+    <auxiliary auxtype="Color" auxvalue="#00000000"/>
+    </volume>
+  <volume name="LV_radiator001">
+      <materialref ref="G4_Cu"/>
+    <solidref ref="radiator001"/>
+    <auxiliary auxtype="Color" auxvalue="#00000000"/>
+    </volume>
+  <volume name="LV_radiator002">
+      <materialref ref="G4_Cu"/>
+    <solidref ref="radiator002"/>
+    <auxiliary auxtype="Color" auxvalue="#00000000"/>
+    </volume>
+  <volume name="LV_radiator003">
+      <materialref ref="G4_Cu"/>
+    <solidref ref="radiator003"/>
+    <auxiliary auxtype="Color" auxvalue="#00000000"/>
+    </volume>
+  <volume name="LV_mli_center_cone">
+      <materialref ref="G4_STAINLESS-STEEL"/>
+    <solidref ref="mli_center_cone"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_mli_cone_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="mli_cone_void"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_mli_center_tube">
+      <materialref ref="G4_STAINLESS-STEEL"/>
+    <solidref ref="mli_center_tube"/>
+    <auxiliary auxtype="Color" auxvalue="#80808000"/>
+    </volume>
+  <volume name="LV_mli_void">
+      <materialref ref="vacuum"/>
+    <solidref ref="mli_void"/>
+    <physvol name="PV-LV_mli_center_tube">
+        <volumeref ref="LV_mli_center_tube"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_psyche_mount">
+      <materialref ref="Al6061"/>
+    <solidref ref="psyche_mount"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_ext_mli">
+      <materialref ref="Al6061"/>
+    <solidref ref="ext_mli"/>
+    <physvol name="PV-LV_ext_panel">
+        <volumeref ref="LV_ext_panel"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_radiator000">
+        <volumeref ref="LV_radiator000"/>
+      <positionref ref="P-LV_radiator000120"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_radiator001">
+        <volumeref ref="LV_radiator001"/>
+      <positionref ref="P-LV_radiator001121"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_radiator002">
+        <volumeref ref="LV_radiator002"/>
+      <positionref ref="P-LV_radiator002122"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_radiator003">
+        <volumeref ref="LV_radiator003"/>
+      <positionref ref="P-LV_radiator003123"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_mli_center_cone">
+        <volumeref ref="LV_mli_center_cone"/>
+      <positionref ref="P-LV_mli_center_cone124"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_mli_cone_void">
+        <volumeref ref="LV_mli_cone_void"/>
+      <positionref ref="P-LV_mli_cone_void125"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_mli_void">
+        <volumeref ref="LV_mli_void"/>
+      <positionref ref="P-LV_mli_void126"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_psyche_mount">
+        <volumeref ref="LV_psyche_mount"/>
+      <positionref ref="P-LV_psyche_mount127"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_housing">
+      <materialref ref="Al6061"/>
+    <solidref ref="housing"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_housing001">
+      <materialref ref="Al6061"/>
+    <solidref ref="housing001"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_housing002">
+      <materialref ref="Al6061"/>
+    <solidref ref="housing002"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_housing003">
+      <materialref ref="Al6061"/>
+    <solidref ref="housing003"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_housing004">
+      <materialref ref="Al6061"/>
+    <solidref ref="housing004"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_housing005">
+      <materialref ref="Al6061"/>
+    <solidref ref="housing005"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_housing006">
+      <materialref ref="Al6061"/>
+    <solidref ref="housing006"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_housing_cap_top">
+      <materialref ref="Al6061"/>
+    <solidref ref="housing_cap_top"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_housing_cap_bot">
+      <materialref ref="Al6061"/>
+    <solidref ref="housing_cap_bot"/>
+    <auxiliary auxtype="Color" auxvalue="#ff00ff00"/>
+    </volume>
+  <volume name="LV_detector">
+      <materialref ref="HPGe"/>
+    <solidref ref="detector"/>
+    <auxiliary auxtype="Color" auxvalue="#00ff8000"/>
+    <auxiliary auxtype="SensDet" auxvalue="LV_detector"/>
+    </volume>
+  <volume name="LV_psyche">
+      <materialref ref="vacuum"/>
+    <solidref ref="psyche"/>
+    <physvol name="PV-LV_housing">
+        <volumeref ref="LV_housing"/>
+      <positionref ref="P-LV_housing129"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_housing001">
+        <volumeref ref="LV_housing001"/>
+      <positionref ref="P-LV_housing001130"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_housing002">
+        <volumeref ref="LV_housing002"/>
+      <positionref ref="P-LV_housing002131"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_housing003">
+        <volumeref ref="LV_housing003"/>
+      <positionref ref="P-LV_housing003132"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_housing004">
+        <volumeref ref="LV_housing004"/>
+      <positionref ref="P-LV_housing004133"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_housing005">
+        <volumeref ref="LV_housing005"/>
+      <positionref ref="P-LV_housing005134"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_housing006">
+        <volumeref ref="LV_housing006"/>
+      <positionref ref="P-LV_housing006135"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_housing_cap_top">
+        <volumeref ref="LV_housing_cap_top"/>
+      <positionref ref="P-LV_housing_cap_top136"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_housing_cap_bot">
+        <volumeref ref="LV_housing_cap_bot"/>
+      <positionref ref="P-LV_housing_cap_bot137"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_detector">
+        <volumeref ref="LV_detector"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  <volume name="LV_container">
+      <materialref ref="vacuum"/>
+    <solidref ref="container"/>
+    <physvol name="PV-LV_mount_ring">
+        <volumeref ref="LV_mount_ring"/>
+      <positionref ref="P-LV_mount_ring1"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-solar_assemb000">
+        <volumeref ref="solar_assemb000"/>
+      <positionref ref="P-solar_assemb0002"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-solar_assemb001">
+        <volumeref ref="solar_assemb001"/>
+      <positionref ref="P-solar_assemb0019"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-solar_assemb002">
+        <volumeref ref="solar_assemb002"/>
+      <positionref ref="P-solar_assemb00216"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-solar_assemb003">
+        <volumeref ref="solar_assemb003"/>
+      <positionref ref="P-solar_assemb00323"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-solar_assemb004">
+        <volumeref ref="solar_assemb004"/>
+      <positionref ref="P-solar_assemb00430"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-solar_assemb005">
+        <volumeref ref="solar_assemb005"/>
+      <positionref ref="P-solar_assemb00537"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_ext_mli">
+        <volumeref ref="LV_ext_mli"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    <physvol name="PV-LV_psyche">
+        <volumeref ref="LV_psyche"/>
+      <positionref ref="P-LV_psyche128"/>
+      <rotationref ref="R-LV_psyche13"/>
+      </physvol>
+    </volume>
+  <volume name="worldVOL">
+      <materialref ref="vacuum"/>
+    <solidref ref="WorldBox"/>
+    <physvol name="PV-LV_container">
+        <volumeref ref="LV_container"/>
+      <positionref ref="center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+  </structure>
+<setup name="Default" version="1.0">
+    <world ref="worldVOL"/>
+  </setup>
+</gdml>

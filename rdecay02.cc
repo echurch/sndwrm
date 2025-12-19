@@ -55,6 +55,9 @@
 #include "G4VisExecutive.hh"
 
 #include "G4OpticalPhysics.hh"
+#include "G4EmStandardPhysics_SpacePhysics.hh"
+#include "G4HadronInelasticQBBC.hh"
+#include "XrayTESdetPhysicsList.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -98,9 +101,12 @@ int main(int argc,char** argv) {
   */
 
   
-  // EC, 30-Apr-2024. Replace longstanding use of crafting my own physics list. ... tacking on args that should enforce LIQMD_HPT, 23-June-2025
-  G4VModularPhysicsList* physlist = new Shielding(1,"HP","",true); // 1 for verbose.
+  // EC, 30-Apr-2024. Replace longstanding use of crafting my own physics list. ... tacking on args that should enforce LIQMD_HPT, 23-June-2025  
+  //  G4VModularPhysicsList* physlist = new Shielding(1,"HP","",true); // 1 for verbose.
+  // EC, 20-Dec-2025. SpacePhysics
+  auto *physlist = new XrayTESdetPhysicsList;
   runManager->SetUserInitialization(physlist);
+
   G4int verb(0);
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(verb);
   /* Comment out all below for successful compilation in G4 11, EC, 20-Dec-2024.
@@ -112,11 +118,9 @@ int main(int argc,char** argv) {
   G4int fMaxNumPhotonStep(7000);
   opticalPhysics->SetMaxNumPhotonsPerStep(fMaxNumPhotonStep);
   */
-  physlist->RegisterPhysics( opticalPhysics);
-
-  runManager->SetUserInitialization( physlist );
+  // Don't want OPs for space physics
+  //physlist->RegisterPhysics( opticalPhysics);
   
-
   runManager->SetUserInitialization(new ActionInitialization(det));
 
   //initialize visualization

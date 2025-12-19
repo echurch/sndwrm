@@ -93,7 +93,8 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 { 
   //if (command == fTargMatCmd )
   // { fDetector->SetTargetMaterial(newValue);}
-
+  std::cout << "DetMess::SNV(): command is " << command << ".  Whereas, fGDMLCmd is " <<  fGDMLCmd << std::endl;
+  
   if (command == fFidVolumeCmd )
     {
       fDetector->SetFidVolume(fFidVolumeCmd->GetNew3VectorValue(newValue));

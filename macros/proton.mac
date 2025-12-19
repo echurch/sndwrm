@@ -2,28 +2,44 @@
 # Demonstrate that isotopes produced in hadronic processes
 # can be treated by RadioactiveDecay.  
 #
-# To register hadronic processes, uncomment corresponding lines
-# in PhysicsList.cc
 #                                                                         
 /control/verbose 2
 /run/verbose 1
 #
 # set the target/detector geometry
-/rdecay02/det/setTargetMate G4_Pb
+##/rdecay02/det/setTargetMate G4_Pb
+/sndwrm/det/setGDMLfile /rcfs/projects/dunelb/chur558/sndwrm/geom/pathfinder_psyche.gdml
+/testem/phys/addPhysics SpacePhysics_QBBC
+##/process/em/AddEmRegion InnerRegion G4EmStandardSS ## from xrayTES
+
 #
 /run/initialize
 #
+
 /process/list
 #
-# rdm is applied only to the target volume
-/grdm/noVolumes
-/grdm/selectVolume Target
 
-/gun/particle proton 
-/gun/energy 1 GeV
-/gun/position 0. 0. -2.4 cm
+
+# rdm is applied only to the target volume
+#/grdm/noVolumes
+#/grdm/selectVolume Target
+
+/gps/position 0 0 0 m
+/gps/pos/type Volume
+/gps/pos/shape Para
+/gps/pos/halfx 13 m
+/gps/pos/halfy 7 m
+/gps/pos/halfz 7 m
+/gps/pos/centre 0. 0. 0. m
+
+/gps/particle proton 
+/gps/energy 100 GeV
+/gps/ang/type iso
 #
-/analysis/setFileName proton
+
+
+
+/analysis/setFileName proton_vanilla.root
 /run/printProgress 1000
 /run/beamOn 10000
 

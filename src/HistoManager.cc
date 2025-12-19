@@ -250,7 +250,8 @@ void HistoManager::Book( )
   analysis->CreateNtupleSColumn("TVolume");         //column 19
   analysis->FinishNtuple();
   
-  analysis->SetNtupleActivation(false);          
+  //  analysis->SetNtupleActivation(false);
+    analysis->SetNtupleActivation(true);          
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

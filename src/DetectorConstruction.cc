@@ -114,12 +114,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
   if (!GetGDMLfile().length())
     {
+      std::cout << "No gdml file: using C++ geometry" <<  std::endl;
       DefineMaterials();
       return ConstructLine();
     }
   
   G4GDMLParser* parser = new G4GDMLParser();
-  parser->Read(GetGDMLfile(), false);  
+  parser->Read(GetGDMLfile(), false);
+  std::cout <<  "gdml file: "  << GetGDMLfile() <<  std::endl;
   fPhysiWorld = parser->GetWorldVolume();
   return fPhysiWorld;
   

@@ -55,7 +55,7 @@ if (USEG4MT)
 endif()
 
 add_executable(sndwrm rdecay02.cc ${sources} ${headers})
-target_link_libraries(sndwrm  ${Geant4_LIBRARIES}  $ENV{MARLEY}/build/libMARLEY.dylib $ENV{XERCESROOT}/libxerces-c-3.3.dylib) ## .so for linux
+target_link_libraries(sndwrm  ${Geant4_LIBRARIES}  $ENV{MARLEY}/build/libMARLEY.dylib $ENV{XERCESROOT}/libxerces-c-3.2.so) ## .so for linux
 
 message(STATUS "USEG4MT is ${USEG4MT}")
 
