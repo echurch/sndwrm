@@ -9,8 +9,8 @@
 # set the target/detector geometry
 ##/rdecay02/det/setTargetMate G4_Pb
 /sndwrm/det/setGDMLfile /rcfs/projects/dunelb/chur558/sndwrm/geom/pathfinder_psyche.gdml
-/testem/phys/addPhysics SpacePhysics_QBBC
-##/process/em/AddEmRegion InnerRegion G4EmStandardSS ## from xrayTES
+##/testem/phys/addPhysics SpacePhysics_QBBC
+####/process/em/AddEmRegion InnerRegion G4EmStandardSS ## from xrayTES
 
 #
 /run/initialize
@@ -33,16 +33,22 @@
 /gps/pos/centre 0. 0. 0. m
 
 /gps/particle proton 
-/gps/energy 100 GeV
+#/gps/energy 100 GeV
+/gps/ene/type Arb
+/gps/hist/type arb
+/gps/hist/file ../ana/tgraph-spectra_solar/proton_spectra.txt
+/gps/hist/inter Lin
+
 /gps/ang/type iso
 #
 /analysis/ntuple/setActivation 3 true # tracks
 /analysis/ntuple/setActivation 4 false # steps
 
-#/analysis/setFileName proton_shielding.root
-/analysis/setFileName proton_SPQBBC.root
+#/analysis/setFileName proton_shielding_cosmic.root
+/analysis/setFileName proton_shielding_sol.root
+#/analysis/setFileName proton_SPQBBC.root
 /run/printProgress 1000
-/run/beamOn 10000000
+/run/beamOn 400000000
 
 
  

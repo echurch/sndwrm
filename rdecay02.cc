@@ -151,8 +151,8 @@ int main(int argc,char** argv) {
 
   std::cout << "sndwrm: About to call destructors, which might complain. Not calling 'em would dump a __ton__ of complaints." << std::endl;
   //job termination
-  if (visManager)
-    delete visManager;
+  ///  if (visManager)
+  ///  delete visManager;
   if (runManager)
     delete runManager;
 }

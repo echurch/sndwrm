@@ -73,11 +73,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4double tID = track->GetTrackID();
 
 
-
-//  if (lVolume == fDetector->GetLogicTarget())   iVol = 1;
- // if (lVolume == fDetector->GetLogicDetector()) iVol = 2;
-
-
   // count processes
   // 
   const G4StepPoint* endPoint = aStep->GetPostStepPoint();
@@ -98,72 +93,24 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if (time/ms > 5.0) // Do not consider long time constant decays, like 41n! 10 msec is a few TPC drifts.
     return;
 
-  if (eVolume)
-    {
-      eVname = eVolume->GetName();  
-      //            std::cout << "SteppingAction eVname: " << eVname << std::endl;
-/*      if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
-	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
-*/
-      if (( eVname.find("Arapuca")!=std::string::npos  || (lVolume->GetName()).find("Arapuca")!=std::string::npos  ) and (pID==0 || pID==-22))
-	//	if ( (eVname.find("Arapuca")!=std::string::npos)  and (pID==0 || pID==-22))
-	{
-	  iVol = 4;
-	  //	  std::cout << "SteppingAction: Optical photon hit an Arapuca: " << eVname << std::endl;
-	  fEventAction->AddEdepLhit(W);
-	}
-    }
-
-
   
   // energy deposit
   //
   G4double edepStep = aStep->GetTotalEnergyDeposit();
 
   tprocess = aStep->GetPostStepPoint()->GetProcessDefinedStep();
-  //  if (pID == 11)
-  //    std::cout << "SteppingAction material in which e- step and x,y,z [mm]: " << lVolume->GetMaterial()->GetName()<< ", " << aStep->GetPreStepPoint()->GetPosition()[0] << ", " << aStep->GetPreStepPoint()->GetPosition()[1] << ", " << aStep->GetPreStepPoint()->GetPosition()[2] << std::endl;
-
-  //  const std::vector<double> fidv {6000,6000,30000};
-  // FidVol now configured in DetectorMessenger. 8-May-2025.
-  //  std::vector<double> fidv {6000,6000,30000};
   G4ThreeVector ffv = fDetector->GetFidVolume();
 
-  if (abs(pID) == 11 && lVolume->GetMaterial()->GetName().find("G4_lAr") != std::string::npos &&
+  if (/*abs(pID) == 11 &&*/ lVolume->GetMaterial()->GetName().find("HPGe") != std::string::npos 
       // also require deposit to be inside the instrumented region. Else, there will not be any charge measured for these event.
-      ( ( abs(pos[0]) < ffv[0] ) && ( abs(pos[1]) < ffv[1] ) && ( abs(pos[2]) < ffv[2] ) ) 
+      //      ( ( abs(pos[0]) < ffv[0] ) && ( abs(pos[1]) < ffv[1] ) && ( abs(pos[2]) < ffv[2] ) ) 
       )
 
     {
-      static G4ParticleDefinition* opticalphoton =
-       G4OpticalPhoton::OpticalPhotonDefinition();
-      const std::vector<const G4Track*>* secondaries =
-       aStep->GetSecondaryInCurrentStep();
-      G4double Lq(0.0), Qq(0.0);
-      for (auto sec: *secondaries)
-      {
-       if(sec->GetDynamicParticle()->GetParticleDefinition() == opticalphoton)
-       {
-         G4String creator_process = sec->GetCreatorProcess()->GetProcessName();
-         if(creator_process == "Cerenkov")
-	   {
-	     Lq++;
-	   }
-         else if(creator_process == "Scintillation")
-	   {
-	     Lq++;
-	   }
-	 }
-      }
       
       if (edepStep > 0.)
 	{
-	  // let's capture edep, L, and calculated Q
-	  Qq = edepStep/W - Lq; // smear this by 2-3%
-	  //	  std::cout << "SteppingAction: edepStep [MeV], L, Q, material, stepLength [mm]: " << edepStep << ", " << Lq << ", " << Qq << "," << lVolume->GetMaterial()->GetName() << ", " << aStep->GetStepLength()<< std::endl;
 	  fEventAction->AddEdepTot(edepStep);
-	  fEventAction->AddEdepL(Lq*W);
-	  fEventAction->AddEdepQ(Qq*W);
 	}
     }
 
@@ -179,45 +126,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   std::string endp("null");
 
 
-  /*
-  const std::vector<double> fidv {
-      GetEvtAct()->GetPrimGenAct()->GetParticleGun()->GetCurrentSource()->GetPosDist()->GetHalfX(),
-      GetEvtAct()->GetPrimGenAct()->GetParticleGun()->GetCurrentSource()->GetPosDist()->GetHalfY(),
-      GetEvtAct()->GetPrimGenAct()->GetParticleGun()->GetCurrentSource()->GetPosDist()->GetHalfZ()
-      } ;
-  */
-
-  // Above does not work when launching n's, gammas from outside the fidV. G'arr! Hard code it for now. EC, 4-Aug-2021.
-
-  //  const std::vector<double> fidv {3000,4500,20000};
   if (sprocess)
       startp = sprocess->GetProcessName();
 
-  // If an optical photon is born outside fiducialvolume let's kill it. EC, 4-Aug-2021.
-  // Idea being that we'd reco this vtx outside our fidv and cut the event.
-  /*
-  if ((pID == 0 or pID == -22 ) and
-      ( ( abs(pos[0]) > fidv.at(0) ) or ( abs(pos[1]) > fidv.at(1) ) or ( abs(pos[2]) > fidv.at(2) ) ) 
-      //      and track->GetCurrentStepNumber() <= 1  // seems ok looking at steps, but concerned it's biasing. EC, 5-Aug-2021.
-      and track->GetCurrentStepNumber() == 0 and iVol!=4 // don't do this for Arapuca hit counting mode
-      )
-    {
-      //      std::cout << "SteppingAction(): Killing optical photon Track at pos " << pos[0] << ", " << pos[1]  << ", " << pos[2] << std::endl;
-      track->SetTrackStatus(fStopAndKill);
-      return;
-    }
-  */
-
-  if (iVol!=3)
-    fEventAction->AddEdep(iVol, edepStep, time, weight);
-
-  if (eVname=="SiPM") {
-	  fEventAction->AddEdep(3, 1.0, time, weight);	  
-  }
-
-  //  if (iVol==4)
-    //    std::cout << "Hit Arapuca, evolume/copyNo, particle: " << eVname << "/" << eVolume->GetCopyNo() << ", " << pID << std::endl;
-//  if (iVol!=4 and fDetector->GetAPEX()) return; // do not fill the steps TTree if we haven't stepped into an Arapuca
   
   const G4ThreeVector tspos(track->GetVertexPosition()); // Let's grab the opt photon's point of origin, not the step's, which may not be the same thing. EC, 16-Aug-2023.
   analysisManager->FillNtupleDColumn(id,0, edepStep);
