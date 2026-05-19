@@ -102,9 +102,9 @@ int main(int argc,char** argv) {
 
   
   // EC, 30-Apr-2024. Replace longstanding use of crafting my own physics list. ... tacking on args that should enforce LIQMD_HPT, 23-June-2025  
-  //  G4VModularPhysicsList* physlist = new Shielding(1,"HP","",true); // 1 for verbose.
+  G4VModularPhysicsList* physlist = new Shielding(1,"HP","",true); // 1 for verbose.
   // EC, 20-Dec-2025. SpacePhysics
-  auto *physlist = new XrayTESdetPhysicsList;
+  //  auto *physlist = new XrayTESdetPhysicsList;
   runManager->SetUserInitialization(physlist);
 
   G4int verb(0);

@@ -25,7 +25,7 @@
 #/grdm/selectVolume Target
 
 /gps/position 0 0 0 m
-/gps/pos/type Volume
+/gps/pos/type Surface
 /gps/pos/shape Para
 /gps/pos/halfx 13 m
 /gps/pos/halfy 7 m

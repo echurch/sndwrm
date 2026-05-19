@@ -15,7 +15,7 @@ def exposeTime(fTGfromSS,fSim):
         x[ii] = tg.GetPointX(ii)
     dx = x[1:]-x[:-1]
     integral = (dx*y[1:]).sum() # 1/days*cm2
-    integral = 13*7*7*2*2*2*1E8  ## These are the halfbox dimenstions in m, units now 1/days
+    integral = (13*7*4+7*7*2)*2*2*1E4  ## These are the halfbox dimensions in m, units now 1/days
     time = Npq/integral
     return time
 
@@ -30,7 +30,9 @@ if __name__=="__main__":
     #Ellen says units on y-axis are EU/day/cm2, with EU being MeV for protons
     fsource = TFile("tgraph-spectra_cosmic/job6b_spectra.root")
     Texp = exposeTime(fsource,fq)
-
+    print(f"Simulated exposure time is {Texp}")
+#    pdb.set_trace()
+    
     binsz = 10
     hs = TH1F ("hsn","",50,0.,binsz*100.)
     hq = TH1F ("hqn","",50,0.,binsz*100.)
@@ -50,8 +52,12 @@ if __name__=="__main__":
     hs.Scale(1.0/Texp)
     hq.Scale(1.0/Texp)
     hs.SetMinimum(10);
-    hs.Draw("Hist")
-    hq.Draw("Hist,same")
+
+    hq.GetYaxis().SetTitle(f"OLTARIS protons - entries per day per {binsz} MeV")
+    hq.GetXaxis().SetTitle("Energy deposited in pathfinder_psyche HPGe [MeV]")
+    
+    hq.Draw("Hist")
+    hs.Draw("Hist,same")
     gPad.SetLogy(1)
     c1.SetLogy(1)
     #gPad.Update()
