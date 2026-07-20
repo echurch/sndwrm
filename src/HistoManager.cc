@@ -192,12 +192,13 @@ void HistoManager::Book( )
   analysis->CreateNtupleDColumn("EnergyDepQ");      //column 1
   analysis->CreateNtupleDColumn("EnergyDepL");    //column 2
   analysis->CreateNtupleDColumn("EnergyDepLHit");    //column 3
-  analysis->CreateNtupleDColumn("Event");    //column 4
-  analysis->CreateNtupleDColumn("X");         //column 5
-  analysis->CreateNtupleDColumn("Y");         //column 6
-  analysis->CreateNtupleDColumn("Z");         //column 7
-  analysis->CreateNtupleIColumn("InEl");         //column 8
-  analysis->CreateNtupleDColumn("EgamCap");         //column 9
+  analysis->CreateNtupleDColumn("EnergyDepLHitInt"); //column 4
+  analysis->CreateNtupleDColumn("Event");    //column 5
+  analysis->CreateNtupleDColumn("X");         //column 6
+  analysis->CreateNtupleDColumn("Y");         //column 7
+  analysis->CreateNtupleDColumn("Z");         //column 8
+  analysis->CreateNtupleIColumn("InEl");         //column 9
+  analysis->CreateNtupleDColumn("EgamCap");         //column 10
   if (fEvtAct)
     analysis->CreateNtupleIColumn("nuclei",fEvtAct->GetNucleiVec());
   analysis->FinishNtuple();

@@ -101,16 +101,30 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if (eVolume)
     {
       eVname = eVolume->GetName();  
-      //            std::cout << "SteppingAction eVname: " << eVname << std::endl;
+      //std::cout << "SteppingAction eVname: " << eVname << std::endl;
 /*      if (lVolume == fDetector->GetLogicSiPM() || eVolume->GetLogicalVolume() == fDetector->GetLogicSiPM() || 
 	  eVname.find("SiPM")!=std::string::npos || (lVolume->GetName()).find("SiPM")!=std::string::npos)     iVol = 3;
 */
-      if (( eVname.find("Arapuca")!=std::string::npos  || (lVolume->GetName()).find("Arapuca")!=std::string::npos  ) and (pID==0 || pID==-22))
+      if ((eVname.find("Arapuca")!=std::string::npos || (lVolume->GetName()).find("Arapuca")!=std::string::npos) and (pID==0 || pID==-22))
 	//	if ( (eVname.find("Arapuca")!=std::string::npos)  and (pID==0 || pID==-22))
 	{
 	  iVol = 4;
 	  //	  std::cout << "SteppingAction: Optical photon hit an Arapuca: " << eVname << std::endl;
-	  fEventAction->AddEdepLhit(W);
+	  bool firstHit = fEventAction->RegisterArapucaHit(tID);
+	  
+	  if (firstHit)
+ 	    {
+		if ((lVolume->GetName()).find("Arapuca")==std::string::npos)
+        	  {
+            	      // photon came from LAr into the Arapuca -> external
+            	      fEventAction->AddEdepLhit(W);
+        	  }
+		else
+		  {
+		      // photon was already inside an Arapuca -> internal
+            	      fEventAction->AddEdepLhitInt(W);
+		  }
+	    }
 	}
     }
 
@@ -129,7 +143,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   //  std::vector<double> fidv {6000,6000,30000};
   G4ThreeVector ffv = fDetector->GetFidVolume();
 
-  if (abs(pID) == 11 && lVolume->GetMaterial()->GetName().find("G4_lAr") != std::string::npos &&
+  if (abs(pID) == 11 && ((lVolume->GetMaterial()->GetName().find("G4_lAr") != std::string::npos) || (lVolume->GetMaterial()->GetName().find("LAr") != std::string::npos)) &&
       // also require deposit to be inside the instrumented region. Else, there will not be any charge measured for these event.
       ( ( abs(pos[0]) < ffv[0] ) && ( abs(pos[1]) < ffv[1] ) && ( abs(pos[2]) < ffv[2] ) ) 
       )

@@ -102,8 +102,10 @@ void EventAction::CapEGam(G4double E)
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
+  ClearArapucaHits();
+
   fEdep1 = fEdep2 = fWeight1 = fWeight2 = 0.;
-  fEdepEvt = fEdepL = fEdepLhit = fEdepQ = 0.0;
+  fEdepEvt = fEdepL = fEdepLhit = fEdepQ = fEdepLhitInt = 0.0;
   fTime0 = -1*s;
   fFiducial = false;
   procVtx[0] = procVtx[1] = procVtx[2] = 0.0;
@@ -179,6 +181,10 @@ void EventAction::AddEdepQ(G4double Q)
 {
   fEdepQ+=Q;
 }
+void EventAction::AddEdepLhitInt(G4double L)
+{
+  fEdepLhitInt+=L;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -193,18 +199,19 @@ void EventAction::EndOfEventAction(const G4Event* G4Evt)
    analysisManager->FillNtupleDColumn(id,1, fEdepQ);
    analysisManager->FillNtupleDColumn(id,2, fEdepL);
    analysisManager->FillNtupleDColumn(id,3, fEdepLhit);
-   analysisManager->FillNtupleDColumn(id,4, G4Evt->GetEventID());
+   analysisManager->FillNtupleDColumn(id,4, fEdepLhitInt);
+   analysisManager->FillNtupleDColumn(id,5, G4Evt->GetEventID());
    G4ThreeVector vtxftt(fPGA->GetPrimaryGenerator()->GetParticlePosition());
    if (vtxftt[0] == 0.0)  // This means it's not a Marley evt, say. So, let's get vtx of interesting (cap,phot, ...) process.
      {
        vtxftt = GetProcVtx();
        //       std::cout << "EnergyCalc(): Interesting fiducial process's vtx is " << vtxftt[0] << "," << vtxftt[1] << "," << vtxftt[2] << std::endl;
      }
-   analysisManager->FillNtupleDColumn(id,5, vtxftt[0]);
-   analysisManager->FillNtupleDColumn(id,6, vtxftt[1]);
-   analysisManager->FillNtupleDColumn(id,7, vtxftt[2]);
-   analysisManager->FillNtupleIColumn(id,8, int(fInel) );
-   analysisManager->FillNtupleDColumn(id,9, fEGamCapSum);
+   analysisManager->FillNtupleDColumn(id,6, vtxftt[0]);
+   analysisManager->FillNtupleDColumn(id,7, vtxftt[1]);
+   analysisManager->FillNtupleDColumn(id,8, vtxftt[2]);
+   analysisManager->FillNtupleIColumn(id,9, int(fInel) );
+   analysisManager->FillNtupleDColumn(id,10, fEGamCapSum);
    // This line knows to go call GetNucleiVec() to populate this row.
    analysisManager->AddNtupleRow(id);
 

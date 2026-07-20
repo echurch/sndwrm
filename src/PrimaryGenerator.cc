@@ -201,6 +201,8 @@ void PrimaryGenerator::GeneratePrimaryVertexMarley(G4Event* event, std::vector<d
 
       // Add the fully-initialized G4PrimaryParticle to the primary vertex
       vertex->SetPrimary( particle );
+
+      std::cout << "G4PrimaryGenerator PID: " << fp->pdg_code() << std::endl;
     }
 
   } // end of loop on particles
