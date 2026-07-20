@@ -121,8 +121,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4GDMLParser* parser = new G4GDMLParser();
   parser->Read(GetGDMLfile(), false);  
   fPhysiWorld = parser->GetWorldVolume();
-  //GDMLMaterialProperties();
-  //GDMLOpticalProperties();
+  GDMLMaterialProperties();
+  GDMLOpticalProperties();
   return fPhysiWorld;
   
 }
