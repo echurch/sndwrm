@@ -212,6 +212,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   private:
     
     void               DefineMaterials();
+    void	       GDMLOpticalProperties();
+    void	       GDMLMaterialProperties();
     G4VPhysicalVolume* ConstructVolumes();        
     G4VPhysicalVolume* ConstructLine();
 

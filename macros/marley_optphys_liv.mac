@@ -8,33 +8,33 @@
 /control/verbose 2
 /run/verbose 0
 /tracking/verbose 0
-
+/sndwrm/det/setGDMLfile /rcfs/projects/dunelb/jime782/duneggd/python/duneggd/apexfd/duneapex.gdml
 #
 # set the target/detector geometry
 #/rdecay02/det/setTargetMate G4_SODIUM_IODIDE
 # set the target/detector geometry
-/rdecay02/det/setTargetLength 58 m
+#/rdecay02/det/setTargetLength 58 m
 # "Radius" means halfXBox, halfYBox
-/rdecay02/det/setTargetRadius 6 m
-/rdecay02/det/setDetectorLength 40. m
+#/rdecay02/det/setTargetRadius 6 m
+#/rdecay02/det/setDetectorLength 40. m
 # Detector"Radius" is set to TargetRadius-InsetRadius
-/rdecay02/det/setInsetRadius 3.9 m
+#/rdecay02/det/setInsetRadius 3.9 m
 # postive puts shield outside cryostat
 #/rdecay02/det/setShieldThickness 40 cm
 
-/rdecay02/det/setShieldThickness +77.6 cm
+#/rdecay02/det/setShieldThickness +77.6 cm
 
-/rdecay02/det/setAcrylicRadius 3. m
-/rdecay02/det/setAcrylicLength 40. m
-/rdecay02/material/setG10SpecRef 0.40
-/rdecay02/material/setAcrylicSpecRef 0.96
-/rdecay02/material/setLArAbsLength 50  m
+#/rdecay02/det/setAcrylicRadius 3. m
+#/rdecay02/det/setAcrylicLength 40. m
+#/rdecay02/material/setG10SpecRef 0.40
+#/rdecay02/material/setAcrylicSpecRef 0.96
+#/rdecay02/material/setLArAbsLength 50  m
 
-/rdecay02/det/setDetectorSiPMsOnAcrylic true
-/rdecay02/det/setDetectorSiPMsOnCathode true
-/rdecay02/det/setDetectorSiPMSize 24.0 cm
-/rdecay02/det/setDetectorSiPMThickness 0.1 cm
-/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
+#/rdecay02/det/setDetectorSiPMsOnAcrylic true
+#/rdecay02/det/setDetectorSiPMsOnCathode true
+#/rdecay02/det/setDetectorSiPMSize 24.0 cm
+#/rdecay02/det/setDetectorSiPMThickness 0.1 cm
+#/rdecay02/det/setDetectorSiPMPhotoCathodeCoverage 0.80
 
 /rdecay02/marley/setConfigFile /rcfs/projects/dunelb/marley/marley/examples/config/annotated_liv.js
 
@@ -44,25 +44,25 @@
 /process/list
 #
 # rdm is applied only to the ColdSkin volume
-/grdm/noVolumes
-/grdm/selectVolume Detector
+#/grdm/noVolumes
+#/grdm/selectVolume Detector
 
 # When 'nu_e' is seen in PrimaryGenerator.cc it launches 1 Marley event
-# and it launches them inside the Acrylic volume, igoring below /gps/pos commands
+# and it launches them inside the Argon volume, igoring below /gps/pos commands
 /gps/particle nu_e
 
 /gps/position 0 0 0 m
 /gps/pos/type Volume
 /gps/pos/shape Para
-/gps/pos/halfx 3 m
-/gps/pos/halfy 4.5 m
-/gps/pos/halfz 20. m
+/gps/pos/halfx 6.5 m
+/gps/pos/halfy 6.5 m
+/gps/pos/halfz 32. m
 /gps/pos/centre 0. 0. 0. m
 #/gps/pos/confine Detector
 # This is for emitting e's from the 1.2cm thick coldskin OR the bulk Ar in detector
 
 
-/analysis/setFileName  /rcfs/projects/dunelb/chur558/data/marley_optphys_liv_shinyg10_0
+/analysis/setFileName  /rcfs/projects/dunelb/chur558/sndwrm/build/TEST.root
 #/analysis/h1/set 0 100 0. 2. MeV
 /analysis/h1/set 1 100 0. 320000.
 /analysis/h1/set 2 100 0. 320000.
@@ -70,12 +70,13 @@
 /analysis/h1/set 4 120 0. 24. MeV
 /analysis/h1/set 5 120 0. 24. MeV
 /analysis/h1/set 6 120 0. 24. MeV
-#/analysis/ntuple/setActivation 0 true
-#/analysis/ntuple/setActivation 1 true
-#/analysis/ntuple/setActivation 2 true
-##/analysis/ntuple/setActivation 3 true
-##/analysis/ntuple/setActivation 4 true ## Steps
-/run/printProgress 1000
+
+/analysis/ntuple/setActivation 0 true
+/analysis/ntuple/setActivation 1 true
+/analysis/ntuple/setActivation 2 true
+/analysis/ntuple/setActivation 3 true
+/analysis/ntuple/setActivation 4 false ## Steps
+/run/printProgress 10
 #/control/execute vis.mac
 
 # SS has neutrons at level of ~1E-11 /cm3/sec from https://books.google.com/books?id=H-DICgAAQBAJ&pg=PA486&lpg=PA486&dq=dark+matter+uranium+and+thorium+contained+in+stainless+steel&source=bl&ots=0CuBLBhG0h&sig=ACfU3U1RCxZ2C11zW-NUBpHb07HerbX6fw&hl=en&ppis=_e&sa=X&ved=2ahUKEwiF45qy2rbnAhU6JzQIHWelCSwQ6AEwAXoECAoQAQ#v=onepage&q=dark%20matter%20uranium%20and%20thorium%20contained%20in%20stainless%20steel&f=false
@@ -86,10 +87,12 @@
 
 
 
-/run/beamOn 6000
+/run/beamOn 1
+"""
 /analysis/setFileName /rcfs/projects/dunelb/chur558/data/marley_optphys_liv_shinyg10_1
 /run/beamOn 6000
 /analysis/setFileName /rcfs/projects/dunelb/chur558/data/marley_optphys_liv_shinyg10_2
 /run/beamOn 6000
 /analysis/setFileName /rcfs/projects/dunelb/chur558/data/marley_optphys_liv_shinyg10_3
 /run/beamOn 6000
+"""

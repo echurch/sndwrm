@@ -121,6 +121,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4GDMLParser* parser = new G4GDMLParser();
   parser->Read(GetGDMLfile(), false);  
   fPhysiWorld = parser->GetWorldVolume();
+  //GDMLMaterialProperties();
+  //GDMLOpticalProperties();
   return fPhysiWorld;
   
 }
@@ -1610,6 +1612,257 @@ G4SubtractionSolid* Cathode13 = new G4SubtractionSolid("Cathode13", Cathode12, f
 
   
   return fPhysiWorld;
+}
+
+void DetectorConstruction::GDMLMaterialProperties()
+{
+  G4Material* acrylic_mat = G4Material::GetMaterial("Acrylic");
+  
+  // wavelengths=490,480,470,460,450 nm
+  G4double Energy_n_acrylic[5] = {2.5302*eV, 2.5829*eV, 2.6379*eV, 2.6952*eV, 2.7551*eV};
+  G4double n_acrylic[5] = {1.4971, 1.4977, 1.4987, 1.4991, 1.5002};
+
+  G4MaterialPropertiesTable* acrylic_pt = new G4MaterialPropertiesTable();
+  acrylic_pt->AddProperty("RINDEX", Energy_n_acrylic, n_acrylic, 5);
+  acrylic_pt->AddConstProperty("SCINTILLATIONYIELD", 0 / MeV);
+
+  acrylic_mat->SetMaterialPropertiesTable(acrylic_pt);
+
+
+  G4Material* env_mat = G4Material::GetMaterial("LAr");
+
+  const G4int nEntries = 8;
+  //_________ RELEVANT ENERGY VALUES Xe 175nm -> 7.08eV; Ar 128 -> 9.69eV_________
+  G4double PhotonEnergy[nEntries] = {2.5*eV, 5.0*eV, 7.0*eV, 7.5*eV, 8.0*eV, 9.0*eV, 9.5*eV, 10.136*eV};
+  G4double l_lAr[nEntries] =        {80*m,     80*m,   80*m,   80*m,   20*m,   20*m,   20*m,      20*m};
+  //  G4double l_lAr[nEntries] =        {80*m,     80*m,   80*m,   80*m,   2000*m,   2000*m,   2000*m,      2000*m};
+
+
+  //  G4double n_lAr[nEntries] = {1.3,1.3,1.3,1.3,1.3};
+  G4double n_lAr[72] = {1.2310665394518083, 1.2311200318147684, 1.2312727482978456, 1.2313496348295065, 1.2313506914097514, 1.2314023012909403, 1.2321538166889967, 1.231909947460871, 1.2321384938953646, 1.2323923169803301, 1.232443926861519, 1.2328668458034384, 1.233095392237932, 1.233053736213583, 1.233509772502325, 1.2335361057330418, 1.2334866090123424, 1.2338668153496684, 1.2343481282888824, 1.2344502914710154, 1.2346282846045646, 1.2350337675923626, 1.2354898038811046, 1.2358874461725522, 1.2361238333033957, 1.2364787629902494, 1.2371038951359457, 1.2374666655191495, 1.237720488604115, 1.2384292913975776, 1.2388853276863196, 1.2393413639750617, 1.2402271033218288, 1.2409106294648191, 1.2417458155106422, 1.2425810015564651, 1.2435678475051206, 1.2446558000556642, 1.245844859208096, 1.2472614082147766, 1.2488296171242892, 1.2505242092861624, 1.2525221212537003, 1.2548739063278473, 1.257579564508603, 1.2607654790483278, 1.2644822032479663, 1.269108886864599, 1.2747719131505861, 1.2816987719601767, 1.2910690403154002, 1.302368759656658, 1.316713517166515, 1.3329411664124329, 1.3493804523854165, 1.365926455672306, 1.3820018039345536, 1.4010549636291998, 1.423580491960391, 1.442600693158671, 1.46103487273757, 1.4894895758980782, 1.508978836972031, 1.5300372520419365, 1.5496431051408859, 1.5737334642006038, 1.5996151986767673, 1.6187496758472137, 1.6361783106957755, 1.6540241603412935, 1.672490509546729, 1.69156768392026};
+  G4double Energy_n_lar[72] = {1.88901692613609*eV, 1.915491549763*eV, 1.94434453495496*eV, 1.9740800365654*eV, 2.00473917327901*eV, 2.03636565851099*eV, 2.0690060083582*eV, 2.1027097698752*eV, 2.1375297720313*eV, 2.17352240202191*eV, 2.21074790997382*eV, 2.24927074550798*eV, 2.28915993011439*eV, 2.33048946986518*eV, 2.37333881365753*eV, 2.41779336295621*eV, 2.46394503991691*eV, 2.51189292184303*eV, 2.56174395119099*eV, 2.61361373183203*eV, 2.66762742404865*eV, 2.72392075285046*eV, 2.78264114670945*eV, 2.84394902682875*eV, 2.90801927068415*eV, 2.97504287795441*eV, 3.04522887226339*eV, 3.11880647861692*eV, 3.19602762431763*eV, 3.27716982084588*eV, 3.36253949617556*eV, 3.45247586185779*eV, 3.54735541774646*eV, 3.64759722049586*eV, 3.75366907130329*eV, 3.86609481562225*eV, 3.98546299517591*eV, 4.11243715385428*eV, 4.24776817847434*eV, 4.39230915909235*eV, 4.54703339014745*eV, 4.71305631519082*eV, 4.89166246132417*eV, 5.08433873911506*eV, 5.29281593505014*eV, 5.51912084854449*eV, 5.76564240171605*eV, 6.03521629502331*eV, 6.33123457629323*eV, 6.65778911807759*eV, 7.01986191167459*eV, 7.42358102512033*eV, 7.80768693883725*eV, 8.18166617653237*eV, 8.49578904787588*eV, 8.75179837892604*eV, 8.97145190403002*eV, 9.21112941189563*eV, 9.40734062594689*eV, 9.56190983757659*eV, 9.71915769371575*eV, 9.88023992289941*eV, 9.99798584772925*eV, 10.0930619775564*eV, 10.1644798618311*eV, 10.2587258039568*eV, 10.3321720936895*eV, 10.3923239488175*eV, 10.4560982471211*eV, 10.4827908882082*eV, 10.5288181909777*eV, 10.5783779318939*eV};
+  
+  G4double ray_e_lAr[21] = { 1.18626*eV, 1.68626*eV, 2.18626*eV, 2.68626*eV, 3.18626*eV, 3.68626*eV, 4.18626*eV, 4.68626*eV, 5.18626*eV, 5.68626*eV, 6.18626*eV, 6.68626*eV, 7.18626*eV, 7.68626*eV, 8.18626*eV, 8.68626*eV, 9.18626*eV, 9.68626*eV, 10.1863*eV, 10.6863*eV, 11.1863*eV};
+  G4double ray_s_lAr[21] = { 1200800*cm, 390747*cm, 128633*cm, 54969.1*cm, 27191.8*cm, 14853.7*cm, 8716.9*cm, 5397.42*cm, 3481.37*cm, 2316.51*cm, 1577.63*cm, 1092.02*cm, 763.045*cm, 534.232*cm, 371.335*cm, 252.942*cm, 165.38*cm, 99.9003*cm, 51.2653*cm, 17.495*cm, 0.964341*cm };
+
+
+  G4double RayleighEnergies[22] = {   2.80*eV,   3.00*eV,   3.50*eV,   4.00*eV,  5.00*eV,  6.00*eV,  7.00*eV,  8.00*eV,  8.50*eV,  9.00*eV,  9.20*eV,  9.40*eV,  9.50*eV,  9.60*eV,  9.70*eV,  9.80*eV,  9.90*eV,  10.0*eV,  10.2*eV,  10.4*eV,  10.6*eV, 10.8*eV };
+    G4double RayleighSpectrum[22] = { 47923.*cm, 35981.*cm, 18825.*cm, 10653.*cm, 3972.*cm, 1681.*cm, 750.9*cm, 334.7*cm, 216.8*cm, 135.0*cm, 109.7*cm, 88.06*cm, 78.32*cm, 69.34*cm, 61.06*cm, 53.46*cm, 46.50*cm, 40.13*cm, 28.91*cm, 19.81*cm, 12.61*cm, 7.20*cm };
+  
+  G4MaterialPropertiesTable* lAr_pt = new G4MaterialPropertiesTable();
+  lAr_pt->AddProperty("RINDEX", Energy_n_lar, n_lAr, 72);
+  //lAr_pt->AddProperty("RAYLEIGH", ray_e_lAr, ray_s_lAr, 21);
+
+  lAr_pt->AddProperty("RAYLEIGH", RayleighEnergies, RayleighSpectrum, 22);
+  lAr_pt->AddProperty("ABSLENGTH", PhotonEnergy, l_lAr, nEntries);
+  lAr_pt->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 6. * ns);       // FASTTIMECONSTANT
+  lAr_pt->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 1590. * ns);//   SLOWTIMECONSTANT
+
+  std::vector<double> FastScintEnergies { 6.0*eV,  6.7*eV,  7.1*eV,  7.4*eV,  7.7*eV, 7.9*eV,  8.1*eV,  8.4*eV,  8.5*eV,  8.6*eV,  8.8*eV,  9.0*eV,  9.1*eV,  9.4*eV,  9.8*eV,  10.4*eV,  10.7*eV};
+  std::vector<double> SlowScintEnergies { 6.0*eV,  6.7*eV,  7.1*eV,  7.4*eV,  7.7*eV, 7.9*eV,  8.1*eV,  8.4*eV,  8.5*eV,  8.6*eV,  8.8*eV,  9.0*eV,  9.1*eV,  9.4*eV,  9.8*eV,  10.4*eV,  10.7*eV};
+  std::vector<double> FastScintSpectrumloc { 0.0,  0.0, 1., 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 0.0};
+  std::vector<double> SlowScintSpectrumloc { 0.0,  0.0, 1., 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 0.0};
+  lAr_pt->AddProperty("SCINTILLATIONCOMPONENT1", FastScintEnergies, FastScintSpectrumloc); // FASTCOMPNENT
+  lAr_pt->AddProperty("SCINTILLATIONCOMPONENT2", SlowScintEnergies, SlowScintSpectrumloc); // SLOWCOMPONENT
+  lAr_pt->AddConstProperty("SCINTILLATIONYIELD", 25000 / MeV );
+  lAr_pt->AddConstProperty("SCINTILLATIONYIELD1", 0.3 ); // YIELDRATIO
+  lAr_pt->AddConstProperty("RESOLUTIONSCALE", 1.0 );
+  env_mat->GetIonisation()->SetBirksConstant(0.069 * cm / MeV);
+
+  // By commenting out below, and running these lines instead I will enforce the G4_lAr properties set in MaterialPropertiesLoader.
+  env_mat->SetMaterialPropertiesTable(lAr_pt);
+  std::cout << "Dumping G4_lAr properties .... " << std::endl;
+  env_mat->GetMaterialPropertiesTable()->DumpTable();
+  //fMPL->SetPropertiesFromServices();  // fills local LArprop class with hard-coded data cutnpasted from fcl file.
+  //fMPL->GetPropertiesFromServices();  // Shoves these into local MaterialTables
+  //fMPL->UpdateGeometry(G4LogicalVolumeStore::GetInstance()); // Finally, loads properties into G4MaterialProperties
+  
+  //__________________ PTP parametrisation __________________//
+
+  G4Material* ptp_mat = G4Material::GetMaterial("pTP");
+
+  const int ptp_e_entries = 22;
+  const int ptp_a_entries = 15;
+  const int ptp_fe_entries = 9;
+  //  const int ptp_ab_entries = 3;
+
+  // Set emission energy range and parameters
+
+  G4double ptp_e_energy[ptp_e_entries] =
+    {3.06434*eV, 3.1098*eV,3.14086*eV, 3.18325*eV, 3.24903*eV,
+    3.31176*eV, 3.33517*eV, 3.37092*eV,3.4198*eV, 3.45108*eV,
+    3.47012*eV, 3.48937*eV, 3.51537*eV, 3.53513*eV, 3.55512*eV,
+    3.59577*eV, 3.62339*eV, 3.63736*eV, 3.65144*eV, 3.66562*eV,
+    3.67992*eV, 3.7235*eV};
+
+  G4double ptp_e[ptp_e_entries] =
+    {0.016285, 0.0520565, 0.0788851, 0.132542, 0.275628,
+     0.409771, 0.543914, 0.678057, 0.722772, 0.821143,
+     0.955286, 1, 0.946343, 0.8122, 0.740657, 0.8122,
+     0.678057, 0.534971, 0.400828, 0.266685, 0.132542, 0.00734215};
+
+  // Set absorption energy range and parameters
+  G4double ptp_a_energy[ptp_a_entries] =
+    {2.0*eV, 3.0*eV, 4.0*eV, 4.5*eV, 5.0*eV, 5.5*eV, 6.0*eV, 6.5*eV, 7.0*eV, 7.5*eV, 8.0*eV, 8.27*eV, 12.40*eV, 24.80*eV, 123.99*eV}; // many divisions to make long absorption length within emission range
+
+  double c_ptp = 0.3*um; // value without absorption
+  //double c_ptp = 2.45*um; // value with absorption
+
+  double m_ptp = 1e6;
+
+  G4double ptp_l[ptp_a_entries] =
+    {m_ptp*c_ptp, m_ptp*c_ptp, m_ptp*c_ptp, m_ptp*c_ptp, m_ptp*c_ptp, m_ptp*c_ptp, c_ptp, c_ptp, c_ptp, c_ptp, c_ptp, c_ptp, c_ptp, c_ptp, c_ptp};
+
+  // Set refraction and absorption energy range and parameters
+
+  G4double ptp_fe_energy[ptp_fe_entries] =
+    {1*eV, 3.0*eV, 3.8*eV, 6.20*eV, 8.27*eV, 12.40*eV, 24.80*eV, 123.99*eV, 200*eV};
+
+  G4double ptp_n[ptp_e_entries] =
+    {1.35, 1.35, 1.35, 1.35, 1.35, 1.35, 1.35, 1.35, 1.35};
+
+  //double ptp_yield = 1.0; // yield without absorption included
+  double ptp_yield = 0.9; // yield without absorption included
+    // double ptp_yield = 2.75; // yield value when including absorption
+
+  G4MaterialPropertiesTable* ptp_pt = new G4MaterialPropertiesTable();
+  ptp_pt->AddProperty("RINDEX", ptp_fe_energy, ptp_n, ptp_fe_entries);
+  ptp_pt->AddProperty("WLSABSLENGTH", ptp_a_energy, ptp_l, ptp_a_entries);
+  ptp_pt->AddProperty("WLSCOMPONENT", ptp_e_energy, ptp_e, ptp_e_entries);
+  //ptp_pt->AddConstProperty("WLSMEANNUMBERPHOTONS",ptp_yield);
+  ptp_pt->AddConstProperty("WLSTIMECONSTANT", 5*ns);
+  ptp_mat->SetMaterialPropertiesTable(ptp_pt);
+
+}
+
+void DetectorConstruction::GDMLOpticalProperties()
+{
+
+  //Surfaces setup
+
+  //lAr-Anode interface
+  
+  G4LogicalVolumeStore* lvStore = G4LogicalVolumeStore::GetInstance();
+
+  G4LogicalVolume* logicAnodeT = lvStore->GetVolume("volAnodePlate",       false);
+  G4LogicalVolume* logicAnodeB = lvStore->GetVolume("volAnodePlateBottom", false);
+
+  if (!logicAnodeT || !logicAnodeB) {
+    G4cerr << "ERROR: could not find anode logical volumes in GDML store!" << G4endl;
+    // optionally: print all names to find the right ones (see below)
+    return;
+  }
+
+  G4OpticalSurface* AnodeSurfaceT = new G4OpticalSurface("AnodeSurfaceT");
+  AnodeSurfaceT->SetType(dielectric_metal);
+  AnodeSurfaceT->SetModel(unified);
+  AnodeSurfaceT->SetFinish(ground);
+  AnodeSurfaceT->SetSigmaAlpha(0.0*deg); // for vikuit
+
+  G4OpticalSurface* AnodeSurfaceB = new G4OpticalSurface("AnodeSurfaceB");
+  AnodeSurfaceB->SetType(dielectric_metal);
+  AnodeSurfaceB->SetModel(unified);
+  AnodeSurfaceB->SetFinish(ground);
+  AnodeSurfaceB->SetSigmaAlpha(0.0*deg); // for vikuit
+
+  const G4int nEntries = 8;
+  G4double PhotonEnergy[nEntries] =
+    { 2.5*eV, 5.0*eV, 7.0*eV, 7.5*eV, 8.0*eV, 9.0*eV, 9.5*eV, 10.136*eV};
+
+  G4double Anode_r[nEntries] = {0.20, 0.20, 0.20, 0.20, 0.0, 0.0, 0.0, 0.0}; //reflection coef for base
+  //G4double Anode_r[nEntries] = {0.5, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 0.0}; //reflection coef for base
+  G4double Anode_e[nEntries] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}; //absorption coefficient
+
+  G4MaterialPropertiesTable* AnodeSurface_pt = new G4MaterialPropertiesTable();
+
+  AnodeSurface_pt->AddProperty("REFLECTIVITY", PhotonEnergy, Anode_r, nEntries);
+  AnodeSurface_pt->AddProperty("EFFICIENCY", PhotonEnergy, Anode_e, nEntries);
+
+  AnodeSurfaceT->SetMaterialPropertiesTable(AnodeSurface_pt);
+  new G4LogicalSkinSurface("AnodeSurface", logicAnodeT, AnodeSurfaceT);
+
+  AnodeSurfaceB->SetMaterialPropertiesTable(AnodeSurface_pt);
+  new G4LogicalSkinSurface("AnodeSurface", logicAnodeB, AnodeSurfaceB);
+
+
+  //_____________________________FC REFLECTIVITY CHANGE 0.2 -> 0.7 ______________________________
+  
+  G4LogicalVolume* logicFieldShaper = lvStore->GetVolume("volFieldShaper", false);
+  G4LogicalVolume* logicFieldShaperS = lvStore->GetVolume("volFieldShaperSlim", false);
+  
+  if (!logicFieldShaper || !logicFieldShaperS) {
+    G4cerr << "ERROR: could not find field shaper logical volumes in GDML store!" << G4endl;
+    // optionally: print all names to find the right ones (see below)
+    return;
+  }
+
+  G4OpticalSurface* FCSurface = new G4OpticalSurface("FCSurface");
+  FCSurface->SetType(dielectric_metal);
+  FCSurface->SetModel(unified);
+  FCSurface->SetFinish(ground);
+  FCSurface->SetSigmaAlpha(0.0*deg); // for vikuit
+
+  G4double FC_r[nEntries] = {0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7}; //reflection coef for base
+  G4double FC_e[nEntries] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}; //absorption coefficient
+  //G4double FC_r[nEntries] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; //reflection coef for base
+
+  G4MaterialPropertiesTable* FCSurface_pt = new G4MaterialPropertiesTable();
+
+  FCSurface_pt->AddProperty("REFLECTIVITY", PhotonEnergy, FC_r, nEntries);
+  FCSurface_pt->AddProperty("EFFICIENCY", PhotonEnergy, FC_e, nEntries);
+
+  FCSurface->SetMaterialPropertiesTable(FCSurface_pt);
+  new G4LogicalSkinSurface("FCSurface",logicFieldShaper,FCSurface);
+  new G4LogicalSkinSurface("FCSurfaceSlim",logicFieldShaperS,FCSurface);
+
+  //_____________________________Mylar REFLECTIVITY 1.0 ______________________________
+
+  G4LogicalVolume* logicAraBacking = lvStore->GetVolume("volBacking",       false);
+
+  G4OpticalSurface* ArapucaBackSurface = new G4OpticalSurface("ArapucaBackSurface");
+  ArapucaBackSurface->SetType(dielectric_metal);
+  ArapucaBackSurface->SetModel(unified);
+  ArapucaBackSurface->SetFinish(ground);
+  ArapucaBackSurface->SetSigmaAlpha(0.0*deg); // for vikuit
+
+  G4double AB_r[nEntries] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}; //reflection coef for base
+  G4double AB_e[nEntries] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}; //absorption coefficient
+
+  G4MaterialPropertiesTable* ArapucaBackSurface_pt = new G4MaterialPropertiesTable();
+
+  ArapucaBackSurface_pt->AddProperty("REFLECTIVITY", PhotonEnergy, AB_r, nEntries);
+  ArapucaBackSurface_pt->AddProperty("EFFICIENCY", PhotonEnergy, AB_e, nEntries);
+
+  ArapucaBackSurface->SetMaterialPropertiesTable(ArapucaBackSurface_pt);
+  new G4LogicalSkinSurface("ArapucaBackSurface",logicAraBacking,ArapucaBackSurface);
+
+  G4LogicalVolume* logicReflPlate = lvStore->GetVolume("volReflPlate", false);
+  new G4LogicalSkinSurface("ReflPlateSurface",logicReflPlate,ArapucaBackSurface);
+
+  G4LogicalVolume* logicPrism = lvStore->GetVolume("volReflPrism", false);
+  new G4LogicalSkinSurface("PrismSurface",logicPrism,ArapucaBackSurface);
+
+  // _________________ CHANGE NEW CRYOSTAT PROPERTIES _____________________________________
+  
+  G4LogicalVolume* logicCryoShell = lvStore->GetVolume("fShellLog",       false);
+  
+  G4OpticalSurface* CryostatSurface = new G4OpticalSurface("CryostatSurface");
+  CryostatSurface->SetType(dielectric_metal);
+  CryostatSurface->SetModel(unified);
+  CryostatSurface->SetFinish(ground);
+  CryostatSurface->SetSigmaAlpha(0.0*deg); // for vikuit
+
+  G4double Cryo_r[nEntries] = {0.4, 0.4, 0.4, 0.4, 0.3, 0.3, 0.3, 0.3}; //reflection coef for base
+  G4double Cryo_e[nEntries] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}; //absorption coefficient
+
+  G4MaterialPropertiesTable* CryostatSurface_pt = new G4MaterialPropertiesTable();
+
+  CryostatSurface_pt->AddProperty("REFLECTIVITY", PhotonEnergy, Cryo_r, nEntries);
+  CryostatSurface_pt->AddProperty("EFFICIENCY", PhotonEnergy, Cryo_e, nEntries);
+
+  CryostatSurface->SetMaterialPropertiesTable(CryostatSurface_pt);
+  new G4LogicalSkinSurface("CryostatSurface", logicCryoShell, CryostatSurface);
+
 }
 
 
